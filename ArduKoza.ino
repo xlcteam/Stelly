@@ -4,6 +4,8 @@
 // if you want debug info from vic, uncomment line below
 // #define DEBUG
 
+
+#define VIC_ARDUINO_SERIAL Serial
 #include <vic.h>
 
 //Constants

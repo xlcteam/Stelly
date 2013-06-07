@@ -173,7 +173,7 @@ void right()
   action = 'R';
   
   motorA.go(speed/2);
-  motorB.go(speed);
+  motorB.go(speed/2);
   motorC.go(-speed);
 }
 
@@ -181,7 +181,7 @@ void left()
 {
   action = 'L';
   
-  motorA.go(-speed);
+  motorA.go(-speed/2);
   motorB.go(-speed/2);
   motorC.go(speed);
 }
