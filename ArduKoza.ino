@@ -11,6 +11,7 @@ int speed=200;
 int speed_min=60;
 int speed_rotate=170;
 int range = 16;
+int kicker_time = 23;
 
 #define DRIBB_SENSOR_PORT 50
 
@@ -67,7 +68,6 @@ void test()
     motorA.go(speed_rotate-(speed_rotate*c/180));
     motorB.go(speed_rotate-(speed_rotate*c/180));
     motorC.go(speed_rotate-(speed_rotate*c/180));
-    motorD.go(speed_rotate-(speed_rotate*c/180));
   } else {
     stopAllMotors();
     /*
@@ -95,9 +95,6 @@ void setup()
   pinMode(BUTTON1, INPUT);
   pinMode(BUTTON2, INPUT);
   
-
-  pinMode(US_PIN, INPUT);
-  pinMode(US_LEFT_PIN, INPUT);
   
   pinMode(32, OUTPUT);
   pinMode(30, OUTPUT);
@@ -107,7 +104,7 @@ void setup()
   
   
   Serial.begin(115200);
-  Serial3.begin(115200);
+  //Serial3.begin(115200);
   vic_init(115200);
 
   stopAllMotors();
@@ -173,7 +170,8 @@ void setup()
   vic_var_set_bind("speed", "200", &speed);
   vic_var_set_bind("mspeed", "60", &speed_min);
   vic_var_set_bind("rspeed", "170", &speed_rotate);
-  vic_var_set_bind("range", "16", &speed_rotate);   
+  vic_var_set_bind("range", "16", &speed_rotate);
+  vic_var_set_bind("kick", "23", &kicker_time);   
   
 
 }
@@ -190,14 +188,14 @@ void loop()
   }
   */
   
-  if(Serial3.available()){
-    char a = Serial3.read();
+  if(Serial.available()){
+    char a = Serial.read();
     vic_process(a);
   }
   vic_tasks_run();
  
 
-  if (digitalRead(BUTTON1) == 0) {
+  /*if (digitalRead(BUTTON1) == 0) {
     vic_println(motion_running);
     if (motion_running == 0 ){
       motion_start();
@@ -230,7 +228,7 @@ void loop()
     simple_motion();
   } else {
     analogWrite(LED1, LOW);
-  }
+  }*/
   
 
   if (esensors_loop) {

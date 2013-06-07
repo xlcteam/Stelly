@@ -145,13 +145,13 @@ void is_ball_near()
   int sensor = max_sensor();
   
   if (analogRead(sensors[6]) < LEFT_NEAR && sensor == 1){
-    Serial3.println("left");
+    //Serial3.println("left");
   } else if (analogRead(sensors[1]) < RIGHT_NEAR && sensor == 1) {
-    Serial3.println("right");
+    //Serial3.println("right");
   } else if (sensor == 1){
-    Serial3.println("forward");
+   // Serial3.println("forward");
   } else {
-    Serial3.println("0");
+    //Serial3.println("0");
   }
 }
 
@@ -161,9 +161,9 @@ void is_ball_near_right()
   int sensor = max_sensor();
   
   if (analogRead(sensors[1]) < RIGHT_NEAR && sensor == 1){
-    Serial3.println("1");
+    //Serial3.println("1");
   } else {
-    Serial3.println("0");
+    //Serial3.println("0");
   }
 
 }
@@ -190,8 +190,8 @@ void up()
 {
   action = 'U';
   
-  motorA.go(-speed);
-  motorB.go(speed);
+  motorA.go(speed);
+  motorB.go(-speed);
   motorC.stop();
 }
 
@@ -199,8 +199,8 @@ void back()
 {
   action = 'B';
   
-  motorA.go(speed);
-  motorB.go(-speed);
+  motorA.go(-speed);
+  motorB.go(speed);
   motorC.stop();
 }
 
@@ -264,8 +264,8 @@ void special_movement_up()
     motorB.go(speed - (diff/range)*c);
     motorC.go(speed);
     
-    Serial3.print("- left side ");
-    Serial3.println(c);
+    //Serial3.print("- left side ");
+    //Serial3.println(c);
     
   } else {
     
@@ -278,8 +278,8 @@ void special_movement_up()
     motorB.go(speed);
     motorC.go(speed - (diff/range)*c);
     
-    Serial3.print("- right side ");
-    Serial3.println(c);    
+    //Serial3.print("- right side ");
+    //Serial3.println(c);    
   } 
 }
 
@@ -303,8 +303,8 @@ void special_movement_back()
     motorB.go(-speed);
     motorC.go(-(speed - (diff/range)*c));
     
-    Serial3.print("- left side ");
-    Serial3.println(c);
+   //Serial3.print("- left side ");
+    //Serial3.println(c);
     
   } else {
     
@@ -317,8 +317,8 @@ void special_movement_back()
     motorB.go(-(speed - (diff/range)*c));
     motorC.go(-speed);
     
-    Serial3.print("- right side ");
-    Serial3.println(c);    
+    //Serial3.print("- right side ");
+   // Serial3.println(c);    
   } 
 }
 
@@ -342,8 +342,8 @@ void special_movement_left()
     motorB.go((speed - (diff/range)*c));
     motorC.go(speed);
     
-    Serial3.print("- up side ");
-    Serial3.println(c);
+    //Serial3.print("- up side ");
+    //Serial3.println(c);
     
   } else {
     
@@ -355,9 +355,9 @@ void special_movement_left()
     motorA.go(-speed);
     motorB.go(speed);
     motorC.go((speed - (diff/range)*c));
-    
-    Serial3.print("- back side ");
-    Serial3.println(c);    
+    //
+    //Serial3.print("- back side ");
+    //Serial3.println(c);    
   } 
 }
 
@@ -380,8 +380,8 @@ void special_movement_right()
     motorB.go(-(speed - (diff/range)*c));
     motorC.go(-speed);
     
-    Serial3.print("- up side ");
-    Serial3.println(c);
+    //Serial3.print("- up side ");
+    //Serial3.println(c);
     
   } else {
     
@@ -394,7 +394,7 @@ void special_movement_right()
     motorB.go(-speed);
     motorC.go(-(speed - (diff/range)*c));
     
-    Serial3.print("- back side ");
-    Serial3.println(c);    
+   // Serial3.print("- back side ");
+   // Serial3.println(c);    
   } 
 }

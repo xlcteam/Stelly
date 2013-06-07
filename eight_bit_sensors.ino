@@ -54,15 +54,15 @@ void esensors_all()
     */
     tmp -= clearing[i];
     
-    Serial3.print(tmp);
-    Serial3.print(" ");
+    //Serial3.print(tmp);
+    //Serial3.print(" ");
     if(tmp < max_val){
       max_val = tmp;
       max_s = i;
     }
   }
-  Serial3.print(max_s + 1);
-  Serial3.println();
+  //Serial3.print(max_s + 1);
+  //Serial3.println();
   
 }
 

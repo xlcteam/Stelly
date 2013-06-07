@@ -26,12 +26,10 @@ void simple_motion()
     motorA.go(speed);
     motorB.go(speed);
     motorC.go(speed);
-    motorD.go(speed);  
   } 
   else {
     stopAllMotors();
-    motorB.go(speed);
-    motorD.go(speed);   
+    motorB.go(speed);   
   }
 
 }
