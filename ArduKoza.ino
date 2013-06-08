@@ -22,11 +22,11 @@ int kicker_time = 23;
 #define PORT_DRIBBLER 28
 #define PORT_KICKER 24
 
-#define BUTTON1 44
-#define BUTTON2 40
+#define BUTTON1 12
+#define BUTTON2 11
 
-#define LED1 8
-#define LED2 9
+#define LED1 13
+#define LED2 10
 
 #define LEFT_NEAR 370
 #define RIGHT_NEAR 390
@@ -41,6 +41,7 @@ int line_sensors[] = {8, 9, 12, 13, 10, 11};
 Motor motorA = Motor(4, 5);
 Motor motorB = Motor(2, 3);
 Motor motorC = Motor(7, 6);
+Motor dribbler = Motor(8, 9);
 
 RelativeNXTCompass compass;
 HTIRSeekerV2 seeker;
@@ -200,7 +201,7 @@ void loop()
   vic_tasks_run();
  
 
-  /*if (digitalRead(BUTTON1) == 0) {
+  if (digitalRead(BUTTON1) == 1) {
     vic_println(motion_running);
     if (motion_running == 0 ){
       motion_start();
@@ -208,21 +209,21 @@ void loop()
       motion_stop();
     }
     
-    while(digitalRead(BUTTON1) == 0); 
+    while(digitalRead(BUTTON1) == 1); 
   }
   
   
-  if (digitalRead(BUTTON2) == 0) {
+  if (digitalRead(BUTTON2) == 1) {
     vic_println("compass loading");
     digitalWrite(LED2, HIGH);
     compass_load();
-    while(digitalRead(BUTTON2) == 0); 
+    while(digitalRead(BUTTON2) == 1); 
     digitalWrite(LED2, LOW);
   }  
-  */
+  
   
   if (motion_running) {
-    analogWrite(LED1, 255);
+    digitalWrite(LED1, HIGH);
     motion();
   } else {
     analogWrite(LED1, LOW);

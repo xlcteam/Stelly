@@ -91,7 +91,7 @@ void motion()
 
   if (sensor == 1 && analogRead(sensors[1]) < RIGHT_NEAR)
     sensor = 2;*/
-  
+  dribbler_off();
   switch (sensor) {
     case 2:
       right();

@@ -1,13 +1,13 @@
 inline void dribbler_off()
 {
   dribbler_state = 0;
-  digitalWrite(PORT_DRIBBLER, 0);
+  dribbler.stop();
 }
 
 inline void dribbler_on()
 {
   dribbler_state = 1;
-  digitalWrite(PORT_DRIBBLER, 1);
+  dribbler.go(255);
 }
 
 
