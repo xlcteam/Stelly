@@ -52,7 +52,9 @@ void motion()
     Serial.println("centralizing!");
     return;
   } else {
-    up();
+    stopAllMotors();
+    
+    //up();
   }
   /*
   int line_sensor = max_line_sensor();
@@ -79,16 +81,16 @@ void motion()
     return;
   }
   */
-/*
+
   
   int sensor = max_sensor();
   
   // fixating sensor 2 and 7 so that sensor 1 doesn't see everything
-  if (sensor == 1 && analogRead(sensors[6]) < LEFT_NEAR)
+/*  if (sensor == 1 && analogRead(sensors[6]) < LEFT_NEAR)
     sensor = 7;
 
   if (sensor == 1 && analogRead(sensors[1]) < RIGHT_NEAR)
-    sensor = 2;
+    sensor = 2;*/
   
   switch (sensor) {
     case 2:
@@ -117,7 +119,7 @@ void motion()
     
     case 1:
       dribbler_on();
-      
+      /*
       if (ball_in_dribbler() && (analogRead(sensors[0]) < 310) ) {
         stopAllMotors();
         delay(200);
@@ -127,7 +129,7 @@ void motion()
         
         return;
       }
-      
+      */
       up();
       break;
       
@@ -137,7 +139,8 @@ void motion()
       stopAllMotors();
       break;
   }
-*/
+  Serial.println(action);
+/**/
 }
 
 void is_ball_near()
@@ -214,7 +217,7 @@ void halt()
 
 void back_right()
 {
-  action = 'B';
+  action = 'BR';
   
   motorA.stop();
   motorB.go(-speed);
@@ -223,7 +226,7 @@ void back_right()
 
 void back_left()
 {
-  action = 'B';
+  action = 'BL';
   
   motorA.go(speed);
   motorB.stop();

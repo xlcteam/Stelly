@@ -2,6 +2,7 @@
 #include <Wire.h>
 #include <NXTI2CDevice.h>
 #include <RelativeNXTCompass.h>
+#include <HTIRSeekerV2.h>
 // if you want debug info from vic, uncomment line below
 // #define DEBUG
 
@@ -10,9 +11,9 @@
 #include <vic.h>
 
 //Constants
-int speed=200;
+int speed=255;
 int speed_min=60;
-int speed_rotate=170;
+int speed_rotate=200;
 int range = 16;
 int kicker_time = 23;
 
@@ -42,6 +43,7 @@ Motor motorB = Motor(2, 3);
 Motor motorC = Motor(7, 6);
 
 RelativeNXTCompass compass;
+HTIRSeekerV2 seeker;
 
 char action = ' ';
 
@@ -170,9 +172,9 @@ void setup()
   
   vic_fn_add("ibn", &is_ball_near);  
   
-  vic_var_set_bind("speed", "200", &speed);
+  vic_var_set_bind("speed", "255", &speed);
   vic_var_set_bind("mspeed", "60", &speed_min);
-  vic_var_set_bind("rspeed", "170", &speed_rotate);
+  vic_var_set_bind("rspeed", "200", &speed_rotate);
   vic_var_set_bind("range", "16", &speed_rotate);
   vic_var_set_bind("kick", "23", &kicker_time);   
   

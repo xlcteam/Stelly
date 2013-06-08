@@ -1,46 +1,61 @@
 int max_sensor()
 {
-  int max_val = 1003, max_s = -1, tmp;
-  for(int i = 0; i < ( sizeof(sensors)/sizeof(*sensors)); i++){
-    tmp = analogRead(sensors[i]); 
-    // TODO
-    /*
-    if (sensors[i] == 0)
-      tmp += 100;
-    */
+  uint8_t dir, s1, s2, s3, s4, s5;
+  seeker.read(&dir, &s1, &s2, &s3, &s4, &s5);
+  
+  int sensor = 0;
+  
+  switch (dir) {
+    case 5:
+      sensor = 1;
+      break;
     
-    tmp -= clearing[i];
+    case 4: 
+      sensor = 7;
+      break;
     
-    if(tmp < max_val){
-      max_val = tmp;
-      max_s = i;
-    }
+    case 3:
+      sensor = 6;
+      break;
+    
+    case 2:
+    case 1:
+      sensor = 5;
+    
+    case 8:
+    case 9:
+      sensor = 4;
+      break;
+    
+    case 7:
+      sensor = 3;
+      break;
+    
+    case 6:
+      sensor = 2;
+      break;
   }
-  return max_s + 1;
+  
+  return sensor;
 }
 
 void sensors_all()
-{
+{  
+  uint8_t dir, s1, s2, s3, s4, s5;
+  seeker.read(&dir, &s1, &s2, &s3, &s4, &s5);
 
-  int max_val = 1023, max_s = -1, tmp;
-  
-  for(int i = 0; i < ( sizeof(sensors)/sizeof(*sensors)); i++){
-    tmp = analogRead(sensors[i]);
-    // TODO
-    /*
-    if (sensors[i] == 0)
-      tmp += 100;
-    */
-    tmp -= clearing[i];
     
-    vic_print(tmp);
-    vic_print(" ");
-    if(tmp < max_val){
-      max_val = tmp;
-      max_s = i;
-    }
-  }
-  vic_print(max_s + 1);
+  vic_print(s1);
+  vic_print(" ");
+  vic_print(s2);
+  vic_print(" ");
+  vic_print(s3);
+  vic_print(" ");
+  vic_print(s4);
+  vic_print(" ");
+  vic_print(s5);
+  vic_print(" ");  
+  vic_print(dir);
   vic_println();
   
 }
