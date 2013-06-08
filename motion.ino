@@ -172,36 +172,36 @@ void right()
 {
   action = 'R';
   
-  motorA.go(speed/2);
-  motorB.go(speed/2);
-  motorC.go(-speed);
+  motorA.go(-speed/2);
+  motorB.go(-speed/2);
+  motorC.go(speed);  
 }
 
 void left()
 {
   action = 'L';
   
-  motorA.go(-speed/2);
-  motorB.go(-speed/2);
-  motorC.go(speed);
+  motorA.go(speed/2);
+  motorB.go(speed/2);
+  motorC.go(-speed);  
 }
 
 void up()
 {
   action = 'U';
   
-  motorA.go(speed);
-  motorB.go(-speed);
+  motorA.go(-speed);
+  motorB.go(speed);
   motorC.stop();
 }
 
 void back()
 {
   action = 'B';
-  
-  motorA.go(-speed);
-  motorB.go(speed);
-  motorC.stop();
+
+  motorA.go(speed);
+  motorB.go(-speed);
+  motorC.stop();  
 }
 
 
@@ -216,18 +216,18 @@ void back_right()
 {
   action = 'B';
   
-  motorA.go(speed);
-  motorB.stop();
-  motorC.go(-speed); 
+  motorA.stop();
+  motorB.go(-speed);
+  motorC.go(speed);   
 }
 
 void back_left()
 {
   action = 'B';
   
-  motorA.stop();
-  motorB.go(-speed);
-  motorC.go(speed);  
+  motorA.go(speed);
+  motorB.stop();
+  motorC.go(-speed);   
 }
 
 void rrotate(int spd)

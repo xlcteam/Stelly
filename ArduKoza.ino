@@ -38,8 +38,8 @@ int clearing[] = {5,  0,  0,  0,  0,  0,  0};
 int line_sensors[] = {8, 9, 12, 13, 10, 11};
 
 Motor motorA = Motor(4, 5);
-Motor motorB = Motor(7, 6);
-Motor motorC = Motor(2, 3);
+Motor motorB = Motor(2, 3);
+Motor motorC = Motor(7, 6);
 
 RelativeNXTCompass compass;
 
