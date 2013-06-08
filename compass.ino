@@ -5,7 +5,7 @@ void serial_compass()
   vicore_func();
   vicore_return("%f", getCompass());
   */
- // Serial3.println(compass.angle());
+  Serial.println(compass.angle());
 }
 
 void compass_load()

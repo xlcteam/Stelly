@@ -49,10 +49,10 @@ void motion()
   int range = 7;
   if (!centered(range)) {
     centralize();
-    //Serial.println("centralizing!");
+    Serial.println("centralizing!");
     return;
   } else {
-    stopAllMotors();
+    up();
   }
   /*
   int line_sensor = max_line_sensor();
@@ -79,7 +79,7 @@ void motion()
     return;
   }
   */
-
+/*
   
   int sensor = max_sensor();
   
@@ -137,7 +137,7 @@ void motion()
       stopAllMotors();
       break;
   }
-
+*/
 }
 
 void is_ball_near()
@@ -232,16 +232,16 @@ void back_left()
 
 void rrotate(int spd)
 {
-  motorA.go(spd);
+  motorA.go(-spd);
   motorB.go(-spd);
-  motorC.go(spd);
+  motorC.go(-spd);
 }
 
 void lrotate(int spd)
 {
-  motorA.go(-spd);
+  motorA.go(spd);
   motorB.go(spd);
-  motorC.go(-spd);  
+  motorC.go(spd);  
 }
 
 

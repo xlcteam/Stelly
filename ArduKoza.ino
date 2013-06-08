@@ -1,6 +1,7 @@
 #include <Motor.h>
 #include <Wire.h>
-#include <RelativeHMC6352.h>
+#include <NXTI2CDevice.h>
+#include <RelativeNXTCompass.h>
 // if you want debug info from vic, uncomment line below
 // #define DEBUG
 
@@ -40,7 +41,7 @@ Motor motorA = Motor(4, 5);
 Motor motorB = Motor(7, 6);
 Motor motorC = Motor(2, 3);
 
-RelativeHMC6352 compass = RelativeHMC6352();
+RelativeNXTCompass compass;
 
 char action = ' ';
 
@@ -216,7 +217,7 @@ void loop()
     while(digitalRead(BUTTON2) == 0); 
     digitalWrite(LED2, LOW);
   }  
-  
+  */
   
   if (motion_running) {
     analogWrite(LED1, 255);
@@ -230,7 +231,7 @@ void loop()
     simple_motion();
   } else {
     analogWrite(LED1, LOW);
-  }*/
+  }
   
 
   if (esensors_loop) {
