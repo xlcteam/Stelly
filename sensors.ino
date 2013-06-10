@@ -66,6 +66,8 @@ void sensors_all()
   vic_print(s5);
   vic_print(" ");  
   vic_print(dir);
+  vic_print(" ");  
+  vic_print(max_sensor());  
   vic_println();
   
 }

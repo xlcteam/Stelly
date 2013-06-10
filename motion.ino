@@ -56,9 +56,9 @@ void motion()
     
     //up();
   }
-  /*
+  
   int line_sensor = max_line_sensor();
-  if (line_sensor != 0) {
+  if (line_sensor != 0 && action != ' ') {
     switch (action) {
       case 'L':
         right();
@@ -68,19 +68,19 @@ void motion()
         left();
         break;    
         
-      case 'U':
+    /*  case 'U':
         back();
         break;
       
       case 'B':
         up();
-        break;
+        break;    */  
     }
     Serial.println("from white");
     delay(500);
     return;
   }
-  */
+  
 
   
   int sensor = max_sensor();
@@ -139,7 +139,7 @@ void motion()
       stopAllMotors();
       break;
   }
-  Serial.println(action);
+  //Serial.println(action);
 /**/
 }
 
@@ -182,7 +182,7 @@ void right()
 
 void left()
 {
-  action = 'L';
+  //action = 'L';
   
   motorA.go(speed/2);
   motorB.go(speed/2);
@@ -191,7 +191,7 @@ void left()
 
 void up()
 {
-  action = 'U';
+  //action = 'U';
   
   motorA.go(-speed);
   motorB.go(speed);
@@ -217,7 +217,7 @@ void halt()
 
 void back_right()
 {
-  action = 'BR';
+  action = 'B';
   
   motorA.stop();
   motorB.go(-speed);
@@ -226,7 +226,7 @@ void back_right()
 
 void back_left()
 {
-  action = 'BL';
+  action = 'B';
   
   motorA.go(speed);
   motorB.stop();
