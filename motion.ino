@@ -62,10 +62,20 @@ void motion()
     switch (action) {
       case 'L':
         right();
+        Serial.print(action);
+        Serial.print(" ");    
+        Serial.println("from white");
+        delay(500);        
+        return;
         break;
         
       case 'R':
         left();
+        Serial.print(action);
+        Serial.print(" ");    
+        Serial.println("from white");
+        delay(500);        
+        return;
         break;    
         
     /*  case 'U':
@@ -76,9 +86,7 @@ void motion()
         up();
         break;    */  
     }
-    Serial.println("from white");
-    delay(500);
-    return;
+
   }
   
 
@@ -182,7 +190,7 @@ void right()
 
 void left()
 {
-  //action = 'L';
+  action = 'L';
   
   motorA.go(speed/2);
   motorB.go(speed/2);
@@ -200,7 +208,7 @@ void up()
 
 void back()
 {
-  action = 'B';
+  //action = 'B';
 
   motorA.go(speed);
   motorB.go(-speed);
