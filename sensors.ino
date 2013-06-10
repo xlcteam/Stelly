@@ -36,6 +36,14 @@ int max_sensor()
       break;
   }
   
+  // This means that the sensor is directly behind the robot.
+  // A dangerous situation, setting sensor to 6 means the robot will move to some side 
+  if (analogRead(A0) < REAR_NEAR) {
+    sensor = 6;
+  
+  }
+  
+  
   return sensor;
 }
 
@@ -44,7 +52,9 @@ void sensors_all()
   uint8_t dir, s1, s2, s3, s4, s5;
   seeker.read(&dir, &s1, &s2, &s3, &s4, &s5);
 
-    
+  vic_print(analogRead(A0));
+  vic_print(" ");
+  
   vic_print(s1);
   vic_print(" ");
   vic_print(s2);

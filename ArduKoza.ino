@@ -30,6 +30,7 @@ int kicker_time = 23;
 
 #define LEFT_NEAR 370
 #define RIGHT_NEAR 390
+#define REAR_NEAR 320
 
 // sensors without 5th sensor
 int sensors[] =  {0,  1,  2,  3,  5,  6,  7};
