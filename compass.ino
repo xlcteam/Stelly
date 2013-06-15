@@ -15,7 +15,7 @@ void compass_load()
 
 void compass_default()
 {
-  //Serial3.println(compass.real_north());
+  Serial.println(compass.real_north());
 }
 
 void serial_compass_loop_start()

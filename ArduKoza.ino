@@ -22,11 +22,11 @@ int kicker_time = 23;
 #define PORT_DRIBBLER 28
 #define PORT_KICKER 24
 
-#define BUTTON1 12
-#define BUTTON2 11
+#define BUTTON1 11 //motion
+#define BUTTON2 9 //compass
 
-#define LED1 13
-#define LED2 10
+#define LED1 12 //motion
+#define LED2 10 //compass
 
 #define LEFT_NEAR 370
 #define RIGHT_NEAR 390
@@ -225,6 +225,7 @@ void loop()
   
   if (motion_running) {
     digitalWrite(LED1, HIGH);
+
     motion();
   } else {
     analogWrite(LED1, LOW);
