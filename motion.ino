@@ -225,7 +225,7 @@ void halt()
 
 void back_right()
 {
-  action = 'B';
+  action = 'R';
   
   motorA.stop();
   motorB.go(-speed);
@@ -234,7 +234,7 @@ void back_right()
 
 void back_left()
 {
-  action = 'B';
+  action = 'L';
   
   motorA.go(speed);
   motorB.stop();

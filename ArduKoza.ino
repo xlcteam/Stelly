@@ -17,15 +17,15 @@ int speed_rotate=150;
 int range = 16;
 int kicker_time = 23;
 
-#define DRIBB_SENSOR_PORT 50
+#define DRIBB_SENSOR_PORT 53
 
 #define PORT_DRIBBLER 28
 #define PORT_KICKER 24
 
-#define BUTTON1 36 //motion
+#define BUTTON1 12 //motion
 #define BUTTON2 51 //compass
 
-#define LED1 37 //motion
+#define LED1 13 //motion
 #define LED2 50 //compass
 
 #define LEFT_NEAR 370
