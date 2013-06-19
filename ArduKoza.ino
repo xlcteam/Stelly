@@ -22,11 +22,11 @@ int kicker_time = 23;
 #define PORT_DRIBBLER 28
 #define PORT_KICKER 24
 
-#define BUTTON1 11 //motion
-#define BUTTON2 9 //compass
+#define BUTTON1 36 //motion
+#define BUTTON2 51 //compass
 
-#define LED1 12 //motion
-#define LED2 10 //compass
+#define LED1 37 //motion
+#define LED2 50 //compass
 
 #define LEFT_NEAR 370
 #define RIGHT_NEAR 390
@@ -40,8 +40,8 @@ int clearing[] = {5,  0,  0,  0,  0,  0,  0};
 int line_sensors[] = {A1, A2, A3};
 
 Motor motorA = Motor(4, 5);
-Motor motorB = Motor(2, 3);
-Motor motorC = Motor(7, 6);
+Motor motorB = Motor(7, 6);
+Motor motorC = Motor(11, 10);
 Motor dribbler = Motor(8, 9);
 
 RelativeNXTCompass compass;
