@@ -13,7 +13,7 @@
 //Constants
 int speed=255;
 int speed_min=60;
-int speed_rotate=200;
+int speed_rotate=150;
 int range = 16;
 int kicker_time = 23;
 
