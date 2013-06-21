@@ -65,7 +65,7 @@ void motion()
         Serial.print(action);
         Serial.print(" ");    
         Serial.println("from white");
-        delay(500);        
+        delay(400);        
         return;
         break;
         
@@ -74,7 +74,7 @@ void motion()
         Serial.print(action);
         Serial.print(" ");    
         Serial.println("from white");
-        delay(500);        
+        delay(400);        
         return;
         break;    
         

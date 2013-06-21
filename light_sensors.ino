@@ -19,7 +19,7 @@ void line_sensors_all()
     }
   }
   
-  if (max_val > 550) max_s = -1;
+  if (max_val > 130) max_s = -1;
   
   vic_print(max_s + 1);
   vic_println();
@@ -40,7 +40,7 @@ int max_line_sensor()
     }
   }
   
-  if (max_val > 550) max_s = -1;
+  if (max_val > 130) max_s = -1;
   
   return max_s + 1;
 

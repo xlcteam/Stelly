@@ -11,9 +11,9 @@
 #include <vic.h>
 
 //Constants
-int speed=255;
+int speed=230;
 int speed_min=60;
-int speed_rotate=150;
+int speed_rotate=130;
 int range = 16;
 int kicker_time = 23;
 
@@ -177,7 +177,7 @@ void setup()
   vic_var_set_bind("speed", "255", &speed);
   vic_var_set_bind("mspeed", "60", &speed_min);
   vic_var_set_bind("rspeed", "200", &speed_rotate);
-  vic_var_set_bind("range", "16", &speed_rotate);
+  vic_var_set_bind("range", "16", &range);
   vic_var_set_bind("kick", "23", &kicker_time);   
   
 
