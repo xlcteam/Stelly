@@ -37,7 +37,7 @@ int sensors[] =  {0,  1,  2,  3,  5,  6,  7};
 //int clearing[] = {-200,  -200,  -200,  -200,  -200,  -200,  -200};
 int clearing[] = {5,  0,  0,  0,  0,  0,  0};
 
-int line_sensors[] = {A1, A2, A3};
+int line_sensors[] = {A1, A2, A3, A4};
 
 Motor motorA = Motor(4, 5);
 Motor motorB = Motor(7, 6);
