@@ -15,18 +15,20 @@ int speed=230;
 int speed_min=60;
 int speed_rotate=130;
 int range = 16;
-int kicker_time = 23;
+int kicker_time = 30;
 
 #define DRIBB_SENSOR_PORT 53
 
 #define PORT_DRIBBLER 28
-#define PORT_KICKER 24
+#define PORT_KICKER 2
 
 #define BUTTON1 12 //motion
 #define BUTTON2 51 //compass
-
+#define BUTTON3 30 //kick
+ 
 #define LED1 13 //motion
 #define LED2 50 //compass
+#define LED3 31 //kick
 
 #define LEFT_NEAR 370
 #define RIGHT_NEAR 390
@@ -58,7 +60,7 @@ int rotate_running;
 int us_loop = 0;
 
 int dribbler_state = 0;
-
+int kicking_running = 0;
 
 int rotated = 0;
 char todo;
@@ -98,9 +100,11 @@ void setup()
   
   pinMode(LED1, OUTPUT);
   pinMode(LED2, OUTPUT);
+  pinMode(LED3, OUTPUT);
   
   pinMode(BUTTON1, INPUT);
   pinMode(BUTTON2, INPUT);
+  pinMode(BUTTON3, INPUT);
   
   
   pinMode(32, OUTPUT);
@@ -108,6 +112,8 @@ void setup()
   pinMode(36, OUTPUT);
   pinMode(34, OUTPUT);
   digitalWrite(34, LOW); // kicker
+  
+  digitalWrite(PORT_KICKER, 0);
   
   
   Serial.begin(115200);
@@ -174,6 +180,9 @@ void setup()
   
   vic_fn_add("ibn", &is_ball_near);  
   
+  vic_fn_add("kd", &kicking_start);
+  vic_fn_add("KD", &kicking_stop);
+  
   vic_var_set_bind("speed", "255", &speed);
   vic_var_set_bind("mspeed", "60", &speed_min);
   vic_var_set_bind("rspeed", "200", &speed_rotate);
@@ -222,6 +231,17 @@ void loop()
     digitalWrite(LED2, LOW);
   }  
   
+  if (digitalRead(BUTTON3) == 1) {
+    vic_println(kicking_running);
+    if (kicking_running == 0 ){
+      kicking_start();
+    } else {
+      kicking_stop();
+    }
+    
+    while(digitalRead(BUTTON3) == 1); 
+  }
+  
   
   if (motion_running) {
     digitalWrite(LED1, HIGH);
@@ -229,6 +249,13 @@ void loop()
     motion();
   } else {
     analogWrite(LED1, LOW);
+  }
+  
+  if (kicking_running) {
+    digitalWrite(LED3, HIGH);
+    kicking();
+  } else {
+    analogWrite(LED3, LOW);
   }
   
   if(simple_motion_running){

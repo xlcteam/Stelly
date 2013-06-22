@@ -62,18 +62,18 @@ void motion()
     switch (action) {
       case 'L':
         right();
-        Serial.print(action);
+        /*Serial.print(action);
         Serial.print(" ");    
-        Serial.println("from white");
+        Serial.println("from white");*/
         delay(400);        
         return;
         break;
         
       case 'R':
         left();
-        Serial.print(action);
+        /*Serial.print(action);
         Serial.print(" ");    
-        Serial.println("from white");
+        Serial.println("from white");*/
         delay(400);        
         return;
         break;    
@@ -128,16 +128,15 @@ void motion()
     case 1:
       dribbler_on();
       /*
-      if (ball_in_dribbler() && (analogRead(sensors[0]) < 310) ) {
+      if (ball_in_dribbler()) {
         stopAllMotors();
-        delay(200);
+        delay(500);
         if (ball_in_dribbler()) {
-          kick();
+          //kick();
+          kick_and_drib();
         }
-        
-        return;
-      }
-      */
+      }*/
+      
       up();
       break;
       
