@@ -47,6 +47,7 @@ void motion()
 {
   
   int range = 7;
+  int randNumber;
   if (!centered(range)) {
     centralize();
     Serial.println("centralizing!");
@@ -127,8 +128,7 @@ void motion()
     
     case 1:
       dribbler_on();
-      /*
-      if (ball_in_dribbler()) {
+      /*if (ball_in_dribbler()) {
         stopAllMotors();
         delay(500);
         if (ball_in_dribbler()) {

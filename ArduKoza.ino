@@ -11,7 +11,7 @@
 #include <vic.h>
 
 //Constants
-int speed=230;
+int speed=255;
 int speed_min=60;
 int speed_rotate=130;
 int range = 16;

@@ -21,10 +21,13 @@ void kicking_stop()
 void kick_and_drib()
 {
   dribbler_off();
+  delay(50);
   kick();
+  up();
   dribbler.go(-255);
   delay(100);
   dribbler_off();
+  stopAllMotors();
 }
 
 void kicking ()
