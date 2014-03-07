@@ -38,6 +38,7 @@ boolean centered(int range)
 void centralize() 
 {
   int c = (int) compass.angle();
+  check_light_sensors();
   if (c > 180) {
     c = 360 - c;
     rrotate(speed_rotate/2 + (c*speed_rotate/180));

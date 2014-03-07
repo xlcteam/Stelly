@@ -22,6 +22,9 @@ int kicker_time = 30;
 #define PORT_DRIBBLER 28
 #define PORT_KICKER 2
 
+#define US_LEFT_R_PIN 35
+#define US_LEFT_W_PIN 34
+
 #define BUTTON1 12 //motion
 #define BUTTON2 51 //compass
 #define BUTTON3 30 //kick
@@ -57,10 +60,10 @@ int compass_loop;
 int simple_motion_running = 0;
 int smotion_running = 0;
 int rotate_running;
-int us_loop = 0;
 
 int dribbler_state = 0;
 int kicking_running = 0;
+int ultrasonic_running = 0;
 
 int rotated = 0;
 char todo;
@@ -106,12 +109,13 @@ void setup()
   pinMode(BUTTON2, INPUT);
   pinMode(BUTTON3, INPUT);
   
+  pinMode(US_LEFT_R_PIN, INPUT);
+  pinMode(US_LEFT_W_PIN, OUTPUT);
+  
   
   pinMode(32, OUTPUT);
   pinMode(30, OUTPUT);
   pinMode(36, OUTPUT);
-  pinMode(34, OUTPUT);
-  digitalWrite(34, LOW); // kicker
   
   digitalWrite(PORT_KICKER, 0);
   
@@ -182,6 +186,9 @@ void setup()
   
   vic_fn_add("kd", &kicking_start);
   vic_fn_add("KD", &kicking_stop);
+  
+  vic_fn_add("ul", &ultrasonic_left_start);
+  vic_fn_add("UL", &ultrasonic_left_stop);
   
   vic_var_set_bind("speed", "255", &speed);
   vic_var_set_bind("mspeed", "60", &speed_min);
@@ -264,7 +271,10 @@ void loop()
   } else {
     analogWrite(LED1, LOW);
   }
-  
+
+  if (ultrasonic_running){
+    us_loop();
+  }
 
   if (esensors_loop) {
     esensors_all();
