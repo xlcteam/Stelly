@@ -58,34 +58,8 @@ void motion()
     //up();
   }
   
-  /*int line_sensor = max_line_sensor();
-  if (line_sensor != 0 && action != ' ') {
-    switch (action) {
-      case 'L':
-        right();
-
-        delay(400);        
-        return;
-        break;
-        
-      case 'R':
-        left();
-
-        delay(400);        
-        return;
-        break;    
-        
-      //case 'U':
-       // back();
-       // break;
-      
-      //case 'B':
-       // up();
-       // break;      
-    }
-
-  }*/
   
+  check_light_sensors();  
 
   
   int sensor = max_sensor();
