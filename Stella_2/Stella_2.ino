@@ -33,6 +33,12 @@ int kicker_time = 30;
 #define LED2 50 //compass
 #define LED3 31 //kick
 
+// touch1 - down, touch2 - up
+#define TOUCH_IN 45
+#define TOUCH_OUT 44
+#define TOUCH2_IN 43
+#define TOUCH2_OUT 42
+
 #define LEFT_NEAR 370
 #define RIGHT_NEAR 390
 #define REAR_NEAR 320
@@ -111,6 +117,11 @@ void setup()
   
   pinMode(US_LEFT_R_PIN, INPUT);
   pinMode(US_LEFT_W_PIN, OUTPUT);
+  
+  pinMode(TOUCH_IN, INPUT);
+  pinMode(TOUCH_OUT, OUTPUT);
+  pinMode(TOUCH2_IN, INPUT);
+  pinMode(TOUCH2_OUT, OUTPUT);
   
   
   pinMode(32, OUTPUT);
@@ -203,14 +214,7 @@ void setup()
 void loop()
 {  
   //Serial.println("l");
-  /*
-  if(Serial3.available()){
-    char a = Serial3.read();
-    Serial.print("incoming: ");
-    Serial.println(a);
-  }
-  */
-  
+ 
   if(Serial.available()){
     char a = Serial.read();
     vic_process(a);
@@ -239,12 +243,7 @@ void loop()
   }  
   
   if (digitalRead(BUTTON3) == 1) {
-    vic_println(kicking_running);
-    if (kicking_running == 0 ){
-      kicking_start();
-    } else {
-      kicking_stop();
-    }
+    kick();
     
     while(digitalRead(BUTTON3) == 1); 
   }

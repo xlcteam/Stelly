@@ -1,8 +1,20 @@
 void kick()
 {
-  digitalWrite(PORT_KICKER, 1);
+  /*digitalWrite(PORT_KICKER, 1);
   delay(kicker_time);
-  digitalWrite(PORT_KICKER, 0);
+  digitalWrite(PORT_KICKER, 0);*/
+  
+  digitalWrite(TOUCH_OUT, HIGH);
+  while(digitalRead(TOUCH_IN)){
+    dribbler.go(-255);
+  }
+  dribbler.stop();
+  
+  digitalWrite(TOUCH2_OUT, HIGH);
+  while(digitalRead(TOUCH2_IN)){
+    dribbler.go(255);
+  }
+  dribbler.stop();
 }
 
 void kicking_start()
@@ -14,7 +26,7 @@ void kicking_start()
 void kicking_stop()
 {
   kicking_running = 0;
-  dribbler_off();
+  //dribbler_off();
   vic_println("Kicking stopped");
 }
 
@@ -32,13 +44,15 @@ void kick_and_drib()
 
 void kicking ()
 {
-  dribbler_on();
+  /*dribbler_on();
   delay(2000);
   dribbler_off();
   kick();
   dribbler.go(-255);
   delay(100);
-  dribbler_off();
+  dribbler_off();*/
+  
+  kick();
 }
 
 
