@@ -64,12 +64,6 @@ void motion()
   
   int sensor = max_sensor();
   
-  // fixating sensor 2 and 7 so that sensor 1 doesn't see everything
-/*  if (sensor == 1 && analogRead(sensors[6]) < LEFT_NEAR)
-    sensor = 7;
-
-  if (sensor == 1 && analogRead(sensors[1]) < RIGHT_NEAR)
-    sensor = 2;*/
   dribbler_off();
   switch (sensor) {
     case 2:
