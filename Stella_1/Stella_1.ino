@@ -27,11 +27,11 @@ int kicker_time = 30;
 
 #define BUTTON1 12 //motion
 #define BUTTON2 51 //compass
-#define BUTTON3 30 //kick
+#define BUTTON3 32 //kick
  
 #define LED1 13 //motion
 #define LED2 50 //compass
-#define LED3 31 //kick
+#define LED3 33 //kick
 
 #define LEFT_NEAR 370
 #define RIGHT_NEAR 390
