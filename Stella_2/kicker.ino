@@ -12,7 +12,7 @@ void kick()
   
   digitalWrite(TOUCH2_OUT, HIGH);
   while(digitalRead(TOUCH2_IN)){
-    dribbler.go(255);
+    dribbler.go(100);
   }
   dribbler.stop();
 }

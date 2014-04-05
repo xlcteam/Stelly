@@ -27,11 +27,11 @@ int kicker_time = 30;
 
 #define BUTTON1 12 //motion
 #define BUTTON2 51 //compass
-#define BUTTON3 30 //kick
+#define BUTTON3 32 //kick
  
 #define LED1 13 //motion
 #define LED2 50 //compass
-#define LED3 31 //kick
+#define LED3 33 //kick
 
 // touch1 - down, touch2 - up
 #define TOUCH_IN 45
@@ -124,9 +124,9 @@ void setup()
   pinMode(TOUCH2_OUT, OUTPUT);
   
   
-  pinMode(32, OUTPUT);
+  /*pinMode(32, OUTPUT);
   pinMode(30, OUTPUT);
-  pinMode(36, OUTPUT);
+  pinMode(36, OUTPUT);*/
   
   digitalWrite(PORT_KICKER, 0);
   
@@ -243,9 +243,11 @@ void loop()
   }  
   
   if (digitalRead(BUTTON3) == 1) {
+    digitalWrite(LED3, HIGH);
     kick();
     
     while(digitalRead(BUTTON3) == 1); 
+    digitalWrite(LED3, LOW);
   }
   
   
@@ -257,12 +259,12 @@ void loop()
     analogWrite(LED1, LOW);
   }
   
-  if (kicking_running) {
+  /*if (kicking_running) {
     digitalWrite(LED3, HIGH);
     kicking();
   } else {
     analogWrite(LED3, LOW);
-  }
+  }*/
   
   if(simple_motion_running){
     analogWrite(LED1, HIGH);

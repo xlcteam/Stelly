@@ -42,7 +42,9 @@ int max_sensor()
     sensor = 6;
   
   }*/
-  
+
+  if (sensor == 1 && s3 > 115)
+     kick(); 
   
   return sensor;
 }
