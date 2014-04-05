@@ -70,15 +70,15 @@ void motion()
 
   if (sensor == 1 && analogRead(sensors[1]) < RIGHT_NEAR)
     sensor = 2;*/
-  dribbler_off();
+  //dribbler_off();
   switch (sensor) {
     case 2:
       right();
-      dribbler_on();
+      //dribbler_on();
       break; 
       
      case 7:
-      dribbler_on();
+      //dribbler_on();
       left();
       break;
     
@@ -97,7 +97,7 @@ void motion()
       break;
     
     case 1:
-      dribbler_on();
+      //dribbler_on();
       /*if (ball_in_dribbler()) {
         stopAllMotors();
         delay(500);
@@ -112,7 +112,7 @@ void motion()
       
       
     default:
-      dribbler_off();
+      //dribbler_off();
       stopAllMotors();
       break;
   }
