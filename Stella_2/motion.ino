@@ -48,6 +48,9 @@ void motion()
   
   int range = 7;
   int randNumber;
+  
+  check_light_sensors();  
+  
   if (!centered(range)) {
     centralize();
     Serial.println("centralizing!");
@@ -57,10 +60,6 @@ void motion()
     
     //up();
   }
-  
-  
-  check_light_sensors();  
-
   
   int sensor = max_sensor();
   
