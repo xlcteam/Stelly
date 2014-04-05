@@ -9,12 +9,14 @@ void kick()
     dribbler.go(-255);
   }
   dribbler.stop();
+  digitalWrite(TOUCH_OUT, LOW);
   
   digitalWrite(TOUCH2_OUT, HIGH);
   while(digitalRead(TOUCH2_IN)){
     dribbler.go(100);
   }
   dribbler.stop();
+  digitalWrite(TOUCH2_OUT, LOW);
 }
 
 void kicking_start()
