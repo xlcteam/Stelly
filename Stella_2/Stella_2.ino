@@ -34,10 +34,10 @@ int kicker_time = 30;
 #define LED3 33 //kick
 
 // touch1 - down, touch2 - up
-#define TOUCH_IN 45
-#define TOUCH_OUT 44
-#define TOUCH2_IN 43
-#define TOUCH2_OUT 42
+#define TOUCH_IN 43
+#define TOUCH_OUT 41
+#define TOUCH2_IN 47
+#define TOUCH2_OUT 45
 
 #define LEFT_NEAR 370
 #define RIGHT_NEAR 390

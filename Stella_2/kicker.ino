@@ -5,14 +5,14 @@ void kick()
   digitalWrite(PORT_KICKER, 0);*/
   
   digitalWrite(TOUCH_OUT, HIGH);
-  while(digitalRead(TOUCH_IN)){
+  while(digitalRead(TOUCH_IN)== 1){
     dribbler.go(-255);
   }
   dribbler.stop();
   digitalWrite(TOUCH_OUT, LOW);
   
   digitalWrite(TOUCH2_OUT, HIGH);
-  while(digitalRead(TOUCH2_IN)){
+  while(digitalRead(TOUCH2_IN) == 1){
     dribbler.go(100);
   }
   dribbler.stop();
