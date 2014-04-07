@@ -51,37 +51,33 @@ int max_line_sensor()
 
 }
 
-void check_light_sensors()
+boolean check_light_sensors()
 {
   int line_sensor = max_line_sensor();
-  if (line_sensor != 0 && action != ' ') {
-    switch (action) {
+  if (line_sensor != 0 && v_action != ' ' && h_action != ' ') {
+    switch (h_action) {
       case 'L':
-        right();
-        /*Serial.print(action);
-        Serial.print(" ");    
-        Serial.println("from white");*/
-        delay(400);        
-        return;
+        if (v_action == 'U')
+          back_right();
+        else if (v_action == 'B')
+          up_right();
+        delay(400);
+        stopAllMotors();        
+        return true;
         break;
         
       case 'R':
+        if (v_action == 'U')
+          back_left();
+        else if (v_action == 'B')
+          up_left();
         left();
-        /*Serial.print(action);
-        Serial.print(" ");    
-        Serial.println("from white");*/
-        delay(400);        
-        return;
-        break;    
-        
-    /*  case 'U':
-        back();
-        break;
-      
-      case 'B':
-        up();
-        break;    */  
+        delay(400);
+        stopAllMotors();       
+        return true;
+        break; 
     }
-
+  } else {
+    return false;
   }
 }

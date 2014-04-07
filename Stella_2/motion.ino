@@ -49,11 +49,11 @@ void motion()
   int range = 7;
   int randNumber;
   
-  check_light_sensors();  
+  if (check_light_sensors()) return;  
   
   if (!centered(range)) {
     centralize();
-    Serial.println("centralizing!");
+    //Serial.println("centralizing!");
     return;
   } else {
     stopAllMotors();
@@ -63,12 +63,6 @@ void motion()
   
   int sensor = max_sensor();
   
-  // fixating sensor 2 and 7 so that sensor 1 doesn't see everything
-/*  if (sensor == 1 && analogRead(sensors[6]) < LEFT_NEAR)
-    sensor = 7;
-
-  if (sensor == 1 && analogRead(sensors[1]) < RIGHT_NEAR)
-    sensor = 2;*/
   //dribbler_off();
   switch (sensor) {
     case 2:
@@ -149,7 +143,7 @@ void is_ball_near_right()
 
 void right()
 {
-  action = 'R';
+  h_action = 'R';
   
   motorA.go(-speed/2);
   motorB.go(-speed/2);
@@ -158,7 +152,7 @@ void right()
 
 void left()
 {
-  action = 'L';
+  h_action = 'L';
   
   motorA.go(speed/2);
   motorB.go(speed/2);
@@ -167,7 +161,7 @@ void left()
 
 void up()
 {
-  //action = 'U';
+  v_action = 'U';
   
   motorA.go(-speed);
   motorB.go(speed);
@@ -176,7 +170,7 @@ void up()
 
 void back()
 {
-  //action = 'B';
+  v_action = 'B';
 
   motorA.go(speed);
   motorB.go(-speed);
@@ -191,9 +185,30 @@ void halt()
   motorC.stop();
 }
 
+void up_right()
+{
+  h_action = 'L';
+  v_action = 'U';
+  
+  motorA.go(-speed);
+  motorB.stop();
+  motorC.go(speed);
+}
+
+void up_left()
+{
+  h_action = 'R';
+  v_action = 'U';
+  
+  motorA.stop();
+  motorB.go(speed);
+  motorC.go(-speed);
+}
+
 void back_right()
 {
-  action = 'R';
+  h_action = 'R';
+  v_action = 'B';
   
   motorA.stop();
   motorB.go(-speed);
@@ -202,7 +217,8 @@ void back_right()
 
 void back_left()
 {
-  action = 'L';
+  h_action = 'L';
+  v_action = 'B';
   
   motorA.go(speed);
   motorB.stop();

@@ -58,7 +58,8 @@ Motor dribbler = Motor(8, 9);
 RelativeNXTCompass compass;
 HTIRSeekerV2 seeker;
 
-char action = ' ';
+char h_action = ' ';
+char v_action = ' ';
 
 int motion_running = 0;
 int esensors_loop = 0;
