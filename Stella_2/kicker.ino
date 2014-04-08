@@ -5,7 +5,7 @@ void kick()
   digitalWrite(PORT_KICKER, 0);*/
   
   digitalWrite(TOUCH_OUT, HIGH);
-  while(digitalRead(TOUCH_IN)== 1){
+  while(digitalRead(TOUCH_IN)== 0){
     dribbler.go(-255);
   }
   dribbler.stop();
