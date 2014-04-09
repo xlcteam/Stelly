@@ -91,14 +91,10 @@ void motion()
     
     case 1:
       //dribbler_on();
-      /*if (ball_in_dribbler()) {
+      if (ball_in_dribbler()) {
         stopAllMotors();
-        delay(500);
-        if (ball_in_dribbler()) {
-          //kick();
-          kick_and_drib();
-        }
-      }*/
+        kick();
+      }
       
       up();
       break;

@@ -43,6 +43,9 @@ int kicker_time = 30;
 #define RIGHT_NEAR 390
 #define REAR_NEAR 320
 
+
+#define PHOTOGATE A5
+
 // sensors without 5th sensor
 int sensors[] =  {0,  1,  2,  3,  5,  6,  7};
 //int clearing[] = {-200,  -200,  -200,  -200,  -200,  -200,  -200};
@@ -74,6 +77,8 @@ int ultrasonic_running = 0;
 
 int rotated = 0;
 char todo;
+
+uint8_t dir, s1, s2, s3, s4, s5;
 
 int board_connected = 0;
 

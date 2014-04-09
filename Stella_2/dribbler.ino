@@ -23,5 +23,6 @@ void dribbler_toggle()
 
 int ball_in_dribbler()
 {
-  return digitalRead(DRIBB_SENSOR_PORT) == 0;
+  return (analogRead(PHOTOGATE) == 1023 && s3 > 100);
+  //return digitalRead(DRIBB_SENSOR_PORT) == 0;
 }

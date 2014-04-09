@@ -1,6 +1,5 @@
 int max_sensor()
 {
-  uint8_t dir, s1, s2, s3, s4, s5;
   seeker.read(&dir, &s1, &s2, &s3, &s4, &s5);
   
   int sensor = 0;
@@ -42,16 +41,13 @@ int max_sensor()
     sensor = 6;
   
   }*/
-
-  if (sensor == 1 && s3 > 115)
-     kick(); 
   
   return sensor;
 }
 
 void sensors_all()
 {  
-  uint8_t dir, s1, s2, s3, s4, s5;
+  //uint8_t dir, s1, s2, s3, s4, s5;
   seeker.read(&dir, &s1, &s2, &s3, &s4, &s5);
 
   //vic_print(analogRead(A0));
