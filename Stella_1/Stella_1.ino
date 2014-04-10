@@ -16,6 +16,7 @@ int speed_min=60;
 int speed_rotate=130;
 int range = 16;
 int kicker_time = 30;
+int line_min_value = 55;
 
 #define DRIBB_SENSOR_PORT 53
 
