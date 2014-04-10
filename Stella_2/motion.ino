@@ -93,6 +93,14 @@ void motion()
       //dribbler_on();
       if (ball_in_dribbler()) {
         stopAllMotors();
+        if(h_action == 'L'){
+            motorC.go(-200);
+            delay(150);
+        } else if (h_action == 'R'){
+            motorC.go(200);
+            delay(100);
+        }
+        stopAllMotors();
         kick();
       }
       
