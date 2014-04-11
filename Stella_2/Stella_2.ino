@@ -42,7 +42,7 @@ int line_min_value = 55;
 
 #define LEFT_NEAR 370
 #define RIGHT_NEAR 390
-#define REAR_NEAR 320
+#define REAR_NEAR 400
 
 
 #define PHOTOGATE A5
