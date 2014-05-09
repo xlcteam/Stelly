@@ -37,10 +37,9 @@ int max_sensor()
   
   // This means that the sensor is directly behind the robot.
   // A dangerous situation, setting sensor to 6 means the robot will move to some side 
-  if (analogRead(A12) < REAR_NEAR) {
+  /*if (analogRead(A12) < REAR_NEAR) {
     sensor = 6;
-  
-  }
+  }*/
   
   return sensor;
 }
