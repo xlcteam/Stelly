@@ -6,7 +6,6 @@
 // if you want debug info from vic, uncomment line below
 // #define DEBUG
 
-
 #define VIC_ARDUINO_SERIAL Serial
 #include <vic.h>
 
@@ -19,6 +18,8 @@ int kicker_time = 30;
 int line_min_value = 55;
 
 #define DRIBB_SENSOR_PORT 53
+
+#define TSOP_PORT A12
 
 #define PORT_DRIBBLER 28
 #define PORT_KICKER 2
@@ -44,7 +45,6 @@ int line_min_value = 55;
 #define RIGHT_NEAR 390
 #define REAR_NEAR 400
 
-
 #define PHOTOGATE A5
 
 // sensors without 5th sensor
@@ -66,7 +66,6 @@ char h_action = ' ';
 char v_action = ' ';
 
 int motion_running = 0;
-int esensors_loop = 0;
 int compass_loop;
 int simple_motion_running = 0;
 int smotion_running = 0;
@@ -103,10 +102,7 @@ void test()
     motorC.go(speed_rotate-(speed_rotate*c/180));
     motorD.go(speed_rotate);
     */
-  }
-  
-  
-  
+  } 
 }
 
 void setup()
@@ -130,13 +126,9 @@ void setup()
   pinMode(TOUCH2_IN, INPUT);
   pinMode(TOUCH2_OUT, OUTPUT);
   
-  
-  /*pinMode(32, OUTPUT);
-  pinMode(30, OUTPUT);
-  pinMode(36, OUTPUT);*/
-  
+  pinMode(PORT_DRIBBLER, OUTPUT);
+  pinMode(PORT_KICKER, OUTPUT);
   digitalWrite(PORT_KICKER, 0);
-  
   
   Serial.begin(115200);
   //Serial3.begin(115200);
@@ -145,16 +137,10 @@ void setup()
   stopAllMotors();
   
   Wire.begin();
-
-  //dribbler
-  pinMode(PORT_DRIBBLER, OUTPUT);
-  pinMode(PORT_KICKER, OUTPUT);
   
   compass.set_north();   
 
   stopAllMotors();
- 
-  
   
   vic_fn_add("dc", &compass_default);
   vic_fn_add("lc", &compass_load);
@@ -199,9 +185,7 @@ void setup()
   vic_fn_add("smb", &special_movement_back);
   vic_fn_add("sml", &special_movement_left);
   vic_fn_add("smr", &special_movement_right);
-  
-  vic_fn_add("ibn", &is_ball_near);  
-  
+    
   vic_fn_add("kd", &kicking_start);
   vic_fn_add("KD", &kicking_stop);
   
@@ -212,16 +196,17 @@ void setup()
   vic_var_set_bind("mspeed", "60", &speed_min);
   vic_var_set_bind("rspeed", "200", &speed_rotate);
   vic_var_set_bind("range", "16", &range);
-  vic_var_set_bind("kick", "23", &kicker_time);   
-  
-
+  vic_var_set_bind("kick", "23", &kicker_time);
 }
 
 
 void loop()
 {  
-  //Serial.println("l");
- 
+  if(Serial3.available()){
+    char a = Serial3.read();
+    vic_process(a);
+  }
+  
   if(Serial.available()){
     char a = Serial.read();
     vic_process(a);
@@ -239,7 +224,6 @@ void loop()
     
     while(digitalRead(BUTTON1) == 1); 
   }
-  
   
   if (digitalRead(BUTTON2) == 1) {
     vic_println("compass loading");
@@ -266,12 +250,12 @@ void loop()
     analogWrite(LED1, LOW);
   }
   
-  /*if (kicking_running) {
+  if (kicking_running) {
     digitalWrite(LED3, HIGH);
     kicking();
   } else {
     analogWrite(LED3, LOW);
-  }*/
+  }
   
   if(simple_motion_running){
     analogWrite(LED1, HIGH);
@@ -282,10 +266,6 @@ void loop()
 
   if (ultrasonic_running){
     us_loop();
-  }
-
-  if (esensors_loop) {
-    esensors_all();
   }
   
   if (compass_loop){

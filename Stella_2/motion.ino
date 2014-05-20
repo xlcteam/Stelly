@@ -53,12 +53,9 @@ void motion()
   
   if (!centered(range)) {
     centralize();
-    //Serial.println("centralizing!");
     return;
   } else {
     stopAllMotors();
-    
-    //up();
   }
   
   int sensor = max_sensor();
@@ -74,7 +71,6 @@ void motion()
       //dribbler_on();
       left();
       break;
-    
     
     case 3:
       back_right();
@@ -113,36 +109,6 @@ void motion()
       stopAllMotors();
       break;
   }
-  //Serial.println(action);
-/**/
-}
-
-void is_ball_near()
-{
-  int sensor = max_sensor();
-  
-  if (analogRead(sensors[6]) < LEFT_NEAR && sensor == 1){
-    //Serial3.println("left");
-  } else if (analogRead(sensors[1]) < RIGHT_NEAR && sensor == 1) {
-    //Serial3.println("right");
-  } else if (sensor == 1){
-   // Serial3.println("forward");
-  } else {
-    //Serial3.println("0");
-  }
-}
-
-void is_ball_near_right()
-{
-  // near second sensor
-  int sensor = max_sensor();
-  
-  if (analogRead(sensors[1]) < RIGHT_NEAR && sensor == 1){
-    //Serial3.println("1");
-  } else {
-    //Serial3.println("0");
-  }
-
 }
 
 void right()
