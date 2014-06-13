@@ -20,6 +20,7 @@ int line_min_value = 55;
 #define DRIBB_SENSOR_PORT 53
 
 #define TSOP_PORT A0
+#define TSOP_PORT2 A5
 
 #define PORT_DRIBBLER 28
 #define PORT_KICKER 2

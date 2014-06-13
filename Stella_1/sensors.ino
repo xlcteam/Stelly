@@ -1,6 +1,7 @@
 int max_sensor()
 {
   uint8_t dir, s1, s2, s3, s4, s5;
+  uint8_t tsop, tsop2;
   seeker.read(&dir, &s1, &s2, &s3, &s4, &s5);
   
   int sensor = 0;
@@ -38,9 +39,13 @@ int max_sensor()
   
   // This means that the sensor is directly behind the robot.
   // A dangerous situation, setting sensor to 6 means the robot will move to some side 
-  if (analogRead(TSOP_PORT) < REAR_NEAR) {
-    sensor = 6;
+  tsop = analogRead(TSOP_PORT);
+  tsop2 = analogRead(TSOP_PORT2);
   
+  if (tsop < tsop2 && tsop < REAR_NEAR){
+    sensor = 3;
+  } else if (tsop2 < tsop && tsop2 < REAR_NEAR){
+    sensor = 6;
   }
  
   return sensor;
@@ -52,6 +57,9 @@ void sensors_all()
   seeker.read(&dir, &s1, &s2, &s3, &s4, &s5);
 
   vic_print(analogRead(TSOP_PORT));
+  vic_print(" ");
+  
+  vic_print(analogRead(TSOP_PORT2));
   vic_print(" ");
   
   vic_print(s1);
