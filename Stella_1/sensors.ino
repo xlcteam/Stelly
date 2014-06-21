@@ -8,7 +8,7 @@ int max_sensor()
   uint8_t tsop, tsop2;
 
   uint8_t TOO_CLOSE = 320;
-  uint8_t CLOSE;
+  uint8_t CLOSE = 390;
 
   seeker.read(&dir, &s1, &s2, &s3, &s4, &s5);
   
@@ -44,13 +44,11 @@ int max_sensor()
       sensor = 2;
       break;
   }
-  
-  // This means that the sensor is directly behind the robot.
-  // A dangerous situation, setting sensor to 6 means the robot will move to some side 
-  tsop = analogRead(TSOP_PORT);
-  tsop2 = analogRead(TSOP_PORT2);
-  
-  if (dir == 0 || dir == 1 || dir == 2 || dir == 3 || dir == 7 || dir == 8 || dir == 9){
+
+  /* direction is zero when the ball is behind the robot, so the IRSeeker doesnt see it */
+  if (dir == 0){
+      tsop = analogRead(TSOP_PORT);
+      tsop2 = analogRead(TSOP_PORT2);
       if ((tsop < tsop2) && (tsop < REAR_NEAR)){
           if (tsop < TOO_CLOSE){
               sensor = 6;
