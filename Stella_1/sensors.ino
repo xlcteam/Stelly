@@ -1,7 +1,15 @@
+/*
+    tsop A5 -> left
+    tsop A0 -> right
+*/
 int max_sensor()
 {
   uint8_t dir, s1, s2, s3, s4, s5;
   uint8_t tsop, tsop2;
+
+  uint8_t TOO_CLOSE = 320;
+  uint8_t CLOSE;
+
   seeker.read(&dir, &s1, &s2, &s3, &s4, &s5);
   
   int sensor = 0;
@@ -42,12 +50,26 @@ int max_sensor()
   tsop = analogRead(TSOP_PORT);
   tsop2 = analogRead(TSOP_PORT2);
   
-  if (tsop < tsop2 && tsop < REAR_NEAR){
-    sensor = 3;
-  } else if (tsop2 < tsop && tsop2 < REAR_NEAR){
-    sensor = 6;
+  if (dir == 0 || dir == 1 || dir == 2 || dir == 3 || dir == 7 || dir == 8 || dir == 9){
+      if ((tsop < tsop2) && (tsop < REAR_NEAR)){
+          if (tsop < TOO_CLOSE){
+              sensor = 6;
+          } else if (tsop < CLOSE){
+              sensor = 5;
+          } else {
+              sensor = 3;
+          }
+      } else if ((tsop2 < tsop) && (tsop2 < REAR_NEAR)){
+          if (tsop2 < TOO_CLOSE){
+              sensor = 3;
+          } else if (tsop2 < CLOSE){
+              sensor = 5;
+          } else {
+              sensor = 6;
+          }
+      }
   }
- 
+
   return sensor;
 }
 
