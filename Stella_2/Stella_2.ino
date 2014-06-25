@@ -46,7 +46,8 @@ int line_min_value = 55;
 #define RIGHT_NEAR 390
 #define REAR_NEAR 400
 
-//#define PHOTOGATE A5
+// not used
+#define PHOTOGATE A5
 
 int line_sensors[] = {A2, A3, A4, A5};
 
