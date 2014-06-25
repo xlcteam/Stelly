@@ -44,10 +44,7 @@ void stopAllMotors()
 
 
 void motion()
-{
-  
-  int range = 7;
-  
+{  
   if (check_light_sensors()) return;  
   
   if (!centered(range)) {
@@ -86,7 +83,7 @@ void motion()
     
     case 1:
       //dribbler_on();
-      if (ball_in_dribbler()) {
+      /*if (ball_in_dribbler()) {
         stopAllMotors();
         if(h_action == 'L'){
             motorC.go(-200);
@@ -97,7 +94,7 @@ void motion()
         }
         stopAllMotors();
         kick();
-      }
+      }*/
       
       up();
       break;

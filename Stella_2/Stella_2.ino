@@ -12,10 +12,10 @@
 //Constants
 int speed=255;
 int speed_min=60;
-int speed_rotate=90; // 130
-int range = 16;
+int speed_rotate=70; // 90
+int range = 9;
 int kicker_time = 30;
-int line_min_value = 55;
+int line_min_value = 90;
 
 #define DRIBB_SENSOR_PORT 53
 
