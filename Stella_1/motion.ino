@@ -47,7 +47,6 @@ void motion()
 {
   
   int range = 7;
-  int randNumber;
   
   if (check_light_sensors()) return;
   
