@@ -66,13 +66,15 @@ void motion()
   dribbler_off();
   switch (sensor) {
     case 2:
-      right();
+      //right();
+      up_right();
       dribbler_on();
       break; 
       
      case 7:
+      //left();
+      up_left();
       dribbler_on();
-      left();
       break;
     
     

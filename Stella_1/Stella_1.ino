@@ -116,7 +116,6 @@ void setup()
   pinMode(PORT_KICKER, OUTPUT);
   digitalWrite(PORT_KICKER, 0);
   
-  
   Serial.begin(115200);
   //Serial3.begin(115200);
   vic_init(115200);
