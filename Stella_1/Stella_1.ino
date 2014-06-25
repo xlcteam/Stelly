@@ -40,11 +40,6 @@ int line_min_value = 55;
 #define RIGHT_NEAR 390
 #define REAR_NEAR 450
 
-// sensors without 5th sensor
-int sensors[] =  {0,  1,  2,  3,  5,  6,  7};
-//int clearing[] = {-200,  -200,  -200,  -200,  -200,  -200,  -200};
-int clearing[] = {5,  0,  0,  0,  0,  0,  0};
-
 int line_sensors[] = {A1, A2, A3, A4};
 
 Motor motorA = Motor(4, 5);

@@ -19,7 +19,8 @@ int line_min_value = 55;
 
 #define DRIBB_SENSOR_PORT 53
 
-#define TSOP_PORT A12
+#define TSOP_PORT A8
+#define TSOP_PORT2 A9
 
 #define PORT_DRIBBLER 28
 #define PORT_KICKER 2
@@ -45,12 +46,7 @@ int line_min_value = 55;
 #define RIGHT_NEAR 390
 #define REAR_NEAR 400
 
-#define PHOTOGATE A5
-
-// sensors without 5th sensor
-int sensors[] =  {0,  1,  2,  3,  5,  6,  7};
-//int clearing[] = {-200,  -200,  -200,  -200,  -200,  -200,  -200};
-int clearing[] = {5,  0,  0,  0,  0,  0,  0};
+//#define PHOTOGATE A5
 
 int line_sensors[] = {A2, A3, A4, A5};
 
