@@ -12,7 +12,7 @@
 //Constants
 int speed=255;
 int speed_min=60;
-int speed_rotate=70; // 90
+int speed_rotate=90; // 11V == 90      15V == 70(65)
 int range = 9;
 int kicker_time = 30;
 int line_min_value = 90;
