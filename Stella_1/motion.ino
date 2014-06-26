@@ -24,7 +24,6 @@ void motion_start()
 {
   motion_running = 1;
   vic_println("AutoMotion started");
-  
 }
 
 void motion_stop()
@@ -48,13 +47,10 @@ void motion()
   if (check_light_sensors()) return;
   
   if (!centered(range)) {
-    centralize();
-    //Serial.println("centralizing!");
-    return;
+      centralize();
+      return;
   } else {
-    stopAllMotors();
-    
-    //up();
+      stopAllMotors();
   }
     
   int sensor = max_sensor();
@@ -97,7 +93,6 @@ void motion()
           kick_and_drib();
         }
       }*/
-      
       up();
       break;
       
@@ -107,8 +102,6 @@ void motion()
       stopAllMotors();
       break;
   }
-  //Serial.println(action);
-/**/
 }
 
 void right()
