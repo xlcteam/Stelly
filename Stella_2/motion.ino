@@ -153,7 +153,7 @@ void halt()
 
 void up_right()
 {
-  h_action = 'L';
+  h_action = 'R';
   v_action = 'U';
   
   motorA.go(-speed);
@@ -163,7 +163,7 @@ void up_right()
 
 void up_left()
 {
-  h_action = 'R';
+  h_action = 'L';
   v_action = 'U';
   
   motorA.stop();

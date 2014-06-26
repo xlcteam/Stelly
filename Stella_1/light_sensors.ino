@@ -34,14 +34,13 @@ int max_line_sensor()
   for(int i = 0; i < ( sizeof(line_sensors)/sizeof(*line_sensors)); i++){
     tmp = analogRead(line_sensors[i]);
 
-    // manduchs ducharina
-    /*if (i == 1){
-      digitalWrite(LED3, !digitalRead(LED3));
-    }*/
-
     if(tmp < max_val){
       max_val = tmp;
       max_s = i;
+    }
+    
+    if (max_val < line_min_value){ 
+         return max_s + 1;
     }
   }
   
