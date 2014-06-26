@@ -1,6 +1,6 @@
 /*
-    tsop A5 -> left
-    tsop A0 -> right
+    tsop A9 -> left
+    tsop A8 -> right
 */
 int max_sensor()
 {
@@ -50,7 +50,7 @@ int max_sensor()
       tsop = analogRead(TSOP_PORT);
       tsop2 = analogRead(TSOP_PORT2);
       
-      if (tsop < tsop2){
+      if (tsop < tsop2 && tsop < 1000){
           if (tsop < TOO_CLOSE){
               sensor = 6;
           } else if (tsop < CLOSE){
@@ -58,7 +58,7 @@ int max_sensor()
           } else {
               sensor = 3;
           }
-      } else if (tsop2 < tsop){
+      } else if (tsop2 < tsop && tsop2 < 1000){
           if (tsop2 < TOO_CLOSE){
               sensor = 3;
           } else if (tsop2 < CLOSE){

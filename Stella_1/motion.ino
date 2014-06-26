@@ -44,10 +44,7 @@ void stopAllMotors()
 
 
 void motion()
-{
-  
-  int range = 7;
-  
+{  
   if (check_light_sensors()) return;
   
   if (!centered(range)) {

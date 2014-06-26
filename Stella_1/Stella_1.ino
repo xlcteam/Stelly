@@ -13,14 +13,14 @@
 int speed=255;
 int speed_min=60;
 int speed_rotate=130;
-int range = 16;
+int range = 9;
 int kicker_time = 30;
 int line_min_value = 55;
 
 #define DRIBB_SENSOR_PORT 53
 
-#define TSOP_PORT A0
-#define TSOP_PORT2 A5
+#define TSOP_PORT A8
+#define TSOP_PORT2 A9
 
 #define PORT_DRIBBLER 28
 #define PORT_KICKER 2
