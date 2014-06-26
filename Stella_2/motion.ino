@@ -56,15 +56,15 @@ void motion()
   
   int sensor = max_sensor();
   
-  //dribbler_off();
+  dribbler_off();
   switch (sensor) {
     case 2:
       right();
-      //dribbler_on();
+      dribbler_on();
       break; 
       
      case 7:
-      //dribbler_on();
+      dribbler_on();
       left();
       break;
     
@@ -82,7 +82,7 @@ void motion()
       break;
     
     case 1:
-      //dribbler_on();
+      dribbler_on();
       /*if (ball_in_dribbler()) {
         stopAllMotors();
         if(h_action == 'L'){
@@ -101,7 +101,7 @@ void motion()
       
       
     default:
-      //dribbler_off();
+      dribbler_off();
       stopAllMotors();
       break;
   }
