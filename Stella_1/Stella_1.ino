@@ -12,7 +12,7 @@
 //Constants
 int speed=255;
 int speed_min=60;
-int speed_rotate=75;
+int speed_rotate=85;
 int range = 7;
 int kicker_time = 30;
 int line_min_value = 150;
@@ -110,6 +110,9 @@ void setup()
   pinMode(PORT_DRIBBLER, OUTPUT);
   pinMode(PORT_KICKER, OUTPUT);
   digitalWrite(PORT_KICKER, 0);
+  
+  pinMode(44, OUTPUT);
+  pinMode(45, OUTPUT);
   
   Serial.begin(115200);
   //Serial3.begin(115200);
@@ -238,12 +241,12 @@ void loop()
     analogWrite(LED1, LOW);
   }
   
-  if (kicking_running) {
+  /*if (kicking_running) {
     digitalWrite(LED3, HIGH);
     kicking();
   } else {
     analogWrite(LED3, LOW);
-  }
+  }*/
   
   if(simple_motion_running){
     analogWrite(LED1, HIGH);

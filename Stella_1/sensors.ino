@@ -1,14 +1,16 @@
 /*
-    tsop A9 -> left
+    tsop2 A9 -> left
     tsop A8 -> right
 */
 int max_sensor()
 {
   uint8_t dir, s1, s2, s3, s4, s5;
   uint8_t tsop, tsop2;
-
-  uint8_t TOO_CLOSE = 320;
-  uint8_t CLOSE = 390;
+  
+  uint8_t tsop_range = 50;
+  
+  uint8_t TOO_CLOSE = 400;
+  uint8_t CLOSE = 500;
 
   seeker.read(&dir, &s1, &s2, &s3, &s4, &s5);
   
@@ -46,28 +48,39 @@ int max_sensor()
   }
 
   /* direction is zero when the ball is behind the robot, so the IRSeeker doesnt see it */
-  if (dir == 0){    
+  /*if (dir == 0){    
+      digitalWrite(LED3, LOW);
+      
+      digitalWrite(45, HIGH);
+      digitalWrite(44, HIGH);
+      delay(30);
       tsop = analogRead(TSOP_PORT);
       tsop2 = analogRead(TSOP_PORT2);
+      digitalWrite(45, LOW);
+      digitalWrite(44, LOW);
       
-      if (tsop < tsop2 && tsop < 1000){
+      if (abs(tsop - tsop2) < tsop_range){
+          sensor = 3;
+      } else if (tsop < tsop2 && tsop < 1000){
           if (tsop < TOO_CLOSE){
-              sensor = 6;
+              sensor = 3;
           } else if (tsop < CLOSE){
               sensor = 5;
           } else {
-              sensor = 3;
+              sensor = 6;
           }
       } else if (tsop2 < tsop && tsop2 < 1000){
           if (tsop2 < TOO_CLOSE){
-              sensor = 3;
+              sensor = 6;
           } else if (tsop2 < CLOSE){
               sensor = 5;
           } else {
-              sensor = 6;
+              sensor = 3;
           }
       }
-  }
+  } else {
+      digitalWrite(LED3, HIGH);
+  }*/
 
   return sensor;
 }
@@ -76,12 +89,19 @@ void sensors_all()
 {  
   uint8_t dir, s1, s2, s3, s4, s5;
   seeker.read(&dir, &s1, &s2, &s3, &s4, &s5);
+  
+  digitalWrite(45, HIGH);
+  digitalWrite(44, HIGH);
+  delay(25);
 
   vic_print(analogRead(TSOP_PORT));
   vic_print(" ");
   
   vic_print(analogRead(TSOP_PORT2));
   vic_print(" ");
+  
+  digitalWrite(45, LOW);
+  digitalWrite(44, LOW);
   
   vic_print(s1);
   vic_print(" ");
