@@ -1,6 +1,6 @@
 /*
-    tsop2 A9 -> left
-    tsop A8 -> right
+    tsop2 A8 -> left
+    tsop A9 -> right
 */
 int max_sensor()
 {

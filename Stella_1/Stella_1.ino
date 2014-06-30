@@ -111,9 +111,6 @@ void setup()
   pinMode(PORT_KICKER, OUTPUT);
   digitalWrite(PORT_KICKER, 0);
   
-  pinMode(44, OUTPUT);
-  pinMode(45, OUTPUT);
-  
   Serial.begin(115200);
   //Serial3.begin(115200);
   vic_init(115200);
@@ -241,15 +238,15 @@ void loop()
     analogWrite(LED1, LOW);
   }
   
-  /*if (kicking_running) {
+  if (kicking_running) {
     digitalWrite(LED3, HIGH);
     kicking();
   } else {
-    analogWrite(LED3, LOW);
-  }*/
+    digitalWrite(LED3, LOW);
+  }
   
   if(simple_motion_running){
-    analogWrite(LED1, HIGH);
+    digitalWrite(LED1, HIGH);
     simple_motion();
   } else {
     analogWrite(LED1, LOW);
