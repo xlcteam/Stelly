@@ -1,7 +1,3 @@
-/*
-    tsop2 A8 -> left
-    tsop A9 -> right
-*/
 int max_sensor()
 {
   uint8_t dir, s1, s2, s3, s4, s5;
@@ -10,7 +6,7 @@ int max_sensor()
   int TOO_CLOSE = 320;
   int CLOSE = 390;
   
-  uint8_t tsop_range = 60;
+  uint8_t tsop_range = 120;
 
   seeker.read(&dir, &s1, &s2, &s3, &s4, &s5);
   
@@ -48,7 +44,11 @@ int max_sensor()
   }
 
   /* direction is zero when the ball is behind the robot, so the IRSeeker doesnt see it */
-  if (dir == 0){    
+  if (dir == 0){
+      /*
+      tsop A8 -> left
+      tsop2 A9 -> right
+      */
       tsop = analogRead(TSOP_PORT);
       tsop2 = analogRead(TSOP_PORT2);
       
@@ -56,13 +56,18 @@ int max_sensor()
           sensor = 6;         
       } else if ((tsop2 - tsop > 0) && (tsop2 - tsop < tsop_range)){
           sensor = 3;
-      } else if (tsop < tsop2){
+      } else {
+          sensor = 5;
+      } 
+      
+      
+      /*else if (tsop < tsop2){
           if (tsop < TOO_CLOSE){
               sensor = 5;
           } else if (tsop < CLOSE){
               sensor = 5;
           } else {
-              sensor = 3;
+              sensor = 6;
           }
       } else if (tsop2 < tsop){
           if (tsop2 < TOO_CLOSE){
@@ -70,9 +75,9 @@ int max_sensor()
           } else if (tsop2 < CLOSE){
               sensor = 5;
           } else {
-              sensor = 6;
+              sensor = 3;
           }
-      }
+      }*/
   }
 
   return sensor;

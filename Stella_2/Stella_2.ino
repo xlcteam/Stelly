@@ -42,7 +42,7 @@ int line_min_value = 150;
 #define TOUCH2_IN 47
 #define TOUCH2_OUT 45
 
-#define LEFT_NEAR 370
+#define LEFT_NEAR =0
 #define RIGHT_NEAR 390
 #define REAR_NEAR 400
 
@@ -230,10 +230,12 @@ void loop()
   
   if (digitalRead(BUTTON3) == 1) {
     digitalWrite(LED3, HIGH);
-    kick();
+    //kick();
+    dribbler_on();
     
     while(digitalRead(BUTTON3) == 1); 
     digitalWrite(LED3, LOW);
+    dribbler_off();
   }
   
   
@@ -247,7 +249,7 @@ void loop()
   
   if (kicking_running) {
     digitalWrite(LED3, HIGH);
-    kicking();
+    //kicking();
   } else {
     analogWrite(LED3, LOW);
   }
