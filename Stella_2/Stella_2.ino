@@ -75,8 +75,6 @@ int ultrasonic_running = 0;
 int rotated = 0;
 char todo;
 
-uint8_t dir, s1, s2, s3, s4, s5;
-
 int board_connected = 0;
 
 unsigned long timer = 0;
