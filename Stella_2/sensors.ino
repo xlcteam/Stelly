@@ -5,10 +5,10 @@
 int max_sensor()
 {
   uint8_t dir, s1, s2, s3, s4, s5;
-  uint8_t tsop, tsop2;
+  int tsop, tsop2;
 
-  uint8_t TOO_CLOSE = 320;
-  uint8_t CLOSE = 390;
+  int TOO_CLOSE = 320;
+  int CLOSE = 390;
   
   uint8_t tsop_range = 60;
 

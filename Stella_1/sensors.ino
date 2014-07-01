@@ -5,12 +5,12 @@
 int max_sensor()
 {
   uint8_t dir, s1, s2, s3, s4, s5;
-  uint8_t tsop, tsop2;
+  int tsop, tsop2;
   
   uint8_t tsop_range = 60;
   
-  uint8_t TOO_CLOSE = 400;
-  uint8_t CLOSE = 500;
+  int TOO_CLOSE = 400;
+  int CLOSE = 500;
 
   seeker.read(&dir, &s1, &s2, &s3, &s4, &s5);
   
