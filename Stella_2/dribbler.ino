@@ -23,5 +23,5 @@ void dribbler_toggle()
 
 int ball_in_dribbler()
 {
-  return (analogRead(PHOTOGATE) == 1023 && s3 > 100);
+  return (analogRead(PHOTOGATE) == 1023); //&& s3 > 100);
 }
