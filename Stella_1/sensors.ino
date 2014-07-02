@@ -56,7 +56,11 @@ int max_sensor()
           sensor = 6;         
       } else if ((tsop2 - tsop > 0) && (tsop2 - tsop < tsop_range)){
           sensor = 3;
-      } else if (tsop < tsop2 && tsop < 1000){
+      } else {
+          sensor = 5;
+      }
+      
+      /*else if (tsop < tsop2 && tsop < 1000){
           if (tsop < TOO_CLOSE){
               sensor = 5;
           } else if (tsop < CLOSE){
@@ -72,7 +76,7 @@ int max_sensor()
           } else {
               sensor = 6;
           }
-      }
+      }*/
   }
 
   return sensor;
