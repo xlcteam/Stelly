@@ -29,12 +29,12 @@ int line_min_value = 150;
 #define US_LEFT_W_PIN 34
 
 #define BUTTON1 12 //motion
-#define BUTTON2 51 //compass
-#define BUTTON3 32 //kick
+#define BUTTON2 44 //compass
+#define BUTTON3 42 //kick
  
 #define LED1 13 //motion
-#define LED2 50 //compass
-#define LED3 33 //kick
+#define LED2 45 //compass
+#define LED3 43 //kick
 
 #define LEFT_NEAR 370
 #define RIGHT_NEAR 390
@@ -221,13 +221,13 @@ void loop()
   
   if (digitalRead(BUTTON3) == 1) {
     vic_println(kicking_running);
-    if (kicking_running == 0 ){
-      kicking_start();
-    } else {
-      kicking_stop();
-    }
+    digitalWrite(LED3, HIGH);
+    //kick();
+    dribbler_on();
     
     while(digitalRead(BUTTON3) == 1); 
+    digitalWrite(LED3, LOW);
+    dribbler_off(); 
   }
   
   
@@ -238,12 +238,12 @@ void loop()
     analogWrite(LED1, LOW);
   }
   
-  if (kicking_running) {
+  /*if (kicking_running) {
     digitalWrite(LED3, HIGH);
     kicking();
   } else {
     digitalWrite(LED3, LOW);
-  }
+  }*/
   
   if(simple_motion_running){
     digitalWrite(LED1, HIGH);

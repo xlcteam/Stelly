@@ -29,12 +29,12 @@ int line_min_value = 150;
 #define US_LEFT_W_PIN 34
 
 #define BUTTON1 12 //motion
-#define BUTTON2 51 //compass
-#define BUTTON3 32 //kick
+#define BUTTON2 44 //compass
+#define BUTTON3 42 //kick
  
 #define LED1 13 //motion
-#define LED2 50 //compass
-#define LED3 33 //kick
+#define LED2 45 //compass
+#define LED3 43 //kick
 
 // touch1 - down, touch2 - up
 #define TOUCH_IN 43
@@ -247,12 +247,12 @@ void loop()
     analogWrite(LED1, LOW);
   }
   
-  if (kicking_running) {
+  /*if (kicking_running) {
     digitalWrite(LED3, HIGH);
     //kicking();
   } else {
     analogWrite(LED3, LOW);
-  }
+  }*/
   
   if(simple_motion_running){
     analogWrite(LED1, HIGH);
