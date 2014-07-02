@@ -156,6 +156,9 @@ void setup()
   vic_fn_add("bl", &back_left);
   vic_fn_add("br", &back_right);
   
+  vic_fn_add("ul", &up_left);
+  vic_fn_add("ur", &up_right);
+  
   vic_fn_add("mA", &mA);
   vic_fn_add("mB", &mB);
   vic_fn_add("mC", &mC);
@@ -172,8 +175,8 @@ void setup()
   vic_fn_add("kd", &kicking_start);
   vic_fn_add("KD", &kicking_stop);
   
-  vic_fn_add("ul", &ultrasonic_left_start);
-  vic_fn_add("UL", &ultrasonic_left_stop);
+  vic_fn_add("uls", &ultrasonic_left_start);
+  vic_fn_add("ULS", &ultrasonic_left_stop);
   
   /* variables which can be set via Serial */
   vic_var_set_bind("speed", "255", &speed);
