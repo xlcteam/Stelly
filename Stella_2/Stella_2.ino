@@ -42,7 +42,7 @@ int line_min_value = 150;
 #define TOUCH2_IN 47
 #define TOUCH2_OUT 45
 
-#define LEFT_NEAR =0
+#define LEFT_NEAR 0
 #define RIGHT_NEAR 390
 #define REAR_NEAR 400
 
@@ -113,17 +113,17 @@ void setup()
   pinMode(BUTTON2, INPUT);
   pinMode(BUTTON3, INPUT);
   
-  pinMode(US_LEFT_R_PIN, INPUT);
-  pinMode(US_LEFT_W_PIN, OUTPUT);
+  //pinMode(US_LEFT_R_PIN, INPUT);
+  //pinMode(US_LEFT_W_PIN, OUTPUT);
   
-  pinMode(TOUCH_IN, INPUT);
-  pinMode(TOUCH_OUT, OUTPUT);
-  pinMode(TOUCH2_IN, INPUT);
-  pinMode(TOUCH2_OUT, OUTPUT);
+  //pinMode(TOUCH_IN, INPUT);
+  //pinMode(TOUCH_OUT, OUTPUT);
+  //pinMode(TOUCH2_IN, INPUT);
+  //pinMode(TOUCH2_OUT, OUTPUT);
   
-  pinMode(PORT_DRIBBLER, OUTPUT);
-  pinMode(PORT_KICKER, OUTPUT);
-  digitalWrite(PORT_KICKER, 0);
+  //pinMode(PORT_DRIBBLER, OUTPUT);
+  //pinMode(PORT_KICKER, OUTPUT);
+  //digitalWrite(PORT_KICKER, 0);
   
   Serial.begin(115200);
   //Serial3.begin(115200);
@@ -167,6 +167,8 @@ void setup()
 
   vic_fn_add("bl", &back_left);
   vic_fn_add("br", &back_right);
+  vic_fn_add("ul", &up_left);
+  vic_fn_add("ur", &up_right);
   
   vic_fn_add("mA", &mA);
   vic_fn_add("mB", &mB);
@@ -184,8 +186,8 @@ void setup()
   vic_fn_add("kd", &kicking_start);
   vic_fn_add("KD", &kicking_stop);
   
-  vic_fn_add("ul", &ultrasonic_left_start);
-  vic_fn_add("UL", &ultrasonic_left_stop);
+  vic_fn_add("uls", &ultrasonic_left_start);
+  vic_fn_add("ULs", &ultrasonic_left_stop);
   
   vic_var_set_bind("speed", "255", &speed);
   vic_var_set_bind("mspeed", "60", &speed_min);
@@ -228,15 +230,15 @@ void loop()
     digitalWrite(LED2, LOW);
   }  
   
-  if (digitalRead(BUTTON3) == 1) {
+  /*if (digitalRead(BUTTON3) == 0) {
     digitalWrite(LED3, HIGH);
     //kick();
     dribbler_on();
     
-    while(digitalRead(BUTTON3) == 1); 
+    while(digitalRead(BUTTON3) == 0); 
     digitalWrite(LED3, LOW);
     dribbler_off();
-  }
+  }*/
   
   
   if (motion_running) {

@@ -107,36 +107,36 @@ void motion()
   }
 }
 
-void right()
+void left()
 {
-  h_action = 'R';
+  h_action = 'L';
   
   motorA.go(-speed/2);
   motorB.go(-speed/2);
   motorC.go(speed);  
 }
 
-void left()
+void right()
 {
-  h_action = 'L';
+  h_action = 'R';
   
   motorA.go(speed/2);
   motorB.go(speed/2);
   motorC.go(-speed);  
 }
 
-void up()
+void back()
 {
-  v_action = 'U';
+  v_action = 'B';
   
   motorA.go(-speed);
   motorB.go(speed);
   motorC.stop();
 }
 
-void back()
+void up()
 {
-  v_action = 'B';
+  v_action = 'U';
 
   motorA.go(speed);
   motorB.go(-speed);
@@ -151,24 +151,14 @@ void halt()
   motorC.stop();
 }
 
-void up_right()
+void back_left()
 {
-  h_action = 'R';
-  v_action = 'U';
+  h_action = 'L';
+  v_action = 'B';
   
   motorA.go(-speed);
   motorB.stop();
   motorC.go(speed);
-}
-
-void up_left()
-{
-  h_action = 'L';
-  v_action = 'U';
-  
-  motorA.stop();
-  motorB.go(speed);
-  motorC.go(-speed);
 }
 
 void back_right()
@@ -177,14 +167,24 @@ void back_right()
   v_action = 'B';
   
   motorA.stop();
+  motorB.go(speed);
+  motorC.go(-speed);
+}
+
+void up_left()
+{
+  h_action = 'L';
+  v_action = 'U';
+  
+  motorA.stop();
   motorB.go(-speed);
   motorC.go(speed);   
 }
 
-void back_left()
+void up_right()
 {
-  h_action = 'L';
-  v_action = 'B';
+  h_action = 'R';
+  v_action = 'U';
   
   motorA.go(speed);
   motorB.stop();
