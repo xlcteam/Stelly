@@ -199,10 +199,10 @@ void setup()
 
 void loop()
 {  
-  if(Serial3.available()){
+  /*if(Serial3.available()){
     char a = Serial3.read();
     vic_process(a);
-  }
+  }*/
   
   if(Serial.available()){
     char a = Serial.read();
