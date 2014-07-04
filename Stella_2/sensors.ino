@@ -52,32 +52,34 @@ int max_sensor()
       tsop = analogRead(TSOP_PORT);
       tsop2 = analogRead(TSOP_PORT2);
       
-      if ((tsop - tsop2 > 0) && (tsop - tsop2 < tsop_range)){
-          sensor = 6;         
-      } else if ((tsop2 - tsop > 0) && (tsop2 - tsop < tsop_range)){
-          sensor = 3;
-      } else {
-          sensor = 5;
-      } 
-      
-      
-      /*else if (tsop < tsop2){
-          if (tsop < TOO_CLOSE){
-              sensor = 5;
-          } else if (tsop < CLOSE){
-              sensor = 5;
-          } else {
-              sensor = 6;
-          }
-      } else if (tsop2 < tsop){
-          if (tsop2 < TOO_CLOSE){
-              sensor = 5;
-          } else if (tsop2 < CLOSE){
-              sensor = 5;
-          } else {
+      if (tsop + tsop2 < 2000){
+          if ((tsop - tsop2 > 0) && (tsop - tsop2 < tsop_range)){
+              sensor = 6;         
+          } else if ((tsop2 - tsop > 0) && (tsop2 - tsop < tsop_range)){
               sensor = 3;
-          }
-      }*/
+          } else {
+              sensor = 5;
+          } 
+          
+          
+          /*else if (tsop < tsop2){
+              if (tsop < TOO_CLOSE){
+                  sensor = 5;
+              } else if (tsop < CLOSE){
+                  sensor = 5;
+              } else {
+                  sensor = 6;
+              }
+          } else if (tsop2 < tsop){
+              if (tsop2 < TOO_CLOSE){
+                  sensor = 5;
+              } else if (tsop2 < CLOSE){
+                  sensor = 5;
+              } else {
+                  sensor = 3;
+              }
+          }*/
+      }
   }
 
   return sensor;
