@@ -191,14 +191,14 @@ void up_right()
   motorC.go(-speed);   
 }
 
-void rrotate(int spd)
+void lrotate(int spd)
 {
   motorA.go(-spd);
   motorB.go(-spd);
   motorC.go(-spd);
 }
 
-void lrotate(int spd)
+void rrotate(int spd)
 {
   motorA.go(spd);
   motorB.go(spd);

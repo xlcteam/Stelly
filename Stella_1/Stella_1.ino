@@ -214,53 +214,53 @@ void loop()
     while(digitalRead(BUTTON1) == 1); 
   }
   
-  if (digitalRead(BUTTON2) == 1) {
-    vic_println("compass loading");
-    digitalWrite(LED2, HIGH);
-    compass_load();
-    while(digitalRead(BUTTON2) == 1); 
-    digitalWrite(LED2, LOW);
-  }  
-  
-  if (digitalRead(BUTTON3) == 1) {
-    vic_println(kicking_running);
-    digitalWrite(LED3, HIGH);
-    //kick();
-    dribbler_on();
+  if (motion_running){
+      digitalWrite(LED1, HIGH);
+      motion();
+  }else{
+    analogWrite(LED1, LOW);
     
-    while(digitalRead(BUTTON3) == 1); 
-    digitalWrite(LED3, LOW);
-    dribbler_off(); 
-  }
+    if (digitalRead(BUTTON2) == 1) {
+      vic_println("compass loading");
+      digitalWrite(LED2, HIGH);
+      compass_load();
+      while(digitalRead(BUTTON2) == 1); 
+      digitalWrite(LED2, LOW);
+    }  
+    
+    if (digitalRead(BUTTON3) == 1) {
+      vic_println(kicking_running);
+      digitalWrite(LED3, HIGH);
+      //kick();
+      dribbler_on();
+      
+      while(digitalRead(BUTTON3) == 1); 
+      digitalWrite(LED3, LOW);
+      dribbler_off(); 
+    }
+    
+    /*if (kicking_running) {
+      digitalWrite(LED3, HIGH);
+      kicking();
+    } else {
+      digitalWrite(LED3, LOW);
+    }*/
+    
+    if(simple_motion_running){
+      digitalWrite(LED1, HIGH);
+      simple_motion();
+    } else {
+      analogWrite(LED1, LOW);
+    }
   
-  
-  if (motion_running) {
-    digitalWrite(LED1, HIGH);
-    motion();
-  } else {
-    analogWrite(LED1, LOW);
-  }
-  
-  /*if (kicking_running) {
-    digitalWrite(LED3, HIGH);
-    kicking();
-  } else {
-    digitalWrite(LED3, LOW);
-  }*/
-  
-  if(simple_motion_running){
-    digitalWrite(LED1, HIGH);
-    simple_motion();
-  } else {
-    analogWrite(LED1, LOW);
-  }
-
-  if (ultrasonic_running){
-    us_loop();
-  }
-  
-  if (compass_loop){
-    serial_compass();
+    if (ultrasonic_running){
+      us_loop();
+    }
+    
+    if (compass_loop){
+      serial_compass();
+    }
+    
   }
 }
 
