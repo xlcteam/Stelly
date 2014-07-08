@@ -70,7 +70,6 @@ boolean check_light_sensors()
           back_left();
         else if (v_action == 'B')
           up_left();
-        left();
         delay(400);
         stopAllMotors();       
         return true;
