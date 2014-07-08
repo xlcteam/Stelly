@@ -104,12 +104,12 @@ void setup()
   pinMode(BUTTON2, INPUT);
   pinMode(BUTTON3, INPUT);
   
-  pinMode(US_LEFT_R_PIN, INPUT);
-  pinMode(US_LEFT_W_PIN, OUTPUT);
+  //pinMode(US_LEFT_R_PIN, INPUT);
+  //pinMode(US_LEFT_W_PIN, OUTPUT);
   
-  pinMode(PORT_DRIBBLER, OUTPUT);
-  pinMode(PORT_KICKER, OUTPUT);
-  digitalWrite(PORT_KICKER, 0);
+  //pinMode(PORT_DRIBBLER, OUTPUT);
+  //pinMode(PORT_KICKER, OUTPUT);
+  //digitalWrite(PORT_KICKER, 0);
   
   Serial.begin(115200);
   //Serial3.begin(115200);
