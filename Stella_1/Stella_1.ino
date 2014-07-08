@@ -40,7 +40,7 @@ int line_min_value = 150;
 #define RIGHT_NEAR 390
 #define REAR_NEAR 450
 
-int line_sensors[] = {A2, A3, A4, A5};
+int line_sensors[] = {A13, A14, A15, A2, A3, A4, A5};
 
 Motor motorA = Motor(4, 5);
 Motor motorB = Motor(7, 6);

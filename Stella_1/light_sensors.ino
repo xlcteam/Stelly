@@ -5,11 +5,6 @@ void line_sensors_all()
   
   for(int i = 0; i < ( sizeof(line_sensors)/sizeof(*line_sensors)); i++){
     tmp = analogRead(line_sensors[i]);
-    // TODO
-    /*
-    if (sensors[i] == 0)
-      tmp += 100;
-    */
     
     vic_print(tmp);
     vic_print(" ");
@@ -53,7 +48,16 @@ int max_line_sensor()
 boolean check_light_sensors()
 {
   int line_sensor = max_line_sensor();
+  
   if (line_sensor != 0 && v_action != ' ' && h_action != ' ') {
+    switch (line_sensor){
+        case 1:
+        case 2:
+        case 3:
+            back();
+            return true;
+    }
+    
     switch (h_action) {
       case 'L':
         if (v_action == 'U')
