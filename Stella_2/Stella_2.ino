@@ -50,6 +50,7 @@ int line_min_value = 150;
 #define PHOTOGATE A5
 
 int line_sensors[] = {A2, A3, A4, A5};
+int front_line_sensors[] = {A13, A14, A15};
 
 Motor motorA = Motor(4, 5);
 Motor motorB = Motor(7, 6);

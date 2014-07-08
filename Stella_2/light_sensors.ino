@@ -5,12 +5,18 @@ void line_sensors_all()
   
   for(int i = 0; i < ( sizeof(line_sensors)/sizeof(*line_sensors)); i++){
     tmp = analogRead(line_sensors[i]);
-    // TODO
-    /*
-    if (sensors[i] == 0)
-      tmp += 100;
-    */
     
+    vic_print(tmp);
+    vic_print(" ");
+    if(tmp < max_val){
+      max_val = tmp;
+      max_s = i;
+    }
+  }
+  
+  for(int i = 0; i < ( sizeof(front_line_sensors)/sizeof(*front_line_sensors)); i++){
+    tmp = analogRead(front_line_sensors[i]);
+   
     vic_print(tmp);
     vic_print(" ");
     if(tmp < max_val){
@@ -50,8 +56,38 @@ int max_line_sensor()
 
 }
 
+int max_front_line_sensor()
+{
+  int max_val = 1023, max_s = -1, tmp;
+  
+  for(int i = 0; i < ( sizeof(front_line_sensors)/sizeof(*front_line_sensors)); i++){
+    tmp = analogRead(front_line_sensors[i]);
+
+    if(tmp < max_val){
+      max_val = tmp;
+      max_s = i;
+    }
+    
+    if (max_val < line_min_value){
+        return max_s + 1;
+    }
+  }
+  
+  if (max_val > line_min_value) max_s = -1;
+  
+  return max_s + 1;
+}
+
 boolean check_light_sensors()
 {
+  int front_line_sensor = max_front_line_sensor();
+  if (front_line_sensor != 0){
+      back();
+      delay(400);
+      stopAllMotors();
+      return true;
+  } 
+   
   int line_sensor = max_line_sensor();
   if (line_sensor != 0 && v_action != ' ' && h_action != ' ') {
     switch (h_action) {
