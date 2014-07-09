@@ -50,11 +50,13 @@ boolean check_light_sensors()
   int line_sensor = max_line_sensor();
   
   if (line_sensor != 0 && v_action != ' ' && h_action != ' ') {
+    stopAllMotors();
     switch (line_sensor){
         case 1:
         case 2:
         case 3:
             back();
+            delay(400);
             return true;
     }
     
