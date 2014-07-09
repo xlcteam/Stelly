@@ -1,48 +1,25 @@
 void line_sensors_all()
-{
-
-  int max_val = 1023, max_s = -1, tmp;
-  
-  for(int i = 0; i < ( sizeof(line_sensors)/sizeof(*line_sensors)); i++){
-    tmp = analogRead(line_sensors[i]);
-    
-    vic_print(tmp);
+{  
+  for(int i = 0; i < ( sizeof(line_sensors)/sizeof(*line_sensors)); i++){    
+    vic_print(digitalRead(line_sensors[i]));
     vic_print(" ");
-    if(tmp < max_val){
-      max_val = tmp;
-      max_s = i;
-    }
   }
-  
-  if (max_val > line_min_value) max_s = -1;
-  
-  vic_print(max_s + 1);
-  vic_println();
-  
+  vic_println();  
 }
 
 
 int max_line_sensor()
-{
-  int max_val = 1023, max_s = -1, tmp;
-  
+{  
   for(int i = 0; i < ( sizeof(line_sensors)/sizeof(*line_sensors)); i++){
-    tmp = analogRead(line_sensors[i]);
-
-    if(tmp < max_val){
-      max_val = tmp;
-      max_s = i;
+    mutex[i] = 1;
+    if (digitalRead(line_sensors[i]) || ws[i]){
+        ws[i] = 0;
+        mutex[i] = 0; 
+        return i + 1;
     }
-    
-    if (max_val < line_min_value){ 
-         return max_s + 1;
-    }
+    mutex[i] = 0;
   }
-  
-  if (max_val > line_min_value) max_s = -1;
-  
-  return max_s + 1;
-
+  return 0;
 }
 
 boolean check_light_sensors()
@@ -50,13 +27,17 @@ boolean check_light_sensors()
   int line_sensor = max_line_sensor();
   
   if (line_sensor != 0 && v_action != ' ' && h_action != ' ') {
+    PCICR = ~_BV(PCIE2);
     stopAllMotors();
+    
+    
     switch (line_sensor){
         case 1:
         case 2:
         case 3:
             back();
             delay(400);
+            PCICR = _BV(PCIE2);
             return true;
     }
     
@@ -66,9 +47,6 @@ boolean check_light_sensors()
           back_right();
         else if (v_action == 'B')
           up_right();
-        delay(400);
-        stopAllMotors();        
-        return true;
         break;
         
       case 'R':
@@ -76,11 +54,12 @@ boolean check_light_sensors()
           back_left();
         else if (v_action == 'B')
           up_left();
-        delay(400);
-        stopAllMotors();       
-        return true;
         break; 
     }
+    delay(400);
+    stopAllMotors();
+    PCICR = _BV(PCIE2);
+    return true;
   } else {
     return false;
   }

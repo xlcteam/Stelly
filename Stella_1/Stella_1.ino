@@ -19,8 +19,8 @@ int line_min_value = 150;
 
 #define DRIBB_SENSOR_PORT 53
 
-#define TSOP_PORT A8
-#define TSOP_PORT2 A9
+#define TSOP_PORT A4
+#define TSOP_PORT2 A5
 
 #define PORT_DRIBBLER 28
 #define PORT_KICKER 2
@@ -40,7 +40,9 @@ int line_min_value = 150;
 #define RIGHT_NEAR 390
 #define REAR_NEAR 450
 
-int line_sensors[] = {A13, A14, A15, A2, A3, A4, A5};
+int line_sensors[] = {A8, A9, A10, A11, A12, A13, A14};
+uint8_t ws[] = {0, 0, 0, 0, 0, 0, 0};
+uint8_t mutex[] = {0, 0, 0, 0, 0, 0, 0};
 
 Motor motorA = Motor(4, 5);
 Motor motorB = Motor(7, 6);
@@ -89,9 +91,14 @@ void test()
     motorD.go(speed_rotate);
     */
   }
-  
-  
-  
+}
+
+ISR(PCINT2_vect)
+{
+    for (int i = 0; i < 7; i++){
+        if (!mutex[i] && !ws[i] && digitalRead(line_sensors[i]))
+            ws[i] = 1;
+    }
 }
 
 void setup()
@@ -103,6 +110,11 @@ void setup()
   pinMode(BUTTON1, INPUT);
   pinMode(BUTTON2, INPUT);
   pinMode(BUTTON3, INPUT);
+  
+  PCICR = _BV(PCIE2);
+  PCMSK2 = _BV(PCINT16) | _BV(PCINT17) | _BV(PCINT18) | _BV(PCINT19) | _BV(PCINT20) | _BV(PCINT21) | _BV(PCINT22);
+  pinMode(2, OUTPUT);
+  analogWrite(2, 70);
   
   //pinMode(US_LEFT_R_PIN, INPUT);
   //pinMode(US_LEFT_W_PIN, OUTPUT);
