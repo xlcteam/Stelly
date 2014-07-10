@@ -27,40 +27,42 @@ boolean check_light_sensors()
   int line_sensor = max_line_sensor();
   
   if (line_sensor != 0 && v_action != ' ' && h_action != ' ') {
-    PCICR = ~_BV(PCIE2);
-    stopAllMotors();
+      PCICR = ~_BV(PCIE2);
+      stopAllMotors();
     
     
-    switch (line_sensor){
-        case 1:
-        case 2:
-        case 3:
-            back();
-            delay(400);
-            PCICR = _BV(PCIE2);
-            return true;
-    }
+      switch (line_sensor){
+          case 1:
+          case 2:
+          case 3:
+              back();
+              delay(400);
+              PCICR = _BV(PCIE2);
+              return true;
+      }
     
-    switch (h_action) {
-      case 'L':
-        if (v_action == 'U')
-          back_right();
-        else if (v_action == 'B')
-          up_right();
-        break;
+      switch (h_action) {
+          case 'L':
+              if (v_action == 'U'){
+                  back_right();
+              }else if (v_action == 'B'){
+                  up_right();
+              }
+              break;
         
-      case 'R':
-        if (v_action == 'U')
-          back_left();
-        else if (v_action == 'B')
-          up_left();
-        break; 
-    }
-    delay(400);
-    stopAllMotors();
-    PCICR = _BV(PCIE2);
-    return true;
+          case 'R':
+              if (v_action == 'U'){
+                  back_left();
+              }else if (v_action == 'B'){
+                  up_left();
+              }
+              break; 
+      }
+      delay(400);
+      stopAllMotors();
+      PCICR = _BV(PCIE2);
+      return true;
   } else {
-    return false;
+      return false;
   }
 }
