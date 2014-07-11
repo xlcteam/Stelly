@@ -1,37 +1,32 @@
-
 void simple_motion_start()
 {
-  simple_motion_running = 1;
+    simple_motion_running = 1;
 }
 
 void simple_motion_stop()
 {
-  simple_motion_running = 0;
-  stopAllMotors();
+    simple_motion_running = 0;
+    stopAllMotors();
 }
 
 void simple_motion()
 {
-  
-  int sensor = max_sensor();
-  
-  if(sensor == 1){
+    int sensor = max_sensor();
     
-    if (ball_in_dribbler()) {
-      kick();
-      stopAllMotors();
-      delay(500);
-    } 
-    
-    motorA.go(speed);
-    motorB.go(speed);
-    motorC.go(speed);
-  } 
-  else {
-    stopAllMotors();
-    motorB.go(speed);   
-  }
-
+    if(sensor == 1){
+        if (ball_in_dribbler()) {
+            kick();
+            stopAllMotors();
+            delay(500);
+        } 
+      
+        motorA.go(speed);
+        motorB.go(speed);
+        motorC.go(speed);
+    } else {
+        stopAllMotors();
+        motorB.go(speed);   
+    }
 }
 
 
