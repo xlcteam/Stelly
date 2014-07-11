@@ -14,19 +14,12 @@ int speed=255;
 int speed_min=60;
 int speed_rotate=90; // 11V == 90      15V == 70(65)
 int range = 9;
-int kicker_time = 30;
 int line_min_value = 150;
 
 #define DRIBB_SENSOR_PORT 53
 
 #define TSOP_PORT A8
 #define TSOP_PORT2 A9
-
-#define PORT_DRIBBLER 28
-#define PORT_KICKER 2
-
-#define US_LEFT_R_PIN 35
-#define US_LEFT_W_PIN 34
 
 #define BUTTON1 12 //motion
 #define BUTTON2 44 //compass
@@ -42,15 +35,10 @@ int line_min_value = 150;
 #define TOUCH2_IN 47
 #define TOUCH2_OUT 45
 
-#define LEFT_NEAR 0
-#define RIGHT_NEAR 390
-#define REAR_NEAR 400
-
 // not used
 #define PHOTOGATE A5
 
-int line_sensors[] = {A2, A3, A4, A5};
-int front_line_sensors[] = {A13, A14, A15};
+int line_sensors[] = {A13, A14, A15, A2, A3, A4, A5};
 
 Motor motorA = Motor(4, 5);
 Motor motorB = Motor(7, 6);
@@ -103,172 +91,144 @@ void test()
 
 void setup()
 {
-   // buttons
-  
-  
-  pinMode(LED1, OUTPUT);
-  pinMode(LED2, OUTPUT);
-  pinMode(LED3, OUTPUT);
-  
-  pinMode(BUTTON1, INPUT);
-  pinMode(BUTTON2, INPUT);
-  pinMode(BUTTON3, INPUT);
-  
-  //pinMode(US_LEFT_R_PIN, INPUT);
-  //pinMode(US_LEFT_W_PIN, OUTPUT);
-  
-  //pinMode(TOUCH_IN, INPUT);
-  //pinMode(TOUCH_OUT, OUTPUT);
-  //pinMode(TOUCH2_IN, INPUT);
-  //pinMode(TOUCH2_OUT, OUTPUT);
-  
-  //pinMode(PORT_DRIBBLER, OUTPUT);
-  //pinMode(PORT_KICKER, OUTPUT);
-  //digitalWrite(PORT_KICKER, 0);
-  
-  Serial.begin(115200);
-  //Serial3.begin(115200);
-  vic_init(115200);
-
-  stopAllMotors();
-  
-  Wire.begin();
-  
-  compass.set_north();   
-
-  stopAllMotors();
-  
-  vic_fn_add("dc", &compass_default);
-  vic_fn_add("lc", &compass_load);
-  
-  vic_fn_add("d", &dribbler_on);
-  vic_fn_add("D", &dribbler_off);
-  
-  vic_fn_add("ds", &serial_dribbler_sernsor);
-  
-  vic_fn_add("c", &serial_compass_loop_start);
-  vic_fn_add("C", &serial_compass_loop_stop);
-  vic_fn_add("cs", &serial_compass);
-  
-  vic_fn_add("k", &kick);
-  
-  vic_fn_add("m", &motion_start);
-  vic_fn_add("M", &motion_stop);
-
-  vic_fn_add("i", &simple_motion_start);
-  vic_fn_add("I", &simple_motion_stop);
-
-  vic_fn_add("s", &sensors_all);
-  
-  vic_fn_add("r", &right);
-  vic_fn_add("l", &left);
-  vic_fn_add("u", &up);
-  vic_fn_add("b", &back);
-  vic_fn_add("h", &halt);
-
-  vic_fn_add("bl", &back_left);
-  vic_fn_add("br", &back_right);
-  vic_fn_add("ul", &up_left);
-  vic_fn_add("ur", &up_right);
-  
-  vic_fn_add("mA", &mA);
-  vic_fn_add("mB", &mB);
-  vic_fn_add("mC", &mC);
-  
-  vic_fn_add("t", &test);
-  
-  vic_fn_add("lS", &line_sensors_all); 
-  
-  vic_fn_add("smu", &special_movement_up);
-  vic_fn_add("smb", &special_movement_back);
-  vic_fn_add("sml", &special_movement_left);
-  vic_fn_add("smr", &special_movement_right);
+    //LEDS
+    pinMode(LED1, OUTPUT);
+    pinMode(LED2, OUTPUT);
+    pinMode(LED3, OUTPUT);
     
-  vic_fn_add("kd", &kicking_start);
-  vic_fn_add("KD", &kicking_stop);
+    //BUTTONS
+    pinMode(BUTTON1, INPUT);
+    pinMode(BUTTON2, INPUT);
+    pinMode(BUTTON3, INPUT);
+    
+    // lopatoidny kicker - tlacitka
+    //pinMode(TOUCH_IN, INPUT);
+    //pinMode(TOUCH_OUT, OUTPUT);
+    //pinMode(TOUCH2_IN, INPUT);
+    //pinMode(TOUCH2_OUT, OUTPUT);
+    
+    Serial.begin(115200);
+    //Serial3.begin(115200);
+    vic_init(115200);
   
-  vic_fn_add("uls", &ultrasonic_left_start);
-  vic_fn_add("ULs", &ultrasonic_left_stop);
+    stopAllMotors();
+    
+    Wire.begin();
+    
+    compass.set_north();   
   
-  vic_var_set_bind("speed", "255", &speed);
-  vic_var_set_bind("mspeed", "60", &speed_min);
-  vic_var_set_bind("rspeed", "200", &speed_rotate);
-  vic_var_set_bind("range", "16", &range);
-  vic_var_set_bind("kick", "23", &kicker_time);
+    stopAllMotors();
+    
+    vic_fn_add("dc", &compass_default);
+    vic_fn_add("lc", &compass_load);
+    
+    vic_fn_add("d", &dribbler_on);
+    vic_fn_add("D", &dribbler_off);
+    
+    vic_fn_add("ds", &serial_dribbler_sernsor);
+    
+    vic_fn_add("c", &serial_compass_loop_start);
+    vic_fn_add("C", &serial_compass_loop_stop);
+    vic_fn_add("cs", &serial_compass);
+    
+    vic_fn_add("k", &kick);
+    
+    vic_fn_add("m", &motion_start);
+    vic_fn_add("M", &motion_stop);
+  
+    vic_fn_add("i", &simple_motion_start);
+    vic_fn_add("I", &simple_motion_stop);
+  
+    vic_fn_add("s", &sensors_all);
+    
+    vic_fn_add("r", &right);
+    vic_fn_add("l", &left);
+    vic_fn_add("u", &up);
+    vic_fn_add("b", &back);
+    vic_fn_add("h", &halt);
+  
+    vic_fn_add("bl", &back_left);
+    vic_fn_add("br", &back_right);
+    vic_fn_add("ul", &up_left);
+    vic_fn_add("ur", &up_right);
+    
+    vic_fn_add("mA", &mA);
+    vic_fn_add("mB", &mB);
+    vic_fn_add("mC", &mC);
+    
+    vic_fn_add("t", &test);
+    
+    vic_fn_add("lS", &line_sensors_all); 
+    
+    vic_fn_add("smu", &special_movement_up);
+    vic_fn_add("smb", &special_movement_back);
+    vic_fn_add("sml", &special_movement_left);
+    vic_fn_add("smr", &special_movement_right);
+
+    vic_var_set_bind("speed", "255", &speed);
+    vic_var_set_bind("mspeed", "60", &speed_min);
+    vic_var_set_bind("rspeed", "200", &speed_rotate);
+    vic_var_set_bind("range", "16", &range);
 }
 
 
 void loop()
 {  
-  /*if(Serial3.available()){
-    char a = Serial3.read();
-    vic_process(a);
-  }*/
-  
-  if(Serial.available()){
-    char a = Serial.read();
-    vic_process(a);
-  }
-  vic_tasks_run();
- 
-
-  if (digitalRead(BUTTON1) == 1) {
-    vic_println(motion_running);
-    if (motion_running == 0 ){
-      motion_start();
-    } else {
-      motion_stop();
+    /*if(Serial3.available()){
+      char a = Serial3.read();
+      vic_process(a);
+    }*/
+    
+    if(Serial.available()){
+        char a = Serial.read();
+        vic_process(a);
     }
-    
-    while(digitalRead(BUTTON1) == 1); 
-  }
+    vic_tasks_run();
+   
   
-  if (motion_running){
-    digitalWrite(LED1, HIGH);
-    motion();
-  
-  }else {
-    analogWrite(LED1, LOW);
-    
-    if (digitalRead(BUTTON2) == 1) {
-      vic_println("compass loading");
-      digitalWrite(LED2, HIGH);
-      compass_load();
-      while(digitalRead(BUTTON2) == 1); 
-      digitalWrite(LED2, LOW);
-    }  
-    
-    /*if (digitalRead(BUTTON3) == 0) {
-      digitalWrite(LED3, HIGH);
-      //kick();
-      dribbler_on();
+    if (digitalRead(BUTTON1) == 1) {
+        vic_println(motion_running);
+        if (motion_running == 0 ){
+            motion_start();
+        } else {
+            motion_stop();
+        }
       
-      while(digitalRead(BUTTON3) == 0); 
-      digitalWrite(LED3, LOW);
-      dribbler_off();
-    }*/
-    
-    /*if (kicking_running) {
-      digitalWrite(LED3, HIGH);
-      //kicking();
-    } else {
-      analogWrite(LED3, LOW);
-    }*/
-    
-    if(simple_motion_running){
-      analogWrite(LED1, HIGH);
-      simple_motion();
-    } else {
-      analogWrite(LED1, LOW);
-    }
-  
-    if (ultrasonic_running){
-      us_loop();
+        while(digitalRead(BUTTON1) == 1)
+              ; 
     }
     
-    if (compass_loop){
-      serial_compass();
+    if (motion_running){
+        motion();
+    } else {    
+        if (digitalRead(BUTTON2) == 1) {
+            vic_println("compass loading");
+            digitalWrite(LED2, HIGH);
+            compass_load();
+            while(digitalRead(BUTTON2) == 1)
+                  ; 
+            digitalWrite(LED2, LOW);
+        }  
+      
+        /*if (digitalRead(BUTTON3) == 0) {
+            digitalWrite(LED3, HIGH);
+            dribbler_on();
+          
+            while(digitalRead(BUTTON3) == 0)
+                  ; 
+            digitalWrite(LED3, LOW);
+            dribbler_off();
+        }*/
+        
+        if(simple_motion_running){
+            analogWrite(LED1, HIGH);
+          simple_motion();
+        } else {
+            analogWrite(LED1, LOW);
+        }
+        
+        if (compass_loop){
+            serial_compass();
+        }
     }
-  }
 }
-

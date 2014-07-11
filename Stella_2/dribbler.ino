@@ -1,27 +1,27 @@
 inline void dribbler_off()
 {
-  dribbler_state = 0;
-  dribbler.stop();
+    dribbler_state = 0;
+    dribbler.stop();
 }
 
 inline void dribbler_on()
 {
-  dribbler_state = 1;
-  //dribbler.go(255);
-  dribbler.go(-255);
+    dribbler_state = 1;
+    //dribbler.go(255);
+    dribbler.go(-255);
 }
 
 
 void dribbler_toggle()
 {
-  if(dribbler_state) {
-    dribbler_off();
-  } else {
-    dribbler_on();
-  }
+    if(dribbler_state) {
+        dribbler_off();
+    } else {
+        dribbler_on();
+    }
 }
 
 int ball_in_dribbler()
 {
-  return (analogRead(PHOTOGATE) == 1023); //&& s3 > 100);
+    return (analogRead(PHOTOGATE) == 1023); //&& s3 > 100);
 }
