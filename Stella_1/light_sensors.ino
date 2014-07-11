@@ -36,7 +36,7 @@ boolean check_light_sensors()
           case 2:
           case 3:
               back();
-              delay(400);
+              delay(250);
               PCICR = _BV(PCIE2);
               return true;
       }
