@@ -30,7 +30,6 @@ boolean check_light_sensors()
       PCICR = ~_BV(PCIE2);
       stopAllMotors();
     
-    
       switch (line_sensor){
           case 1:
           case 2:

@@ -116,13 +116,6 @@ void setup()
   pinMode(2, OUTPUT);
   analogWrite(2, 70);
   
-  //pinMode(US_LEFT_R_PIN, INPUT);
-  //pinMode(US_LEFT_W_PIN, OUTPUT);
-  
-  //pinMode(PORT_DRIBBLER, OUTPUT);
-  //pinMode(PORT_KICKER, OUTPUT);
-  //digitalWrite(PORT_KICKER, 0);
-  
   Serial.begin(115200);
   //Serial3.begin(115200);
   vic_init(115200);
@@ -134,7 +127,6 @@ void setup()
   compass.set_north();   
 
   stopAllMotors();
- 
  
   /* functions which are callable via Serial */
   vic_fn_add("dc", &compass_default);
@@ -212,8 +204,7 @@ void loop()
     char a = Serial.read();
     vic_process(a);
   }
-  vic_tasks_run();
- 
+  vic_tasks_run(); 
 
   if (digitalRead(BUTTON1) == 1) {
     vic_println(motion_running);
@@ -227,11 +218,8 @@ void loop()
   }
   
   if (motion_running){
-      digitalWrite(LED1, HIGH);
       motion();
-  }else{
-    analogWrite(LED1, LOW);
-    
+  }else{    
     if (digitalRead(BUTTON2) == 1) {
       vic_println("compass loading");
       digitalWrite(LED2, HIGH);
@@ -243,20 +231,12 @@ void loop()
     if (digitalRead(BUTTON3) == 1) {
       vic_println(kicking_running);
       digitalWrite(LED3, HIGH);
-      //kick();
       dribbler_on();
       
       while(digitalRead(BUTTON3) == 1); 
       digitalWrite(LED3, LOW);
       dribbler_off(); 
     }
-    
-    /*if (kicking_running) {
-      digitalWrite(LED3, HIGH);
-      kicking();
-    } else {
-      digitalWrite(LED3, LOW);
-    }*/
     
     if(simple_motion_running){
       digitalWrite(LED1, HIGH);

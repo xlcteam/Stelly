@@ -23,6 +23,7 @@ void mC(void)
 void motion_start()
 {
   motion_running = 1;
+  digitalWrite(LED1, HIGH);
   vic_println("AutoMotion started");
 }
 
