@@ -7,7 +7,6 @@ void line_sensors_all()
     vic_println();  
 }
 
-
 int max_line_sensor()
 {  
     for(int i = 0; i < ( sizeof(line_sensors)/sizeof(*line_sensors)); i++){
@@ -30,30 +29,41 @@ boolean check_light_sensors()
         PCICR = ~_BV(PCIE2);
         stopAllMotors();
     
-        /*switch (line_sensor){
-            case 1:
-            case 2:
-            case 3:
+        switch (line_sensor){
+                case 3:
+                case 4:
                 back();
                 delay(250);
                 PCICR = _BV(PCIE2);
                 return true;
-        }*/
+        }
     
         switch (h_action) {
             case 'L':
                 if (v_action == 'U'){
-                    back_right();
+                  // back right();  
+                    motorA.stop();
+                    motorB.go(-speed+50);
+                    motorC.go(speed-50);
                 }else if (v_action == 'B'){
-                    up_right();
+                   // up_right();
+                   motorA.go(-speed+50);
+                   motorB.stop();
+                   motorC.go(speed-50);
                 }
                 break;
-        
+
             case 'R':
                 if (v_action == 'U'){
-                    back_left();
+                   //back_left();
+                   motorA.go(speed-50);
+                   motorB.stop();
+                   motorC.go(-speed+50);
                 }else if (v_action == 'B'){
-                    up_left();
+                    //up_left();
+                    motorA.stop();
+                    motorB.go(speed-50);
+                    motorC.go(-speed+50);
                 }
                 break; 
         }

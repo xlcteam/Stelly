@@ -23,7 +23,6 @@ void serial_compass_loop_stop()
     compass_loop = 0;
 }
 
-
 boolean centered(int range)
 {
     float c = compass.angle();

@@ -100,8 +100,7 @@ void motion()
              }*/
             up();
             break;
-      
-      
+
         default:
             dribbler_off();
             stopAllMotors();
@@ -130,7 +129,7 @@ void right()
 void back()
 {
     v_action = 'B';
-  
+
     motorA.go(speed);
     motorB.go(-speed);
     motorC.stop();
@@ -207,7 +206,6 @@ void rrotate(int spd)
     motorC.go(-spd);  
 }
 
-
 void special_movement_up() 
 {
     int c = (int) compass.angle();
@@ -244,7 +242,6 @@ void special_movement_up()
     } 
 }
 
-
 void special_movement_back() 
 {
     int c = (int) compass.angle();
@@ -280,7 +277,6 @@ void special_movement_back()
        // Serial3.println(c);    
     } 
 }
-
 
 void special_movement_left() 
 {
