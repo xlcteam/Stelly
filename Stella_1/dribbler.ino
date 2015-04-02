@@ -8,7 +8,7 @@ inline void dribbler_on()
 {
     dribbler_state = 1;
     //dribbler.go(255);
-    dribbler.go(-255);
+    dribbler.go(-speed);
 }
 
 

@@ -23,6 +23,11 @@ void mC(void)
 void motion_start()
 {
     motion_running = 1;
+    for(int i = 0; i < ( sizeof(line_sensors)/sizeof(*line_sensors)); i++){
+        mutex[i] = 1;
+        ws[i] = 0;
+        mutex[i] = 0;
+    }  
     digitalWrite(LED1, HIGH);
     vic_println("AutoMotion started");
 }
