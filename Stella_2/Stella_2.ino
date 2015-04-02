@@ -14,18 +14,18 @@ int speed=255;
 int speed_min=60;
 int speed_rotate=90; // 11V == 90      15V == 70(65)
 int range = 9;
-int line_min_value = 150;
+int line_min_value = 200;  // 150
 
 #define DRIBB_SENSOR_PORT 53
 
 #define TSOP_PORT A8
 #define TSOP_PORT2 A9
 
-#define BUTTON1 12 //motion
+#define BUTTON1 52 //motion, 12
 #define BUTTON2 44 //compass
 #define BUTTON3 42 //kick
  
-#define LED1 13 //motion
+#define LED1 53 //motion, 13
 #define LED2 45 //compass
 #define LED3 43 //kick
 
@@ -38,7 +38,9 @@ int line_min_value = 150;
 // not used
 #define PHOTOGATE A5
 
-int line_sensors[] = {A13, A14, A15, A2, A3, A4, A5};
+//int line_sensors[] = {A13, A14, A15, A2, A3, A4, A5};
+int line_sensors[] = {A15, A2, A3, A4, A5}; // A13
+int line_values[] = {70, 180, 150, 120, 120}; // A14 160; 65, 65, 150, 150, 150, 150,,,,50, 120,100, 100, 120,,,50, 150, 100, 120, 120//50
 
 Motor motorA = Motor(4, 5);
 Motor motorB = Motor(7, 6);

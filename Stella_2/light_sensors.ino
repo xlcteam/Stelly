@@ -4,17 +4,17 @@ void line_sensors_all()
   
     for(int i = 0; i < ( sizeof(line_sensors)/sizeof(*line_sensors)); i++){
         tmp = analogRead(line_sensors[i]);
-    
+
         vic_print(tmp);
         vic_print(" ");
         if(tmp < max_val){
             max_val = tmp;
             max_s = i;
+
+            if (max_val > line_values[max_s]) max_s = -1;
         }
     }
-  
-    if (max_val > line_min_value) max_s = -1;
-  
+
     vic_print(max_s + 1);
     vic_println();
 }
@@ -23,7 +23,7 @@ void line_sensors_all()
 int max_line_sensor()
 {
     int max_val = 1023, max_s = -1, tmp;
-  
+
     for(int i = 0; i < ( sizeof(line_sensors)/sizeof(*line_sensors)); i++){
         tmp = analogRead(line_sensors[i]);
 
@@ -31,14 +31,14 @@ int max_line_sensor()
           max_val = tmp;
           max_s = i;
         }
-    
-        if (max_val < line_min_value){
+
+        if (max_val < line_values[i]){
             return max_s + 1;
         }
     }
-  
-    if (max_val > line_min_value) max_s = -1;
-  
+
+    if (max_val > line_values[max_s]) max_s = -1;
+
     return max_s + 1;
 }
 
@@ -49,12 +49,14 @@ boolean check_light_sensors()
         switch (line_sensor){
             case 1:
             case 2:
-            case 3:
-                back();
+                if (v_action == 'U')
+                    back();
+                else if (v_action == 'B')
+                    up();
                 delay(250);
                 return true;
         }
-    
+
         switch (h_action) {
             case 'L':
                 if (v_action == 'U')
@@ -62,7 +64,7 @@ boolean check_light_sensors()
                 else if (v_action == 'B')
                     up_right();
                 break;
-        
+
             case 'R':
                 if (v_action == 'U')
                     back_left();
