@@ -8,7 +8,7 @@ inline void dribbler_on()
 {
     dribbler_state = 1;
     //dribbler.go(255);
-    dribbler.go(-speed);
+    dribbler.go(-255);
 }
 
 
@@ -23,5 +23,6 @@ void dribbler_toggle()
 
 int ball_in_dribbler()
 {
-    return digitalRead(DRIBB_SENSOR_PORT) == 0;
+    return digitalRead(DRIBB_SENSOR_PORT) == 0; //&& s3 > 100);
 }
+

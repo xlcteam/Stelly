@@ -12,31 +12,26 @@
 //Constants
 int speed=255;
 int speed_min=60;
-int speed_rotate=85;
-int range = 7;
-int kicker_time = 30;
-int line_min_value = 150;
+int speed_rotate=85; // 11V == 90      15V == 70(65)
+int range = 7; //9
+int line_min_value = 150;  // 200
 
-/* constant definitions*/
 #define DRIBB_SENSOR_PORT 53
 
 #define TSOP_PORT A4
 #define TSOP_PORT2 A5
 
-#define LIGHT_PWM 2
-
-#define BUTTON1 12 //motion
+#define BUTTON1 12 //motion, 52
 #define BUTTON2 44 //compass
 #define BUTTON3 42 //kick
  
-#define LED1 13 //motion
+#define LED1 13 //motion, 53
 #define LED2 45 //compass
 #define LED3 43 //kick
 
-int line_sensors[] = {A8, A9, A10, A11, A12, A13, A14};
-uint8_t ws[] = {0, 0, 0, 0, 0, 0, 0};
-uint8_t mutex[] = {0, 0, 0, 0, 0, 0, 0};
-
+//int line_sensors[] = {A13, A14, A15, A2, A3, A4, A5};
+int line_sensors[] = {A0, A1, A2, A3};
+//int line_sensors[] = {A8, A9, A10, A11, A12, A13, A14};
 Motor motorA = Motor(4, 5);
 Motor motorB = Motor(7, 6);
 Motor motorC = Motor(11, 10);
@@ -45,8 +40,8 @@ Motor dribbler = Motor(8, 9);
 RelativeNXTCompass compass;
 HTIRSeekerV2 seeker;
 
-char v_action = ' ';
 char h_action = ' ';
+char v_action = ' ';
 
 uint8_t motion_running = 0;
 uint8_t compass_loop;
@@ -55,47 +50,42 @@ uint8_t dribbler_state = 0;
 
 void test()
 {
-    int c = (int) compass.angle();
-    if ( c > 0 && c < 180) {
-        //Serial.println(speed_rotate-(speed_rotate*c/90));
-        motorA.go(speed_rotate-(speed_rotate*c/180));
-        motorB.go(speed_rotate-(speed_rotate*c/180));
-        motorC.go(speed_rotate-(speed_rotate*c/180));
-    } else {
-        stopAllMotors();
-        /*
-        c -= 180;
-      
-        motorA.go(speed_rotate);
-        motorB.go(speed_rotate-(speed_rotate*c/180));
-        motorC.go(speed_rotate-(speed_rotate*c/180));
-        motorD.go(speed_rotate);
-        */
-    }
-}
-
-ISR(PCINT2_vect)
-{
-    for (int i = 0; i < 7; i++){
-        if (!mutex[i] && !ws[i] && digitalRead(line_sensors[i]))
-            ws[i] = 1;
-    }
+  int c = (int) compass.angle();
+  if ( c > 0 && c < 180) {
+    //Serial.println(speed_rotate-(speed_rotate*c/90));
+    motorA.go(speed_rotate-(speed_rotate*c/180));
+    motorB.go(speed_rotate-(speed_rotate*c/180));
+    motorC.go(speed_rotate-(speed_rotate*c/180));
+  } else {
+    stopAllMotors();
+    /*
+    c -= 180;
+    
+    motorA.go(speed_rotate);
+    motorB.go(speed_rotate-(speed_rotate*c/180));
+    motorC.go(speed_rotate-(speed_rotate*c/180));
+    motorD.go(speed_rotate);
+    */
+  } 
 }
 
 void setup()
 {
+    //LEDS
     pinMode(LED1, OUTPUT);
     pinMode(LED2, OUTPUT);
     pinMode(LED3, OUTPUT);
-  
+    
+    //BUTTONS
     pinMode(BUTTON1, INPUT);
     pinMode(BUTTON2, INPUT);
     pinMode(BUTTON3, INPUT);
     
-    PCICR = _BV(PCIE2);
-    PCMSK2 = _BV(PCINT16) | _BV(PCINT17) | _BV(PCINT18) | _BV(PCINT19) | _BV(PCINT20) | _BV(PCINT21) | _BV(PCINT22);
-    pinMode(LIGHT_PWM, OUTPUT);
-    analogWrite(LIGHT_PWM, 30);  // 70, 57, 55, 35(este stale vidi), 30(niekedy vidi), 20, 60, 40, 45, 40
+    // lopatoidny kicker - tlacitka
+    //pinMode(TOUCH_IN, INPUT);
+    //pinMode(TOUCH_OUT, OUTPUT);
+    //pinMode(TOUCH2_IN, INPUT);
+    //pinMode(TOUCH2_OUT, OUTPUT);
     
     Serial.begin(115200);
     //Serial3.begin(115200);
@@ -108,8 +98,7 @@ void setup()
     compass.set_north();   
   
     stopAllMotors();
-   
-    /* functions which are callable via Serial */
+    
     vic_fn_add("dc", &compass_default);
     vic_fn_add("lc", &compass_load);
     
@@ -140,7 +129,6 @@ void setup()
   
     vic_fn_add("bl", &back_left);
     vic_fn_add("br", &back_right);
-    
     vic_fn_add("ul", &up_left);
     vic_fn_add("ur", &up_right);
     
@@ -156,29 +144,27 @@ void setup()
     vic_fn_add("smb", &special_movement_back);
     vic_fn_add("sml", &special_movement_left);
     vic_fn_add("smr", &special_movement_right);
-    
-    /* variables which can be set via Serial */
+
     vic_var_set_bind("speed", "255", &speed);
     vic_var_set_bind("mspeed", "60", &speed_min);
-    vic_var_set_bind("rspeed", "130", &speed_rotate);
+    vic_var_set_bind("rspeed", "200", &speed_rotate);
     vic_var_set_bind("range", "16", &range);
-    vic_var_set_bind("kick", "23", &kicker_time);   
 }
+
 
 void loop()
 {  
-    /* maybe bluetooth in the future
-    if(Serial3.available()){
+    /*if(Serial3.available()){
       char a = Serial3.read();
       vic_process(a);
-    }
-    */
+    }*/
     
     if(Serial.available()){
         char a = Serial.read();
         vic_process(a);
     }
-    vic_tasks_run(); 
+    vic_tasks_run();
+   
   
     if (digitalRead(BUTTON1) == 1) {
         vic_println(motion_running);
@@ -207,22 +193,22 @@ void loop()
         if (digitalRead(BUTTON3) == 1) {
             digitalWrite(LED3, HIGH);
             dribbler_on();
+          
             while(digitalRead(BUTTON3) == 1)
                   ; 
             digitalWrite(LED3, LOW);
-            dribbler_off(); 
+            dribbler_off();
         }
-      
+        
         if(simple_motion_running){
-            digitalWrite(LED1, HIGH);
-            simple_motion();
+            analogWrite(LED1, HIGH);
+          simple_motion();
         } else {
             analogWrite(LED1, LOW);
         }
-      
+        
         if (compass_loop){
             serial_compass();
         }
     }
 }
-

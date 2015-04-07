@@ -1,4 +1,3 @@
- 
 void mA(void)
 {
     int s;
@@ -23,11 +22,6 @@ void mC(void)
 void motion_start()
 {
     motion_running = 1;
-    for(int i = 0; i < ( sizeof(line_sensors)/sizeof(*line_sensors)); i++){
-        mutex[i] = 1;
-        ws[i] = 0;
-        mutex[i] = 0;
-    }  
     digitalWrite(LED1, HIGH);
     vic_println("AutoMotion started");
 }
@@ -37,6 +31,7 @@ void motion_stop()
     motion_running = 0;
     stopAllMotors();
     dribbler_off();
+    analogWrite(LED1, LOW);
     vic_println("AutoMotion stopped");
 }
 
@@ -50,7 +45,7 @@ void stopAllMotors()
 void motion()
 {  
     if (check_light_sensors())
-        return;
+        return;  
   
     if (!centered(range)) {
         centralize();
@@ -58,7 +53,7 @@ void motion()
     } else {
         stopAllMotors();
     }
-    
+  
     uint8_t sensor = max_sensor();
   
     dribbler_off();
@@ -70,11 +65,11 @@ void motion()
             break; 
       
         case 7:
-            //left();
-            up_left();
+            // left();
             dribbler_on();
+            up_left();
             break;
-
+    
         case 3:
             back_right();
             break;
@@ -92,12 +87,17 @@ void motion()
             dribbler_on();
             /*if (ball_in_dribbler()) {
                 stopAllMotors();
-                delay(500);
-                if (ball_in_dribbler()) {
-                    //kick();
-                    kick_and_drib();
+                if(h_action == 'L'){
+                    motorC.go(-200);
+                    delay(150);
+                } else if (h_action == 'R'){
+                    motorC.go(200);
+                    delay(100);
                 }
-             }*/
+                stopAllMotors();
+                kick();
+            }*/
+      
             up();
             break;
       
@@ -112,7 +112,7 @@ void motion()
 void left()
 {
     h_action = 'L';
-  
+    
     motorA.go(-speed/2);
     motorB.go(-speed/2);
     motorC.go(speed);  
@@ -121,7 +121,7 @@ void left()
 void right()
 {
     h_action = 'R';
-  
+    
     motorA.go(speed/2);
     motorB.go(speed/2);
     motorC.go(-speed);  
@@ -130,7 +130,7 @@ void right()
 void back()
 {
     v_action = 'B';
-  
+    
     motorA.go(-speed);
     motorB.go(speed);
     motorC.stop();
@@ -139,7 +139,7 @@ void back()
 void up()
 {
     v_action = 'U';
-
+  
     motorA.go(speed);
     motorB.go(-speed);
     motorC.stop();  
@@ -153,23 +153,13 @@ void halt()
     motorC.stop();
 }
 
-void up_right()
-{
-    h_action = 'R';
-    v_action = 'U';
-  
-    motorA.go(speed);
-    motorB.stop();
-    motorC.go(-speed);
-}
-
-void up_left()
+void back_left()
 {
     h_action = 'L';
-    v_action = 'U';
-  
-    motorA.stop();
-    motorB.go(-speed);
+    v_action = 'B';
+    
+    motorA.go(-speed);
+    motorB.stop();
     motorC.go(speed);
 }
 
@@ -177,20 +167,30 @@ void back_right()
 {
     h_action = 'R';
     v_action = 'B';
-  
+    
     motorA.stop();
     motorB.go(speed);
-    motorC.go(-speed);   
+    motorC.go(-speed);
 }
 
-void back_left()
+void up_left()
 {
     h_action = 'L';
-    v_action = 'B';
-  
-    motorA.go(-speed);
-    motorB.stop();
+    v_action = 'U';
+    
+    motorA.stop();
+    motorB.go(-speed);
     motorC.go(speed);   
+}
+
+void up_right()
+{
+    h_action = 'R';
+    v_action = 'U';
+    
+    motorA.go(speed);
+    motorB.stop();
+    motorC.go(-speed);   
 }
 
 void lrotate(int spd)
@@ -229,7 +229,8 @@ void special_movement_up()
       
         //Serial3.print("- left side ");
         //Serial3.println(c);
-    } else {
+      
+    } else { 
         if (c > range) {
             lrotate(speed_rotate);
             return;
@@ -238,10 +239,10 @@ void special_movement_up()
         motorA.go(speed - (diff/range)*c);
         motorB.go(speed);
         motorC.go(speed - (diff/range)*c);
-        
+      
         //Serial3.print("- right side ");
         //Serial3.println(c);    
-    } 
+   } 
 }
 
 
@@ -265,8 +266,9 @@ void special_movement_back()
         motorC.go(-(speed - (diff/range)*c));
       
         //Serial3.print("- left side ");
-        //Serial3.println(c); 
-    } else { 
+        //Serial3.println(c);
+      
+    } else {  
         if (c > range) {
             lrotate(speed_rotate);
             return;
@@ -277,7 +279,7 @@ void special_movement_back()
         motorC.go(-speed);
       
         //Serial3.print("- right side ");
-       // Serial3.println(c);    
+        //Serial3.println(c);    
     } 
 }
 
@@ -304,7 +306,7 @@ void special_movement_left()
         //Serial3.print("- up side ");
         //Serial3.println(c);
       
-    } else {  
+    } else {
         if (c > range) {
             lrotate(speed_rotate);
             return;

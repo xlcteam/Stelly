@@ -11,15 +11,15 @@ void simple_motion_stop()
 
 void simple_motion()
 {
-    int sensor = max_sensor();
-    
+    uint8_t sensor = max_sensor();
+  
     if(sensor == 1){
         if (ball_in_dribbler()) {
             kick();
             stopAllMotors();
             delay(500);
         } 
-      
+    
         motorA.go(speed);
         motorB.go(speed);
         motorC.go(speed);
