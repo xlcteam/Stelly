@@ -197,6 +197,8 @@ void lrotate(int spd)
     motorA.go(spd);
     motorB.go(spd);
     motorC.go(spd);
+    Serial.print("lrotate ");
+    Serial.println(spd);
 }
 
 void rrotate(int spd)
@@ -204,6 +206,8 @@ void rrotate(int spd)
     motorA.go(-spd);
     motorB.go(-spd);
     motorC.go(-spd);  
+    Serial.print("rrotate ");
+    Serial.println(spd);
 }
 
 void special_movement_up() 

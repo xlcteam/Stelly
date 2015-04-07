@@ -36,7 +36,7 @@ void centralize()
         c = 360 - c;
         rrotate(speed_rotate/2 + (c*speed_rotate/180));
     } else {
-        lrotate(speed_rotate/2 + (c*speed_rotate/180));
+        lrotate(speed_rotate/2 + (c*speed_rotate/180) + 30);
     }
 }
 
