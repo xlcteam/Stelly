@@ -33,9 +33,9 @@ int line_min_value = 150;
 #define LED2 25 //compass
 #define LED3 27 //kick
 
-int line_sensors[] = {A11, A8, A9, A12, A15, A14};
-uint8_t ws[] = {0, 0, 0, 0, 0, 0, 0};
-uint8_t mutex[] = {0, 0, 0, 0, 0, 0, 0};
+int line_sensors[] = {51, 53};//{A11, A8, 51, 53, A15, A14};
+uint8_t ws[] = {1, 1};//, 0, 0, 0, 0, 0};
+uint8_t mutex[] = {0, 0};//, 0, 0, 0, 0, 0};
 
 Motor motorB = Motor(30, 8); // dir, pwm
 Motor motorA = Motor(32, 7);
@@ -82,6 +82,14 @@ ISR(PCINT2_vect)
     }
 }
 
+ISR(PCINT0_vect)
+{
+    for (int i = 0; i < 2; i++){
+        if (!mutex[i] && ws[i] && !digitalRead(line_sensors[i]))
+            ws[i] = 0;
+    }
+}
+
 void setup()
 {
     pinMode(LED1, OUTPUT);
@@ -92,10 +100,15 @@ void setup()
     pinMode(BUTTON2, INPUT);
     pinMode(BUTTON3, INPUT);
     
-    PCICR = _BV(PCIE2);
-    PCMSK2 = _BV(PCINT16) | _BV(PCINT17) | _BV(PCINT19) | _BV(PCINT20) | _BV(PCINT22) | _BV(PCINT23);
+    /*PCICR = _BV(PCIE2);
+    PCMSK2 = _BV(PCINT16) | _BV(PCINT17) | _BV(PCINT19) | _BV(PCINT20) | _BV(PCINT22) | _BV(PCINT23);*/
+    pinMode(51, INPUT);
+    pinMode(53, INPUT);
+    PCICR = _BV(PCIE0);
+    PCMSK0 = _BV(PCINT0) | _BV(PCINT2);
     pinMode(LIGHT_PWM, OUTPUT);
-    analogWrite(LIGHT_PWM, 180);  // 230 70, 57, 55, 35(este stale vidi), 30(niekedy vidi), 20, 60, 40, 45, 40
+    analogWrite(LIGHT_PWM, 170);  //200, 180, 230 70, 57, 55, 35(este stale vidi), 30(niekedy vidi), 20, 60, 40, 45, 40
+    sei();
     
     Serial.begin(115200);
     //Serial3.begin(115200);
