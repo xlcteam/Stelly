@@ -144,7 +144,6 @@ void up()
     motorC.stop();  
 }
 
-
 void halt()
 {
     motorA.stop();

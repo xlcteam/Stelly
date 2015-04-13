@@ -10,18 +10,18 @@
 #include <vic.h>
 
 //Constants
-int speed= 250;
-int speed_min= 60;
-int speed_rotate= 80; //110
-int range = 10;
-int kicker_time = 30;
-int line_min_value = 150;
+uint8_t speed= 250;
+uint8_t speed_min= 60;
+uint8_t speed_rotate= 80; //110
+uint8_t range = 10;
+uint8_t kicker_time = 30;
+// line_min_value = 150;
 
 /* constant definitions*/
 #define DRIBB_SENSOR_PORT 53
 
-//#define TSOP_PORT A4
-//#define TSOP_PORT2 A5
+#define TSOP_PORT A6 // right
+#define TSOP_PORT2 A7 // left
 
 #define LIGHT_PWM 5
 
@@ -34,8 +34,8 @@ int line_min_value = 150;
 #define LED3 27 //kick
 
 int line_sensors[] = {A11, A8, A9, A12, A15, A14};
-uint8_t ws[] = {0, 0, 0, 0, 0, 0, 0};
-uint8_t mutex[] = {0, 0, 0, 0, 0, 0, 0};
+uint8_t ws[] = {0, 0, 0, 0, 0, 0};
+uint8_t mutex[] = {0, 0, 0, 0, 0, 0};
 
 Motor motorB = Motor(30, 8); // dir, pwm
 Motor motorA = Motor(32, 7);
@@ -76,9 +76,9 @@ void test()
 
 ISR(PCINT2_vect)
 {
-    for (int i = 0; i < 7; i++){
+    for (uint8_t i = 0; i < 6; i++){
         if (!mutex[i] && !ws[i] && digitalRead(line_sensors[i]))
-            ws[i] = 1;
+            ws[i] = 1; 
     }
 }
 
@@ -180,15 +180,16 @@ void loop()
     }
     vic_tasks_run(); 
 
-    if (digitalRead(BUTTON1) == 1) {
+    if (digitalRead(BUTTON1) == 1){ //&& (motion_running == 0 ) {
         vic_println(motion_running);
-        if (motion_running == 0 ){
+        motion_start();
+       /* if (motion_running == 0 ){
             motion_start();
         } else {
             motion_stop();
         }
 
-        while(digitalRead(BUTTON1) == 1); 
+        while(digitalRead(BUTTON1) == 1); */
     }
 
     if (motion_running){

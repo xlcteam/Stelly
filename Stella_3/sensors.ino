@@ -44,7 +44,9 @@ int max_sensor()
     }
 
     /* direction is zero when the ball is behind the robot, so the IRSeeker doesnt see it */
-    /*if (dir == 0){
+    if (dir == 0){
+      // tsop = right
+      // tsop2 = left
         tsop = analogRead(TSOP_PORT);
         tsop2 = analogRead(TSOP_PORT2);
          
@@ -57,7 +59,7 @@ int max_sensor()
                 sensor = 5;
             }
         }
-    }*/
+    }
     
     return sensor;
 }
@@ -67,11 +69,11 @@ void sensors_all()
   uint8_t dir, s1, s2, s3, s4, s5;
   seeker.read(&dir, &s1, &s2, &s3, &s4, &s5);
 
-  /*vic_print(analogRead(TSOP_PORT));
+  vic_print(analogRead(TSOP_PORT));
   vic_print(" ");
   
   vic_print(analogRead(TSOP_PORT2));
-  vic_print(" ");*/
+  vic_print(" ");
   
   vic_print(dir);
   vic_print(" ");
@@ -96,6 +98,3 @@ void serial_dribbler_sernsor()
   vic_func();
   vic_return("%d", ball_in_dribbler());
 }
-
-
-
