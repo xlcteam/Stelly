@@ -20,8 +20,8 @@ uint8_t kicker_time = 30;
 /* constant definitions*/
 #define DRIBB_SENSOR_PORT 53
 
-#define TSOP_PORT A6 // right
-#define TSOP_PORT2 A7 // left
+#define TSOP_PORT A7 // right 7
+#define TSOP_PORT2 A6 // left 6
 
 #define LIGHT_PWM 5
 
