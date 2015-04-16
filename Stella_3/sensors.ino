@@ -77,7 +77,7 @@ void sensors_all()
   vic_print(analogRead(TSOP_PORT));
   vic_print(" ");
   
-  //lavy
+  //lav
   vic_print(analogRead(TSOP_PORT2));
   vic_print(" ");
   

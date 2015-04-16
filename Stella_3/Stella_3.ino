@@ -9,14 +9,6 @@
 #define VIC_ARDUINO_SERIAL Serial
 #include <vic.h>
 
-//Constants
-uint8_t speed= 250;
-uint8_t speed_min= 60;
-uint8_t speed_rotate= 80; //110
-uint8_t range = 10;
-uint8_t kicker_time = 30;
-// line_min_value = 150;
-
 /* constant definitions*/
 #define DRIBB_SENSOR_PORT 53
 
@@ -33,9 +25,19 @@ uint8_t kicker_time = 30;
 #define LED2 25 //compass
 #define LED3 27 //kick
 
+#define SPEED_ROTATE_LOW_VOLT 80
+
 int line_sensors[] = {A11, A8, A9, A12, A15, A14};
 uint8_t ws[] = {0, 0, 0, 0, 0, 0};
 uint8_t mutex[] = {0, 0, 0, 0, 0, 0};
+
+//Constants
+uint8_t speed= 250;
+uint8_t speed_min= 60;
+uint8_t speed_rotate = 55;
+uint8_t range = 10;
+uint8_t kicker_time = 30;
+// line_min_value = 150;
 
 Motor motorB = Motor(30, 8); // dir, pwm
 Motor motorA = Motor(32, 7);
@@ -95,7 +97,7 @@ void setup()
     PCICR = _BV(PCIE2);
     PCMSK2 = _BV(PCINT16) | _BV(PCINT17) | _BV(PCINT19) | _BV(PCINT20) | _BV(PCINT22) | _BV(PCINT23);
     pinMode(LIGHT_PWM, OUTPUT);
-    analogWrite(LIGHT_PWM, 200);  // 230 70, 57, 55, 35(este stale vidi), 30(niekedy vidi), 20, 60, 40, 45, 40
+    analogWrite(LIGHT_PWM, 98);  // 100, 200, 230 70, 57, 55, 35(este stale vidi), 30(niekedy vidi), 20, 60, 40, 45, 40
     
     Serial.begin(115200);
     //Serial3.begin(115200);
@@ -160,7 +162,6 @@ void setup()
     /* variables which can be set via Serial */
     vic_var_set_bind("speed", "255", &speed);
     vic_var_set_bind("mspeed", "60", &speed_min);
-    vic_var_set_bind("rspeed", "130", &speed_rotate);
     vic_var_set_bind("range", "16", &range);
     vic_var_set_bind("kick", "23", &kicker_time);   
 }
@@ -180,7 +181,7 @@ void loop()
     }
     vic_tasks_run(); 
 
-    if (digitalRead(BUTTON1) == 1){ //&& (motion_running == 0 ) {
+    if (digitalRead(BUTTON1) == 1){
         vic_println(motion_running);
         motion_start();
        /* if (motion_running == 0 ){
@@ -201,14 +202,14 @@ void loop()
             compass_load();
             while(digitalRead(BUTTON2) == 1); 
             digitalWrite(LED2, LOW);
-        }  
-
+        }
+        
+        // ked je vybita baterka --> na sever sa otacaj rychlejsie:
         if (digitalRead(BUTTON3) == 1) {
             digitalWrite(LED3, HIGH);
-            dribbler_on();
-            while(digitalRead(BUTTON3) == 1); 
+            speed_rotate = SPEED_ROTATE_LOW_VOLT;
+            while (digitalRead(BUTTON3) == 1);
             digitalWrite(LED3, LOW);
-            dribbler_off(); 
         }
 
         if(simple_motion_running){
