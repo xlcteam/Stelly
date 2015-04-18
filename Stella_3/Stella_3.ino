@@ -28,7 +28,7 @@
 #define SPEED_ROTATE_LOW_VOLT 80
 
 int line_sensors[] = {A11, A8, A9, A12, A15, A14};
-uint8_t ws[] = {0, 0, 0, 0, 0, 0};
+uint8_t ws[] = {1, 1, 1, 1, 1, 1};
 uint8_t mutex[] = {0, 0, 0, 0, 0, 0};
 
 //Constants
@@ -79,8 +79,9 @@ void test()
 ISR(PCINT2_vect)
 {
     for (uint8_t i = 0; i < 6; i++){
-        if (!mutex[i] && !ws[i] && digitalRead(line_sensors[i]))
-            ws[i] = 1; 
+        //if (!mutex[i] && ws[i] && !digitalRead(line_sensors[i]))
+        //    ws[i] = 0;
+       ws[i] = digitalRead(line_sensors[i]); 
     }
 }
 
@@ -97,7 +98,7 @@ void setup()
     PCICR = _BV(PCIE2);
     PCMSK2 = _BV(PCINT16) | _BV(PCINT17) | _BV(PCINT19) | _BV(PCINT20) | _BV(PCINT22) | _BV(PCINT23);
     pinMode(LIGHT_PWM, OUTPUT);
-    analogWrite(LIGHT_PWM, 98);  // 100, 200, 230 70, 57, 55, 35(este stale vidi), 30(niekedy vidi), 20, 60, 40, 45, 40
+    analogWrite(LIGHT_PWM, 230);  // 210,250, 98, 100, 200, 230 70, 57, 55, 35(este stale vidi), 30(niekedy vidi), 20, 60, 40, 45, 40
     
     Serial.begin(115200);
     //Serial3.begin(115200);

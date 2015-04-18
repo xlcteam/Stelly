@@ -25,7 +25,7 @@ void motion_start()
     motion_running = 1;
     for(int i = 0; i < ( sizeof(line_sensors)/sizeof(*line_sensors)); i++){
         mutex[i] = 1;
-        ws[i] = 0;
+        ws[i] = 1;
         mutex[i] = 0;
     }  
     digitalWrite(LED1, HIGH);

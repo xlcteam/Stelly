@@ -39,8 +39,10 @@ int line_min_value = 200;  // 150
 #define PHOTOGATE A5
 
 //int line_sensors[] = {A13, A14, A15, A2, A3, A4, A5};
-int line_sensors[] = {A15, A2, A3, A4, A5}; // A13
-int line_values[] = {70, 180, 150, 120, 120}; // A14 160; 65, 65, 150, 150, 150, 150,,,,50, 120,100, 100, 120,,,50, 150, 100, 120, 120//50
+int line_sensors[] = {A15, A13, A2, A3, A4, A5}; // A13
+int line_values[] = {55, 50, 140, 130, 100, 100}; // A14 160; 65, 65, 150, 150, 150, 150,,,,50, 120,100, 100, 120,,,50, 150, 100, 120, 120//50
+//                  { 60,60, 90,  62,  60,  62}
+//                    70, 70, 180, 150, 120, 120
 
 Motor motorA = Motor(4, 5);
 Motor motorB = Motor(7, 6);
@@ -197,7 +199,7 @@ void loop()
         }
       
         while(digitalRead(BUTTON1) == 1)
-              ; 
+  ; 
     }
     
     if (motion_running){
@@ -207,8 +209,7 @@ void loop()
             vic_println("compass loading");
             digitalWrite(LED2, HIGH);
             compass_load();
-            while(digitalRead(BUTTON2) == 1)
-                  ; 
+            while(digitalRead(BUTTON2) == 1); 
             digitalWrite(LED2, LOW);
         }  
       

@@ -59,17 +59,33 @@ boolean check_light_sensors()
 
         switch (h_action) {
             case 'L':
-                if (v_action == 'U')
-                    back_right();
-                else if (v_action == 'B')
-                    up_right();
+                if (v_action == 'U'){
+                   // back_right();
+                   motorA.stop();
+                   motorB.go(speed-50);
+                   motorC.go(-speed+50);
+                }
+                else if (v_action == 'B'){
+                    // up_right();
+                    motorA.go(speed-50);
+                    motorB.stop();
+                    motorC.go(-speed+50); 
+                }
                 break;
 
             case 'R':
-                if (v_action == 'U')
-                    back_left();
-                else if (v_action == 'B')
-                    up_left();
+                if (v_action == 'U'){
+                    // back_left();
+                    motorA.go(-speed+50);
+                    motorB.stop();
+                    motorC.go(speed-50);
+                }
+                else if (v_action == 'B'){
+                    // up_left();
+                     motorA.stop();
+                     motorB.go(-speed+50);
+                     motorC.go(speed-50);
+                }
                 break; 
         }
         delay(400);
