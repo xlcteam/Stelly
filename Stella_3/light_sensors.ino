@@ -30,8 +30,8 @@ boolean check_light_sensors()
         stopAllMotors();
     
         switch (line_sensor){
-                case 5:
-                case 6:
+                case 1:
+                case 2:
                 back();
                 delay(250);
                 //PCICR = _BV(PCIE2);
