@@ -90,9 +90,11 @@ void sensors_all()
     uint8_t dir, s1, s2, s3, s4, s5;
     seeker.read(&dir, &s1, &s2, &s3, &s4, &s5);
   
+    //lavy
     vic_print(analogRead(TSOP_PORT));
     vic_print(" ");
     
+    // pravy
     vic_print(analogRead(TSOP_PORT2));
     vic_print(" ");
     

@@ -18,8 +18,8 @@ int line_min_value = 200;  // 150
 
 #define DRIBB_SENSOR_PORT 53
 
-#define TSOP_PORT A8
-#define TSOP_PORT2 A9
+#define TSOP_PORT A8 //lavy
+#define TSOP_PORT2 A9 // pravy
 
 #define BUTTON1 52 //motion, 12
 #define BUTTON2 44 //compass
@@ -40,9 +40,10 @@ int line_min_value = 200;  // 150
 
 //int line_sensors[] = {A13, A14, A15, A2, A3, A4, A5};
 int line_sensors[] = {A15, A13, A2, A3, A4, A5}; // A13
-int line_values[] = {55, 50, 140, 130, 100, 100}; // A14 160; 65, 65, 150, 150, 150, 150,,,,50, 120,100, 100, 120,,,50, 150, 100, 120, 120//50
+int line_values[] = {75, 70, 180, 150, 120, 120};
+//{55, 50, 140, 130, 100, 100}; // A14 160; 65, 65, 150, 150, 150, 150,,,,50, 120,100, 100, 120,,,50, 150, 100, 120, 120//50
 //                  { 60,60, 90,  62,  60,  62}
-//                    70, 70, 180, 150, 120, 120
+//                    
 
 Motor motorA = Motor(4, 5);
 Motor motorB = Motor(7, 6);
