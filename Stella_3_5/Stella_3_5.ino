@@ -27,16 +27,18 @@
 
 #define SPEED_ROTATE_LOW_VOLT 80
 
+#define COMPASS_RANGE 45
+
 int line_sensors[] = {A11, A8, A9, A12, A15, A14};
 uint8_t ws[] = {1, 1, 1, 1, 1, 1};
 uint8_t mutex[] = {0, 0, 0, 0, 0, 0};
 
 //Constants
-uint8_t speed= 255;
+int speed= 255;
 uint8_t speed_min= 60;
 uint8_t speed_rotate = 90;
-uint8_t range = 10;
 uint8_t kicker_time = 30;
+int compass_angle;
 // line_min_value = 150;
 
 Motor motorB = Motor(30, 8); // dir, pwm
@@ -163,7 +165,6 @@ void setup()
     /* variables which can be set via Serial */
     vic_var_set_bind("speed", "255", &speed);
     vic_var_set_bind("mspeed", "60", &speed_min);
-    vic_var_set_bind("range", "16", &range);
     vic_var_set_bind("kick", "23", &kicker_time);   
 }
 
@@ -176,6 +177,7 @@ void loop()
     }
     */
 
+    compass_angle = compass.angle();
     if(Serial.available()){
         char a = Serial.read();
         vic_process(a);
@@ -224,5 +226,6 @@ void loop()
             serial_compass();
         }
     }
+    
 }
 

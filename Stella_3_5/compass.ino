@@ -34,9 +34,9 @@ void centralize()
     int c = (int) compass.angle();
     if (c > 180) {
         c = 360 - c;
-        rrotate(speed_rotate/2 + (c*speed_rotate/180));
+        rrotate(speed_rotate/2 + (c*speed_rotate/180) );
     } else {
-        lrotate(speed_rotate/2 + (c*speed_rotate/180) + 18); //20
+        lrotate(speed_rotate/2 + (c*speed_rotate/180) ); //20,18
     }
 }
 
