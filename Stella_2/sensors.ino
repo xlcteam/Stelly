@@ -6,7 +6,7 @@ int max_sensor()
     int TOO_CLOSE = 320;
     int CLOSE = 390;
     
-    uint8_t tsop_range = 120;
+    uint8_t tsop_range = 500; //120
   
     seeker.read(&dir, &s1, &s2, &s3, &s4, &s5);
     
