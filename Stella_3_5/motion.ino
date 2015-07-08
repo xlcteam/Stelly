@@ -49,9 +49,8 @@ void stopAllMotors()
 
 void motion()
 {  //biele ciary, koment na vypnutie
-    /*if (check_light_sensors())
+    if (check_light_sensors())
         return;
-     */ 
     if (!centered(COMPASS_RANGE)) {
         centralize();
         return;
