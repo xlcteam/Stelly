@@ -126,7 +126,7 @@ int left_right_compensation(){
   }
   return speed_motorA_B;
 }
-void left()
+void right()
 {
     h_action = 'L';
   
@@ -135,7 +135,7 @@ void left()
     motorC.go(-speed);
 }
 
-void right()
+void left()
 {
     h_action = 'R';
   

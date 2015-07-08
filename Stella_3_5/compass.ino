@@ -25,13 +25,13 @@ void serial_compass_loop_stop()
 
 boolean centered(int range)
 {
-    float c = compass.angle();
+    int c = compass_angle;
     return ((c >= (360.0 - range)) || (c <= range));
 }
 
 void centralize() 
 {
-    int c = (int) compass.angle();
+    int c = (int) compass_angle;
     if (c > 180) {
         c = 360 - c;
         rrotate(speed_rotate/2 + (c*speed_rotate/180) );

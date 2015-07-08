@@ -41,29 +41,29 @@ boolean check_light_sensors()
         switch (h_action) {
             case 'L':
                 if (v_action == 'U'){
-                  // back right();  
-                    motorA.stop();
+                    back_right();  
+                    /*motorA.stop();
                     motorB.go(-speed+70);
-                    motorC.go(speed-70);
+                    motorC.go(speed-70);*/
                 }else if (v_action == 'B'){
-                   // up_right();
-                   motorA.go(-speed+70);
+                   up_right();
+                   /*motorA.go(-speed+70);
                    motorB.stop();
-                   motorC.go(speed-70);
+                   motorC.go(speed-70);*/
                 }
                 break;
 
             case 'R':
                 if (v_action == 'U'){
-                   //back_left();
-                   motorA.go(speed-70);
+                   back_left();
+                   /*motorA.go(speed-70);
                    motorB.stop();
-                   motorC.go(-speed+70);
+                   motorC.go(-speed+70);*/
                 }else if (v_action == 'B'){
-                    //up_left();
-                    motorA.stop();
+                    up_left();
+                    /*motorA.stop();
                     motorB.go(speed-70);
-                    motorC.go(-speed+70);
+                    motorC.go(-speed+70);*/
                 }
                 break; 
         }

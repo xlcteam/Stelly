@@ -81,9 +81,11 @@ void test()
 ISR(PCINT2_vect)
 {
     for (uint8_t i = 0; i < 6; i++){
-        //if (!mutex[i] && ws[i] && !digitalRead(line_sensors[i]))
-        //    ws[i] = 0;
-       ws[i] = digitalRead(line_sensors[i]); 
+        if (!mutex[i] && ws[i] && !digitalRead(line_sensors[i])) {
+            ws[i] = 0;
+            //motion_stop();
+        }
+       //ws[i] = digitalRead(line_sensors[i]); 
     }
 }
 
@@ -100,7 +102,7 @@ void setup()
     PCICR = _BV(PCIE2);
     PCMSK2 = _BV(PCINT16) | _BV(PCINT17) | _BV(PCINT18) | _BV(PCINT19) | _BV(PCINT20) | _BV(PCINT21);
     pinMode(LIGHT_PWM, OUTPUT);
-    analogWrite(LIGHT_PWM, 210); // 210
+    analogWrite(LIGHT_PWM, 120); // 210
     
     Serial.begin(115200);
     //Serial3.begin(115200);
@@ -177,7 +179,7 @@ void loop()
     }
     */
 
-    compass_angle = compass.angle();
+    //compass_angle = (int) compass.angle();
     if(Serial.available()){
         char a = Serial.read();
         vic_process(a);
@@ -187,13 +189,13 @@ void loop()
     if (digitalRead(BUTTON1) == 1){
         vic_println(motion_running);
         motion_start();
-       /* if (motion_running == 0 ){
+        /*if (motion_running == 0 ){
             motion_start();
         } else {
             motion_stop();
         }
 
-        while(digitalRead(BUTTON1) == 1); */
+        while(digitalRead(BUTTON1) == 1);*/
     }
 
     if (motion_running){
