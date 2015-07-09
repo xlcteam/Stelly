@@ -10,13 +10,13 @@ void line_sensors_all()
 int max_line_sensor()
 {  
     for(int i = 0; i < ( sizeof(line_sensors)/sizeof(*line_sensors)); i++){
-        //mutex[i] = 1; 
+        mutex[i] = 1; 
         if (!digitalRead(line_sensors[i]) || !ws[i]){
-            //ws[i] = 1; 
-            //mutex[i] = 0; 
+            ws[i] = 1; 
+            mutex[i] = 0; 
             return i + 1;
         }
-        //mutex[i] = 0;
+        mutex[i] = 0;
     }
     return 0;
 }
@@ -33,7 +33,7 @@ boolean check_light_sensors()
                 case 1:
                 case 2:
                 back();
-                delay(250);
+                delay(100); //250
                 //PCICR = _BV(PCIE2);
                 return true;
         }
@@ -41,33 +41,33 @@ boolean check_light_sensors()
         switch (h_action) {
             case 'L':
                 if (v_action == 'U'){
-                    back_right();  
-                    /*motorA.stop();
-                    motorB.go(-speed+70);
-                    motorC.go(speed-70);*/
+                    //back_right();  
+                    motorA.go(compensation() );
+                    motorB.go(speed);
+                    motorC.go(-speed);
                 }else if (v_action == 'B'){
-                   up_right();
-                   /*motorA.go(-speed+70);
-                   motorB.stop();
-                   motorC.go(speed-70);*/
+                    //up_right();
+                    motorA.go(speed);
+                    motorB.go(compensation() );
+                    motorC.go(-speed); 
                 }
                 break;
 
             case 'R':
                 if (v_action == 'U'){
-                   back_left();
-                   /*motorA.go(speed-70);
-                   motorB.stop();
-                   motorC.go(-speed+70);*/
+                   //back_left();
+                    motorA.go(-speed);
+                    motorB.go(compensation() );
+                    motorC.go(speed);
                 }else if (v_action == 'B'){
-                    up_left();
-                    /*motorA.stop();
-                    motorB.go(speed-70);
-                    motorC.go(-speed+70);*/
+                    //up_left();
+                     motorA.go(compensation() );
+                     motorB.go(-speed);
+                     motorC.go(speed);
                 }
                 break; 
         }
-        delay(450);
+        delay(100); //450
         stopAllMotors();
         //PCICR = _BV(PCIE2);
         return true;

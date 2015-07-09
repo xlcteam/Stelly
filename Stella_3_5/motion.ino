@@ -50,7 +50,8 @@ void stopAllMotors()
 void motion()
 {  //biele ciary, koment na vypnutie
     if (check_light_sensors())
-        return;
+        return; 
+
     if (!centered(COMPASS_RANGE)) {
         centralize();
         return;
@@ -173,7 +174,7 @@ void halt()
 void back_left()
 {
     h_action = 'L';
-    v_action = 'U';
+    v_action = 'B';
   
     motorA.go(-speed);
     motorB.go(compensation() );
@@ -183,7 +184,7 @@ void back_left()
 void back_right()
 {
     h_action = 'R';
-    v_action = 'U';
+    v_action = 'B';
   
     motorA.go(compensation() );
     motorB.go(speed);
@@ -193,7 +194,7 @@ void back_right()
 void up_left()
 {
     h_action = 'L';
-    v_action = 'B';
+    v_action = 'U';
   
     motorA.go(compensation() );
     motorB.go(-speed);
@@ -203,7 +204,7 @@ void up_left()
 void up_right()
 {
     h_action = 'R';
-    v_action = 'B';
+    v_action = 'U';
   
     motorA.go(speed);
     motorB.go(compensation() );

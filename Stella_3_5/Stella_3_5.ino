@@ -83,7 +83,6 @@ ISR(PCINT2_vect)
     for (uint8_t i = 0; i < 6; i++){
         if (!mutex[i] && ws[i] && !digitalRead(line_sensors[i])) {
             ws[i] = 0;
-            //motion_stop();
         }
        //ws[i] = digitalRead(line_sensors[i]); 
     }
@@ -179,7 +178,7 @@ void loop()
     }
     */
 
-    //compass_angle = (int) compass.angle();
+    compass_angle = (int) compass.angle();
     if(Serial.available()){
         char a = Serial.read();
         vic_process(a);
