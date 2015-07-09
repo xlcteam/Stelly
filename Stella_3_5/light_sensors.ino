@@ -33,7 +33,7 @@ boolean check_light_sensors()
                 case 1:
                 case 2:
                 back();
-                delay(100); //250
+                delay(100); //250, 90(with compensation)
                 //PCICR = _BV(PCIE2);
                 return true;
         }
@@ -42,32 +42,36 @@ boolean check_light_sensors()
             case 'L':
                 if (v_action == 'U'){
                     //back_right();  
-                    motorA.go(compensation() );
-                    motorB.go(speed);
-                    motorC.go(-speed);
+                    //motorA.go(compensation() );
+                    motorA.stop();
+                    motorB.go(speed - 50);
+                    motorC.go(-speed + 50);
                 }else if (v_action == 'B'){
                     //up_right();
-                    motorA.go(speed);
-                    motorB.go(compensation() );
-                    motorC.go(-speed); 
+                    motorA.go(speed - 50);
+                    //motorB.go(compensation() );
+                    motorB.stop();
+                    motorC.go(-speed + 50); 
                 }
                 break;
 
             case 'R':
                 if (v_action == 'U'){
                    //back_left();
-                    motorA.go(-speed);
-                    motorB.go(compensation() );
-                    motorC.go(speed);
+                    motorA.go(-speed + 50);
+                    //motorB.go(compensation() );
+                    motorB.stop();
+                    motorC.go(speed - 50);
                 }else if (v_action == 'B'){
                     //up_left();
-                     motorA.go(compensation() );
-                     motorB.go(-speed);
-                     motorC.go(speed);
+                     //motorA.go(compensation() );
+                     motorA.stop();
+                     motorB.go(-speed + 50);
+                     motorC.go(speed - 50);
                 }
                 break; 
         }
-        delay(100); //450
+        delay(110); //450, 100(with compensation)
         stopAllMotors();
         //PCICR = _BV(PCIE2);
         return true;

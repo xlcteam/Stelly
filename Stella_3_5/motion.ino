@@ -127,23 +127,6 @@ int left_right_compensation(){
   }
   return speed_motorA_B;
 }
-void right()
-{
-    h_action = 'L';
-  
-    motorA.go(speed/2 + left_right_compensation() );
-    motorB.go(speed/2);
-    motorC.go(-speed);
-}
-
-void left()
-{
-    h_action = 'R';
-  
-    motorA.go(-speed/2);
-    motorB.go(-speed/2 + left_right_compensation() );
-    motorC.go(speed);
-}
 
 void up()
 {
@@ -170,6 +153,23 @@ void halt()
     motorC.stop();
 }
 
+void right()
+{
+    h_action = 'L';
+  
+    motorA.go(speed/2 + left_right_compensation() );
+    motorB.go(speed/2);
+    motorC.go(-speed);
+}
+
+void left()
+{
+    h_action = 'R';
+  
+    motorA.go(-speed/2);
+    motorB.go(-speed/2 + left_right_compensation() );
+    motorC.go(speed);
+}
 
 void back_left()
 {
