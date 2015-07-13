@@ -10,13 +10,13 @@ void line_sensors_all()
 int max_line_sensor()
 {  
     for(int i = 0; i < ( sizeof(line_sensors)/sizeof(*line_sensors)); i++){
-        //mutex[i] = 1; 
+        mutex[i] = 1; 
         if (!digitalRead(line_sensors[i]) || !ws[i]){
-            //ws[i] = 1; 
-            //mutex[i] = 0; 
+            ws[i] = 1; 
+            mutex[i] = 0; 
             return i + 1;
         }
-        //mutex[i] = 0;
+        mutex[i] = 0;
     }
     return 0;
 }

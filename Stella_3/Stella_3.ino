@@ -27,7 +27,7 @@
 
 #define SPEED_ROTATE_LOW_VOLT 80
 
-int line_sensors[] = {A11, A8, A9, A12, A15, A14};
+int line_sensors[] = {A13, A12, A11, A10, A9, A8};//{A15, A14, A11, A12, A8, A9};
 uint8_t ws[] = {1, 1, 1, 1, 1, 1};
 uint8_t mutex[] = {0, 0, 0, 0, 0, 0};
 
@@ -79,9 +79,9 @@ void test()
 ISR(PCINT2_vect)
 {
     for (uint8_t i = 0; i < 6; i++){
-        //if (!mutex[i] && ws[i] && !digitalRead(line_sensors[i]))
-        //    ws[i] = 0;
-       ws[i] = digitalRead(line_sensors[i]); 
+        if (!mutex[i] && ws[i] && !digitalRead(line_sensors[i]))
+           ws[i] = 0;
+       //ws[i] = digitalRead(line_sensors[i]); 
     }
 }
 
@@ -96,9 +96,9 @@ void setup()
     pinMode(BUTTON3, INPUT);
     
     PCICR = _BV(PCIE2);
-    PCMSK2 = _BV(PCINT16) | _BV(PCINT17) | _BV(PCINT19) | _BV(PCINT20) | _BV(PCINT22) | _BV(PCINT23);
+    PCMSK2 = _BV(PCINT16) | _BV(PCINT17) | _BV(PCINT18) | _BV(PCINT19) | _BV(PCINT20) | _BV(PCINT21);
     pinMode(LIGHT_PWM, OUTPUT);
-    analogWrite(LIGHT_PWM, 210);  // theBest:210,230,250, 98, 100, 200, 230 70, 57, 55, 35(este stale vidi), 30(niekedy vidi), 20, 60, 40, 45, 40
+    analogWrite(LIGHT_PWM, 150);  // theBest:210,230,250, 98, 100, 200, 230 70, 57, 55, 35(este stale vidi), 30(niekedy vidi), 20, 60, 40, 45, 40
     
     Serial.begin(115200);
     //Serial3.begin(115200);
@@ -197,21 +197,21 @@ void loop()
     if (motion_running){
         motion();
     } else {    
-        if (digitalRead(BUTTON2) == 1) {
+        if (digitalRead(BUTTON3) == 1) {
             vic_println("compass loading");
-            digitalWrite(LED2, HIGH);
+            digitalWrite(LED3, HIGH);
             compass_load();
-            while(digitalRead(BUTTON2) == 1); 
-            digitalWrite(LED2, LOW);
+            while(digitalRead(BUTTON3) == 1); 
+            digitalWrite(LED3, LOW);
         }
         
         // ked je vybita baterka --> na sever sa otacaj rychlejsie:
-        if (digitalRead(BUTTON3) == 1) {
+        /*if (digitalRead(BUTTON3) == 1) {
             digitalWrite(LED3, HIGH);
             speed_rotate = SPEED_ROTATE_LOW_VOLT;
             while (digitalRead(BUTTON3) == 1);
             digitalWrite(LED3, LOW);
-        }
+        }*/
 
         if(simple_motion_running){
             digitalWrite(LED1, HIGH);
