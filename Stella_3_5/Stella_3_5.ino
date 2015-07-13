@@ -12,8 +12,8 @@
 /* constant definitions*/
 #define DRIBB_SENSOR_PORT 53
 
-#define TSOP_PORT A7 // right 7
-#define TSOP_PORT2 A6 // left 6
+#define TSOP_PORT A6 // right 
+#define TSOP_PORT2 A7 // left 
 
 #define LIGHT_PWM 2
 
@@ -27,17 +27,17 @@
 
 #define SPEED_ROTATE_LOW_VOLT 80
 
-#define COMPASS_RANGE 45
+#define COMPASS_RANGE 20 //45
 
 int line_sensors[] = {A13, A12, A11, A10, A9, A8};
 uint8_t ws[] = {1, 1, 1, 1, 1, 1};
 uint8_t mutex[] = {0, 0, 0, 0, 0, 0};
 
 //Constants
-int speed= 255;
-uint8_t speed_min= 60;
-uint8_t speed_rotate = 90;
-uint8_t kicker_time = 30;
+int speed= 160; 
+int speed_min= 60;
+int speed_rotate = 70; //90
+int kicker_time = 30;
 int compass_angle;
 // line_min_value = 150;
 
@@ -164,9 +164,9 @@ void setup()
     vic_fn_add("smr", &special_movement_right);
     
     /* variables which can be set via Serial */
-    vic_var_set_bind("speed", "255", &speed);
-    vic_var_set_bind("mspeed", "60", &speed_min);
-    vic_var_set_bind("kick", "23", &kicker_time);   
+    //vic_var_set_bind("speed", "255", &speed);
+    //vic_var_set_bind("mspeed", "60", &speed_min);
+    //vic_var_set_bind("kick", "23", &kicker_time);   
 }
 
 void loop()

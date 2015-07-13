@@ -25,17 +25,21 @@ boolean check_light_sensors()
 {
     int line_sensor = max_line_sensor();
   
-    if (line_sensor != 0 && v_action != ' ' && h_action != ' ') {
+    if (line_sensor != 0 && (v_action != ' ' || h_action != ' ')) {
         //PCICR = ~_BV(PCIE2);
         stopAllMotors();
     
-        switch (line_sensor){
-                case 1:
-                case 2:
-                back();
-                delay(100); //250, 90(with compensation)
-                //PCICR = _BV(PCIE2);
-                return true;
+        if (ws[2] && ws[3] && ws[4] && ws[5]) {
+            switch (line_sensor){
+                    case 1:
+                    case 2:
+                        back();
+                        delay(100); //250, 90(with compensation)
+                        //PCICR = _BV(PCIE2);
+                        return true;
+                     default:
+                         break;
+            }
         }
     
         switch (h_action) {
@@ -69,7 +73,7 @@ boolean check_light_sensors()
                      motorB.go(-speed + 50);
                      motorC.go(speed - 50);
                 }
-                break; 
+                break;
         }
         delay(110); //450, 100(with compensation)
         stopAllMotors();
