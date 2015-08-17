@@ -52,7 +52,7 @@ void motion()
     if (check_light_sensors())
         return;
   
-    if (!centered(range)) {
+    if (!centered(COMPASS_RANGE)) {
         centralize();
         return;
     } else {
@@ -108,22 +108,34 @@ void motion()
     }
 }
 
-void left()
-{
-    h_action = 'L';
-  
-    motorA.go(speed/2);
-    motorB.go(speed/2);
-    motorC.go(-speed);  
+int compensation(){
+  int speed_motor;
+  if (compass_angle < 45 ) {
+    speed_motor = -min((compass_angle * (speed/COMPASS_RANGE)), speed); 
+  }else if (compass_angle > 315) {
+    speed_motor = min(((360 - compass_angle) * (speed/COMPASS_RANGE)), speed);
+  }  
+  return speed_motor;
 }
 
-void right()
+int left_right_compensation(){
+  int speed_motorA_B;
+  if (compass_angle < 45){
+    speed_motorA_B = min((compass_angle) * (speed/(COMPASS_RANGE*2)) , speed/2);
+  }else if (compass_angle > 315){
+    speed_motorA_B = -min(((360 - compass_angle) * (speed/(COMPASS_RANGE*2))), speed/2);
+  }
+  return speed_motorA_B;
+}
+
+void up()
 {
-    h_action = 'R';
-  
-    motorA.go(-speed/2);
-    motorB.go(-speed/2);
-    motorC.go(speed);  
+    v_action = 'U';
+
+    motorA.go(-speed);
+    motorB.go(speed);
+    motorC.stop();
+    //motorC.go(compensation());  
 }
 
 void back()
@@ -133,15 +145,25 @@ void back()
     motorA.go(speed);
     motorB.go(-speed);
     motorC.stop();
+    //motorC.go(compensation());
 }
 
-void up()
+void left()
 {
-    v_action = 'U';
+    h_action = 'L';
+  
+    motorA.go(-speed/2);
+    motorB.go(-speed/2); //+ left_right_compensation());
+    motorC.go(speed);  
+}
 
-    motorA.go(-speed);
-    motorB.go(speed);
-    motorC.stop();  
+void right()
+{
+    h_action = 'R';
+  
+    motorA.go(speed/2); //+ left_right_compensation() );
+    motorB.go(speed/2);
+    motorC.go(-speed);  
 }
 
 void halt()
@@ -158,6 +180,7 @@ void up_right()
   
     motorA.go(-speed);
     motorB.stop();
+    //motorB.go(compensation());
     motorC.go(speed);
 }
 
@@ -167,6 +190,7 @@ void up_left()
     v_action = 'U';
   
     motorA.stop();
+    //motorA.go(compensation());
     motorB.go(speed);
     motorC.go(-speed);
 }
@@ -177,6 +201,7 @@ void back_right()
     v_action = 'B';
   
     motorA.stop();
+    //motorA.go(compensation());
     motorB.go(-speed);
     motorC.go(speed);   
 }
@@ -188,6 +213,7 @@ void back_left()
   
     motorA.go(speed);
     motorB.stop();
+    //motorB.go(compensation());
     motorC.go(-speed);   
 }
 

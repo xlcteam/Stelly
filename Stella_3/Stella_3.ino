@@ -12,10 +12,10 @@
 /* constant definitions*/
 #define DRIBB_SENSOR_PORT 53
 
-#define TSOP_PORT A7 // right 7
-#define TSOP_PORT2 A6 // left 6
+#define TSOP_PORT A6 // right 7
+#define TSOP_PORT2 A7 // left 6
 
-#define LIGHT_PWM 5
+#define LIGHT_PWM 2 //5
 
 #define BUTTON1 22 //motion
 #define BUTTON2 24 //compass
@@ -25,6 +25,8 @@
 #define LED2 25 //compass
 #define LED3 27 //kick
 
+#define COMPASS_RANGE 15 //45
+
 #define SPEED_ROTATE_LOW_VOLT 80
 
 int line_sensors[] = {A13, A12, A11, A10, A9, A8};//{A15, A14, A11, A12, A8, A9};
@@ -32,11 +34,12 @@ uint8_t ws[] = {1, 1, 1, 1, 1, 1};
 uint8_t mutex[] = {0, 0, 0, 0, 0, 0};
 
 //Constants
-uint8_t speed= 250;
+uint8_t speed= 200; //255
 uint8_t speed_min= 60;
-uint8_t speed_rotate = 55;
+uint8_t speed_rotate = 70; //55
 uint8_t range = 10;
 uint8_t kicker_time = 30;
+int compass_angle;
 // line_min_value = 150;
 
 Motor motorB = Motor(30, 8); // dir, pwm
@@ -175,7 +178,7 @@ void loop()
       vic_process(a);
     }
     */
-
+    compass_angle = (int) compass.angle();
     if(Serial.available()){
         char a = Serial.read();
         vic_process(a);
@@ -184,14 +187,16 @@ void loop()
 
     if (digitalRead(BUTTON1) == 1){
         vic_println(motion_running);
-        motion_start();
-       /* if (motion_running == 0 ){
+        //motion_start();
+        //compass_load();
+        if (motion_running == 0 ){
             motion_start();
+            compass_load();
         } else {
             motion_stop();
         }
 
-        while(digitalRead(BUTTON1) == 1); */
+        while(digitalRead(BUTTON1) == 1); 
     }
 
     if (motion_running){
