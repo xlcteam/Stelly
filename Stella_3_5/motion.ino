@@ -134,8 +134,8 @@ void up()
 
     motorA.go(speed);
     motorB.go(-speed);
-    motorC.stop();
-    //motorC.go(compensation()); 
+    //motorC.stop();
+    motorC.go(compensation()); 
 }
 
 void back()
@@ -144,8 +144,8 @@ void back()
 
     motorA.go(-speed);
     motorB.go(speed);
-    motorC.stop();
-    //motorC.go(compensation()); 
+    //motorC.stop();
+    motorC.go(compensation()); 
 }
 
 void halt()
@@ -159,8 +159,8 @@ void right()
 {
     h_action = 'R';
   
-    //motorA.go(speed/2 + left_right_compensation());
-    motorA.go(speed/2);
+    motorA.go(speed/2 + left_right_compensation());
+    //motorA.go(speed/2);
     motorB.go(speed/2);
     motorC.go(-speed);
 }
@@ -170,8 +170,8 @@ void left()
     h_action = 'L';
   
     motorA.go(-speed/2);
-    motorB.go(-speed/2);
-    //motorB.go(-speed/2 + left_right_compensation());
+    //motorB.go(-speed/2);
+    motorB.go(-speed/2 + left_right_compensation());
     motorC.go(speed);
 }
 
@@ -181,8 +181,8 @@ void back_left()
     v_action = 'B';
   
     motorA.go(-speed);
-    motorB.stop();
-    //motorB.go(compensation());
+    //motorB.stop();
+    motorB.go(compensation());
     motorC.go(speed);
 }
 
@@ -191,8 +191,8 @@ void back_right()
     h_action = 'R';
     v_action = 'B';
   
-    //motorA.go(compensation() );
-    motorA.stop();
+    motorA.go(compensation() );
+    //motorA.stop();
     motorB.go(speed);
     motorC.go(-speed);
 }
@@ -202,8 +202,8 @@ void up_left()
     h_action = 'L';
     v_action = 'U';
   
-    //motorA.go(compensation() );
-    motorA.stop();
+    motorA.go(compensation() );
+    //motorA.stop();
     motorB.go(-speed);
     motorC.go(speed);   
 }
@@ -214,8 +214,8 @@ void up_right()
     v_action = 'U';
   
     motorA.go(speed);
-   // motorB.go(compensation());
-    motorB.stop();
+    motorB.go(compensation());
+    //motorB.stop();
     motorC.go(-speed);   
 }
 

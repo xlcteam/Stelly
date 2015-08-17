@@ -27,14 +27,14 @@
 
 #define SPEED_ROTATE_LOW_VOLT 80
 
-#define COMPASS_RANGE 20 //45
+#define COMPASS_RANGE 45 //45
 
 int line_sensors[] = {A13, A12, A11, A10, A9, A8};
 uint8_t ws[] = {1, 1, 1, 1, 1, 1};
 uint8_t mutex[] = {0, 0, 0, 0, 0, 0};
 
 //Constants
-int speed= 160; 
+int speed= 160; //160 
 int speed_min= 60;
 int speed_rotate = 70; //90
 int kicker_time = 30;
@@ -101,7 +101,7 @@ void setup()
     PCICR = _BV(PCIE2);
     PCMSK2 = _BV(PCINT16) | _BV(PCINT17) | _BV(PCINT18) | _BV(PCINT19) | _BV(PCINT20) | _BV(PCINT21);
     pinMode(LIGHT_PWM, OUTPUT);
-    analogWrite(LIGHT_PWM, 120); // 210
+    analogWrite(LIGHT_PWM, 100); // 210
     
     Serial.begin(115200);
     //Serial3.begin(115200);
