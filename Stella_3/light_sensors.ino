@@ -33,7 +33,7 @@ boolean check_light_sensors()
                 case 1:
                 case 2:
                 back();
-                delay(250);
+                delay(100); //250
                 //PCICR = _BV(PCIE2);
                 return true;
         }
@@ -56,9 +56,9 @@ boolean check_light_sensors()
             case 'R':
                 if (v_action == 'U'){
                    //back_left();
-                   motorA.go(+speed-70);
+                   motorA.go(speed-70);
                    motorB.stop();
-                   motorC.go(speed-70);
+                   motorC.go(-speed+70);
                 }else if (v_action == 'B'){
                     //up_left();
                     motorA.stop();
@@ -67,7 +67,7 @@ boolean check_light_sensors()
                 }
                 break; 
         }
-        delay(450);
+        delay(200); //450
         stopAllMotors();
         //PCICR = _BV(PCIE2);
         return true;
