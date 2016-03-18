@@ -5,8 +5,10 @@ void line_sensors_all()
     for(int i = 0; i < ( sizeof(line_sensors)/sizeof(*line_sensors)); i++){
         tmp = analogRead(line_sensors[i]);
 
-        vic_print(tmp);
-        vic_print(" ");
+        //vic_print(tmp);
+        //vic_print(" ");
+        Serial.print(tmp);
+        Serial.print(" ");
         if(tmp < max_val){
             max_val = tmp;
             max_s = i;
@@ -15,8 +17,10 @@ void line_sensors_all()
         }
     }
 
-    vic_print(max_s + 1);
-    vic_println();
+    //vic_print(max_s + 1);
+    //vic_println();
+    Serial.print(max_s + 1);
+    Serial.println();
 }
 
 

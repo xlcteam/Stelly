@@ -23,7 +23,8 @@ void motion_start()
 {
     motion_running = 1;
     digitalWrite(LED1, HIGH);
-    vic_println("AutoMotion started");
+    //vic_println("AutoMotion started");
+    Serial.println("AutoMotion started");
 }
 
 void motion_stop()
@@ -32,7 +33,8 @@ void motion_stop()
     stopAllMotors();
     dribbler_off();
     analogWrite(LED1, LOW);
-    vic_println("AutoMotion stopped");
+    //vic_println("AutoMotion stopped");
+    Serial.println("AutoMotion stopped");
 }
 
 void stopAllMotors()
@@ -44,8 +46,8 @@ void stopAllMotors()
 
 void motion()
 {  
-    if (check_light_sensors())
-        return;
+    //if (check_light_sensors())
+      //  return;
   
     if (!centered(range)) {
         centralize();

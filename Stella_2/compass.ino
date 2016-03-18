@@ -1,7 +1,8 @@
 
 void serial_compass()
 {
-    vic_println(compass.angle());
+    //vic_println(compass.angle());
+    Serial.println(compass.angle());
 }
 
 void compass_load()
@@ -11,7 +12,8 @@ void compass_load()
 
 void compass_default()
 {
-    vic_println(compass.real_north());
+    //vic_println(compass.real_north());
+    Serial.println(compass.real_north());
 }
 
 void serial_compass_loop_start()
