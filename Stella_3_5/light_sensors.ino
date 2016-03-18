@@ -1,10 +1,13 @@
 void line_sensors_all()
 {  
     for(int i = 0; i < ( sizeof(line_sensors)/sizeof(*line_sensors)); i++){    
-        vic_print(digitalRead(line_sensors[i]));
-        vic_print(" ");
+        //vic_print(digitalRead(line_sensors[i]));
+        //vic_print(" ");
+        Serial.print(digitalRead(line_sensors[i]));
+        Serial.print(" ");
     }
-    vic_println();  
+    //vic_println();  
+    Serial.println();
 }
 
 int max_line_sensor()
