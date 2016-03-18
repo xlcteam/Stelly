@@ -72,14 +72,14 @@ void sensors_all()
   seeker.read(&dir, &s1, &s2, &s3, &s4, &s5);
  
   // pravy
-  vic_print(analogRead(TSOP_PORT));
-  vic_print(" ");
+  //vic_print(analogRead(TSOP_PORT)); vic_print(" ");
+  Serial.print(analogRead(TSOP_PORT)); Serial.print(" ");
   
   //lavy
-  vic_print(analogRead(TSOP_PORT2));
-  vic_print(" ");
+  //vic_print(analogRead(TSOP_PORT2));vic_print(" ");
+  Serial.print(analogRead(TSOP_PORT)); Serial.print(" ");
   
-  vic_print(dir);
+  /*vic_print(dir);
   vic_print(" ");
   vic_print(s1);
   vic_print(" ");
@@ -92,13 +92,24 @@ void sensors_all()
   vic_print(s5);
   //vic_print(" ");    
   //vic_print(max_sensor());  
-  vic_println();
-  
+  vic_println();*/
+  Serial.print(dir);
+  Serial.print(" ");
+  Serial.print(s1);
+  Serial.print(" ");
+  Serial.print(s2);
+  Serial.print(" ");
+  Serial.print(s3);
+  Serial.print(" ");
+  Serial.print(s4);
+  Serial.print(" ");
+  Serial.print(s5);
+  Serial.println(); 
 }
 
 
-void serial_dribbler_sernsor()
+/*void serial_dribbler_sernsor()
 {
   vic_func();
   vic_return("%d", ball_in_dribbler());
-}
+}*/

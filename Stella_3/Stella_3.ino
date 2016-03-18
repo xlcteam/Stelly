@@ -34,7 +34,7 @@ uint8_t ws[] = {1, 1, 1, 1, 1, 1};
 uint8_t mutex[] = {0, 0, 0, 0, 0, 0};
 
 //Constants
-uint8_t speed= 220; //255
+uint8_t speed= 225; //255,220
 uint8_t speed_min= 60;
 uint8_t speed_rotate = 70; //55
 uint8_t range = 10;
@@ -42,10 +42,10 @@ uint8_t kicker_time = 30;
 int compass_angle;
 // line_min_value = 150;
 
-Motor motorB = Motor(30, 8); // dir, pwm
+Motor dribbler = Motor(30, 8); // dir, pwm
 Motor motorA = Motor(32, 7);
 Motor motorC = Motor(34, 6);
-Motor dribbler = Motor(36, 4);
+Motor motorB = Motor(36, 4);
 
 RelativeNXTCompass compass;
 HTIRSeekerV2 seeker;
@@ -105,7 +105,7 @@ void setup()
     
     Serial.begin(115200);
     //Serial3.begin(115200);
-    vic_init(115200);
+    //vic_init(115200);
   
     stopAllMotors();
     
@@ -116,58 +116,58 @@ void setup()
     stopAllMotors();
    
     /* functions which are callable via Serial */
-    vic_fn_add("dc", &compass_default);
-    vic_fn_add("lc", &compass_load);
+    vic_fn_add("dc", compass_default);
+    vic_fn_add("lc", compass_load);
     
-    vic_fn_add("d", &dribbler_on);
-    vic_fn_add("D", &dribbler_off);
+    vic_fn_add("d", dribbler_on);
+    vic_fn_add("D", dribbler_off);
     
-    vic_fn_add("ds", &serial_dribbler_sernsor);
+    //vic_fn_add("ds", serial_dribbler_sernsor);
     
-    vic_fn_add("c", &serial_compass_loop_start);
-    vic_fn_add("C", &serial_compass_loop_stop);
-    vic_fn_add("cs", &serial_compass);
+    vic_fn_add("c", serial_compass_loop_start);
+    vic_fn_add("C", serial_compass_loop_stop);
+    vic_fn_add("cs", serial_compass);
     
-    vic_fn_add("k", &kick);
+    vic_fn_add("k", kick);
     
-    vic_fn_add("m", &motion_start);
-    vic_fn_add("M", &motion_stop);
+    vic_fn_add("m", motion_start);
+    vic_fn_add("M", motion_stop);
   
-    vic_fn_add("i", &simple_motion_start);
-    vic_fn_add("I", &simple_motion_stop);
+    vic_fn_add("i", simple_motion_start);
+    vic_fn_add("I", simple_motion_stop);
   
-    vic_fn_add("s", &sensors_all);
+    vic_fn_add("s", sensors_all);
     
-    vic_fn_add("r", &right);
-    vic_fn_add("l", &left);
-    vic_fn_add("u", &up);
-    vic_fn_add("b", &back);
-    vic_fn_add("h", &halt);
+    vic_fn_add("r", right);
+    vic_fn_add("l", left);
+    vic_fn_add("u", up);
+    vic_fn_add("b", back);
+    vic_fn_add("h", halt);
   
-    vic_fn_add("bl", &back_left);
-    vic_fn_add("br", &back_right);
+    vic_fn_add("bl", back_left);
+    vic_fn_add("br", back_right);
     
-    vic_fn_add("ul", &up_left);
-    vic_fn_add("ur", &up_right);
+    vic_fn_add("ul", up_left);
+    vic_fn_add("ur", up_right);
     
-    vic_fn_add("mA", &mA);
-    vic_fn_add("mB", &mB);
-    vic_fn_add("mC", &mC);
+    vic_fn_add("mA", mA);
+    vic_fn_add("mB", mB);
+    vic_fn_add("mC", mC);
     
-    vic_fn_add("t", &test);
+    vic_fn_add("t", test);
     
-    vic_fn_add("lS", &line_sensors_all); 
+    vic_fn_add("lS", line_sensors_all); 
     
-    vic_fn_add("smu", &special_movement_up);
-    vic_fn_add("smb", &special_movement_back);
-    vic_fn_add("sml", &special_movement_left);
-    vic_fn_add("smr", &special_movement_right);
+    vic_fn_add("smu", special_movement_up);
+    vic_fn_add("smb", special_movement_back);
+    vic_fn_add("sml", special_movement_left);
+    vic_fn_add("smr", special_movement_right);
     
     /* variables which can be set via Serial */
-    vic_var_set_bind("speed", "255", &speed);
-    vic_var_set_bind("mspeed", "60", &speed_min);
-    vic_var_set_bind("range", "16", &range);
-    vic_var_set_bind("kick", "23", &kicker_time);   
+    /*vic_var_set_bind("speed", "255", speed);
+    vic_var_set_bind("mspeed", "60", speed_min);
+    vic_var_set_bind("range", "16", range);
+    vic_var_set_bind("kick", "23", kicker_time);  */ 
 }
 
 void loop()
@@ -179,14 +179,15 @@ void loop()
     }
     */
     compass_angle = (int) compass.angle();
-    if(Serial.available()){
+    if(Serial.available() > 0){
         char a = Serial.read();
         vic_process(a);
     }
-    vic_tasks_run(); 
+    //vic_tasks_run(); 
 
     if (digitalRead(BUTTON1) == 1){
-        vic_println(motion_running);
+        //vic_println(motion_running);
+        Serial.println(motion_running);
         //motion_start();
         //compass_load();
         if (motion_running == 0 ){
@@ -203,7 +204,8 @@ void loop()
         motion();
     } else {    
         if (digitalRead(BUTTON3) == 1) {
-            vic_println("compass loading");
+            //vic_println("compass loading");
+            Serial.println("compass loading");
             digitalWrite(LED3, HIGH);
             compass_load();
             while(digitalRead(BUTTON3) == 1); 

@@ -29,7 +29,8 @@ void motion_start()
         mutex[i] = 0;
     }  
     digitalWrite(LED1, HIGH);
-    vic_println("AutoMotion started");
+    //vic_println("AutoMotion started");
+    Serial.println("AutoMotion started");
 }
 
 void motion_stop()
@@ -37,7 +38,8 @@ void motion_stop()
     motion_running = 0;
     stopAllMotors();
     dribbler_off();
-    vic_println("AutoMotion stopped");
+    //vic_println("AutoMotion stopped");
+    Serial.println("AutoMotion stopped");
 }
 
 void stopAllMotors()
