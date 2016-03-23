@@ -25,7 +25,7 @@
 #define LED2 25 //compass
 #define LED3 27 //kick
 
-#define COMPASS_RANGE 15 //45
+#define COMPASS_RANGE 25 //45, 15, 25-OK
 
 #define SPEED_ROTATE_LOW_VOLT 80
 
@@ -36,7 +36,7 @@ uint8_t mutex[] = {0, 0, 0, 0, 0, 0};
 //Constants
 uint8_t speed= 225; //255,220
 uint8_t speed_min= 60;
-uint8_t speed_rotate = 70; //55
+uint8_t speed_rotate = 80; //55, 70
 uint8_t range = 10;
 uint8_t kicker_time = 30;
 int compass_angle;
