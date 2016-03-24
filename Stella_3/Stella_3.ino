@@ -36,7 +36,7 @@ uint8_t mutex[] = {0, 0, 0, 0, 0, 0};
 //Constants
 uint8_t speed= 225; //255,220
 uint8_t speed_min= 60;
-uint8_t speed_rotate = 80; //55, 70
+uint8_t speed_rotate = 80; //55, 70, 80
 uint8_t range = 10;
 uint8_t kicker_time = 30;
 int compass_angle;

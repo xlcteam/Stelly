@@ -1,5 +1,5 @@
-void line_sensors_all()
-{  
+void line_sensors_all(){
+  while (1 == 1){  
     for(int i = 0; i < ( sizeof(line_sensors)/sizeof(*line_sensors)); i++){    
         //vic_print(digitalRead(line_sensors[i]));
         //vic_print(" ");
@@ -8,6 +8,7 @@ void line_sensors_all()
     }
     //vic_println();  
     Serial.println();
+  }
 }
 
 int max_line_sensor()
@@ -70,7 +71,7 @@ boolean check_light_sensors()
                 }
                 break; 
         }
-        delay(150); //450, 200, 100
+        delay(100); //450, 200, 100
         stopAllMotors();
         //PCICR = _BV(PCIE2);
         return true;
