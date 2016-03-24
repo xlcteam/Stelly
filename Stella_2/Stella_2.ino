@@ -10,9 +10,9 @@
 #include <vic.h>
 
 //Constants
-int speed=255;
-int speed_min=60;
-int speed_rotate=90; // 11V == 90      15V == 70(65)
+int speed = 255;
+int speed_min = 60;
+int speed_rotate = 90; // 11V == 90      15V == 70(65)
 int range = 9;
 int line_min_value = 200;  // 150
 
@@ -20,6 +20,8 @@ int line_min_value = 200;  // 150
 
 #define TSOP_PORT A8 //lavy
 #define TSOP_PORT2 A9 // pravy
+
+#define LIGHT_PWM 2
 
 #define BUTTON1 53 //motion, 12
 #define BUTTON2 42 //compass
@@ -39,8 +41,11 @@ int line_min_value = 200;  // 150
 #define PHOTOGATE A5
 
 //int line_sensors[] = {A13, A14, A15, A2, A3, A4, A5};
-int line_sensors[] = {A15, A13, A2, A3, A4, A5}; // A13
-int line_values[] = {75, 70, 185, 160, 120, 120};
+//int line_sensors[] = {A15, A13, A2, A3, A4, A5}; // A13
+int line_sensors[] = {A13, A12, A11, A10, A9, A8};
+//int line_values[] = {75, 70, 185, 160, 120, 120};
+uint8_t ws[] = {1, 1, 1, 1, 1, 1};
+uint8_t mutex[] = {0, 0, 0, 0, 0, 0};
 //{55, 50, 140, 130, 100, 100}; // A14 160; 65, 65, 150, 150, 150, 150,,,,50, 120,100, 100, 120,,,50, 150, 100, 120, 120//50
 //                  { 60,60, 90,  62,  60,  62}
 //                    
@@ -94,6 +99,17 @@ void test()
   } 
 }
 
+ISR(PCINT2_vect)
+{
+    for (uint8_t i = 0; i < 6; i++){
+        if (!mutex[i] && ws[i] && !digitalRead(line_sensors[i])) {
+            ws[i] = 0;
+        }
+       //ws[i] = digitalRead(line_sensors[i]); 
+    }
+}
+
+
 void setup()
 {
     //LEDS
@@ -123,6 +139,11 @@ void setup()
     compass.set_north();   
   
     stopAllMotors();
+    
+    PCICR = _BV(PCIE2);
+    PCMSK2 = _BV(PCINT16) | _BV(PCINT17) | _BV(PCINT18) | _BV(PCINT19) | _BV(PCINT20) | _BV(PCINT21);
+    pinMode(LIGHT_PWM, OUTPUT);
+    analogWrite(LIGHT_PWM, 170);
     
     vic_fn_add("dc", compass_default);
     vic_fn_add("lc", compass_load);

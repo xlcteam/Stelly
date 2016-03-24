@@ -44,12 +44,12 @@ int max_sensor()
     }
   
     /* direction is zero when the ball is behind the robot, so the IRSeeker doesnt see it */
-    if (dir == 0){
+   /* if (dir == 0){
         /*
         tsop A8 -> left
         tsop2 A9 -> right
         */
-        tsop = analogRead(TSOP_PORT);
+      /*  tsop = analogRead(TSOP_PORT);
         tsop2 = analogRead(TSOP_PORT2);
         
         if (tsop + tsop2 < 2000){
@@ -60,7 +60,6 @@ int max_sensor()
             } else {
                 sensor = 5;
             } 
-            
             
             /*else if (tsop < tsop2){
                 if (tsop < TOO_CLOSE){
@@ -79,14 +78,14 @@ int max_sensor()
                     sensor = 3;
                 }
             }*/
-        }
+      /*  }
     }
-  
+  */
     return sensor;
 }
 
-void sensors_all()
-{  
+void sensors_all() {
+  while(1 == 1) {  
     uint8_t dir, s1, s2, s3, s4, s5;
     seeker.read(&dir, &s1, &s2, &s3, &s4, &s5);
   
@@ -130,6 +129,7 @@ void sensors_all()
     vic_print(max_sensor());  
     vic_println();
     */
+  }
 }
 
 /*void serial_dribbler_sernsor()

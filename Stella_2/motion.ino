@@ -46,8 +46,8 @@ void stopAllMotors()
 
 void motion()
 {  
-    //if (check_light_sensors())
-      //  return;
+    if (check_light_sensors())
+        return;
   
     if (!centered(range)) {
         centralize();
