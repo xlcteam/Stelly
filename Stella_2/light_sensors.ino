@@ -76,10 +76,11 @@ boolean check_light_sensors(){
         switch (line_sensor){
             case 5:
             case 6:
-                if (v_action == 'U')
+                if (v_action == 'U'){
                     back();
-                else if (v_action == 'B')
+                }else if (v_action == 'B'){
                     up();
+                }               
                 delay(200); //250
                 return true;
         }
@@ -92,14 +93,15 @@ boolean check_light_sensors(){
                    motorA.stop();
                    motorB.go(speed-50);
                    motorC.go(-speed+50);
-                }
-                else if (v_action == 'B'){
+                }else if (v_action == 'B'){
                     // up_right();
                     motorA.go(speed-50);
                     motorB.stop();
                     motorC.go(-speed+50); 
-                }
-                break;
+                }else {
+                    right();
+                  }
+                    break;
 
             case 'R':
                 if (v_action == 'U'){
@@ -107,16 +109,17 @@ boolean check_light_sensors(){
                     motorA.go(-speed+50);
                     motorB.stop();
                     motorC.go(speed-50);
-                }
-                else if (v_action == 'B'){
+                }else if (v_action == 'B'){
                     // up_left();
                      motorA.stop();
                      motorB.go(-speed+50);
                      motorC.go(speed-50);
-                }
+                }else {
+                    left();
+                  }
                 break; 
         }
-        delay(200); //400
+        delay(150); //400, 200
         stopAllMotors();       
         return true;
     } else {

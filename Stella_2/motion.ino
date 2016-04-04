@@ -112,6 +112,7 @@ void motion()
 void left()
 {
     h_action = 'L';
+    v_action = ' ';
     
     motorA.go(-speed/2);
     motorB.go(-speed/2);
@@ -121,6 +122,7 @@ void left()
 void right()
 {
     h_action = 'R';
+    v_action = ' ';
     
     motorA.go(speed/2);
     motorB.go(speed/2);
