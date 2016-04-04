@@ -34,7 +34,7 @@ uint8_t ws[] = {1, 1, 1, 1, 1, 1};
 uint8_t mutex[] = {0, 0, 0, 0, 0, 0};
 
 //Constants
-uint8_t speed= 225; //255,220
+uint8_t speed= 200; //255,220
 uint8_t speed_min= 60;
 uint8_t speed_rotate = 80; //55, 70, 80
 uint8_t range = 10;
@@ -82,9 +82,12 @@ void test()
 ISR(PCINT2_vect)
 {
     for (uint8_t i = 0; i < 6; i++){
-        if (!mutex[i] && ws[i] && !digitalRead(line_sensors[i]))
-           ws[i] = 0;
-       //ws[i] = digitalRead(line_sensors[i]); 
+        if (!mutex[i] && ws[i]) {
+            if (!digitalRead(line_sensors[i]))
+                ws[i] = 0;
+            else
+                ws[i] = 1;
+        }
     }
 }
 

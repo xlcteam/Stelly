@@ -55,6 +55,9 @@ boolean check_light_sensors()
                    motorB.stop();
                    motorC.go(speed);// -70
                 }
+                else {
+                   right();
+                }
                 break;
 
             case 'R':
@@ -68,6 +71,8 @@ boolean check_light_sensors()
                     motorA.stop();
                     motorB.go(speed); // -70
                     motorC.go(-speed); //+70
+                }else {
+                    left(); 
                 }
                 break; 
         }

@@ -153,6 +153,7 @@ void back()
 void left()
 {
     h_action = 'L';
+    v_action = ' ';
   
     motorA.go(speed/2);
     motorB.go(speed/2); // + left_right_compensation());
@@ -162,6 +163,7 @@ void left()
 void right()
 {
     h_action = 'R';
+    v_action = ' ';
   
     motorA.go(-speed/2); // + left_right_compensation() );
     motorB.go(-speed/2);
