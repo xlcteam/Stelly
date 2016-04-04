@@ -67,7 +67,7 @@ int max_sensor()
 }
 
 void sensors_all()
-{  
+{  while(1 == 1){
   uint8_t dir, s1, s2, s3, s4, s5;
   seeker.read(&dir, &s1, &s2, &s3, &s4, &s5);
  
@@ -105,6 +105,7 @@ void sensors_all()
   Serial.print(" ");
   Serial.print(s5);
   Serial.println();
+  }
 }
 
 /*void serial_dribbler_sernsor()

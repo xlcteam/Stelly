@@ -27,7 +27,7 @@
 
 #define SPEED_ROTATE_LOW_VOLT 80
 
-#define COMPASS_RANGE 45 //45, 35(bez kompenzacie)
+#define COMPASS_RANGE 10 //45, 35(bez kompenzacie)
 
 int line_sensors[] = {A13, A12, A11, A10, A9, A8};
 uint8_t ws[] = {1, 1, 1, 1, 1, 1};
@@ -36,14 +36,14 @@ uint8_t mutex[] = {0, 0, 0, 0, 0, 0};
 //Constants
 int speed = 255; //160 , 150
 int speed_min= 60;
-int speed_rotate = 90; //90,70
+int speed_rotate = 100; //90,70
 int kicker_time = 30;
 int compass_angle;
 // line_min_value = 150;
 
-Motor motorB = Motor(30, 8); // dir, pwm
-Motor motorA = Motor(32, 7);
-Motor motorC = Motor(34, 6);
+Motor motorB = Motor(29, 8); // dir, pwm
+Motor motorA = Motor(33, 6); //32
+Motor motorC = Motor(31, 7); //34
 Motor dribbler = Motor(36, 4);
 
 RelativeNXTCompass compass;
