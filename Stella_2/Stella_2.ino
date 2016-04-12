@@ -18,8 +18,8 @@ int line_min_value = 200;  // 150
 
 #define DRIBB_SENSOR_PORT 53
 
-#define TSOP_PORT A8 //lavy
-#define TSOP_PORT2 A9 // pravy
+#define TSOP_PORT A14 //lavy 15,14
+#define TSOP_PORT2 A15 // pravy
 
 #define LIGHT_PWM 2
 
