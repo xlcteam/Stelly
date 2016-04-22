@@ -44,18 +44,20 @@ int max_sensor()
     }
   
     /* direction is zero when the ball is behind the robot, so the IRSeeker doesnt see it */
-   /* if (dir == 0){
+    if (dir == 0){
         /*
-        tsop A8 -> left
-        tsop2 A9 -> right
+        tsop A15 -> left
+        tsop2 A14 -> right
         */
-      /*  tsop = analogRead(TSOP_PORT);
+        tsop = analogRead(TSOP_PORT);
         tsop2 = analogRead(TSOP_PORT2);
         
         if (tsop + tsop2 < 2000){
-            if ((tsop - tsop2 > 0) && (tsop - tsop2 < tsop_range)){
-                sensor = 6;         
-            } else if ((tsop2 - tsop > 0) && (tsop2 - tsop < tsop_range)){
+            // vidi pravy
+            if ((tsop - tsop2 > 0)) {//&& (tsop - tsop2 < tsop_range)){
+                sensor = 6;  
+            //vidi lavy       
+            } else if ((tsop2 - tsop > 0)) {//&& (tsop2 - tsop < tsop_range)){
                 sensor = 3;
             } else {
                 sensor = 5;
@@ -78,9 +80,9 @@ int max_sensor()
                     sensor = 3;
                 }
             }*/
-      /*  }
+        }
     }
-  */
+  
     return sensor;
 }
 

@@ -74,8 +74,8 @@ boolean check_light_sensors(){
   
    //if (line_sensor != 0 && v_action != ' ' && h_action != ' ') {
         switch (line_sensor){
-            case 5:
-            case 6:
+            case 1:
+            case 2://5,6
                 if (v_action == 'U'){
                     back();
                 }else if (v_action == 'B'){

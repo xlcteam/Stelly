@@ -18,8 +18,8 @@ int line_min_value = 200;  // 150
 
 #define DRIBB_SENSOR_PORT 53
 
-#define TSOP_PORT A14 //lavy 15,14
-#define TSOP_PORT2 A15 // pravy
+#define TSOP_PORT A15 //lavy 15,14
+#define TSOP_PORT2 A14 // pravy
 
 #define LIGHT_PWM 2
 
@@ -143,7 +143,7 @@ void setup()
     PCICR = _BV(PCIE2);
     PCMSK2 = _BV(PCINT16) | _BV(PCINT17) | _BV(PCINT18) | _BV(PCINT19) | _BV(PCINT20) | _BV(PCINT21);
     pinMode(LIGHT_PWM, OUTPUT);
-    analogWrite(LIGHT_PWM, 160); //170
+    analogWrite(LIGHT_PWM, 165); //170
     
     vic_fn_add("dc", compass_default);
     vic_fn_add("lc", compass_load);
