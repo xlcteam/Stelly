@@ -41,7 +41,7 @@ boolean check_light_sensors()
                   } else { back();
                 }
                 //back();
-                delay(100); //250
+                delay(140); //250
                 //PCICR = _BV(PCIE2);
                 return true;
         }
@@ -80,7 +80,7 @@ boolean check_light_sensors()
                 }
                 break; 
         }
-        delay(90); //450, 200, 100
+        delay(100); //450, 200, 100
         stopAllMotors();
         //PCICR = _BV(PCIE2);
         return true;

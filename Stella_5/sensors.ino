@@ -24,23 +24,32 @@ int max_sensor()
         case 3:
             sensor = 6;
             break;
-    
+        
         case 2:
-        case 1:
-            sensor = 5;
+            sensor = 4;//6
+            break;
     
-        case 8:
+        //case 2:
+        case 1:
+            sensor = 3;//5;
+    
+       // case 8:
         case 9:
+            sensor = 6;//4;
+            break;
+        case 8:
             sensor = 4;
             break;
-    
         case 7:
+        //2case 8:
             sensor = 3;
             break;
-    
+       
         case 6:
             sensor = 2;
             break;
+        
+        
     }
 
     /* direction is zero when the ball is behind the robot, so the IRSeeker doesnt see it */
@@ -50,7 +59,7 @@ int max_sensor()
         tsop = analogRead(TSOP_PORT); // pravy
         tsop2 = analogRead(TSOP_PORT2); // lavy
          
-        if (tsop + tsop2 < 2000){
+        if (tsop + tsop2 < 2000){ //2000
           // vidi lavy
             if (tsop - tsop2 > 0){
                 sensor = 3; 

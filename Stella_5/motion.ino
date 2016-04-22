@@ -137,7 +137,7 @@ void up()
     motorA.go(-speed);
     motorB.go(speed);
     motorC.stop();
-    //motorC.go(compensation());  
+   // motorC.go(compensation());  
 }
 
 void back()
@@ -156,7 +156,7 @@ void left()
     v_action = ' ';
   
     motorA.go(speed/2);
-    motorB.go(speed/2); // + left_right_compensation());
+    motorB.go(speed/2);// + left_right_compensation());
     motorC.go(-speed);  
 }
 
@@ -165,7 +165,7 @@ void right()
     h_action = 'R';
     v_action = ' ';
   
-    motorA.go(-speed/2); // + left_right_compensation() );
+    motorA.go(-speed/2);// + left_right_compensation() );
     motorB.go(-speed/2);
     motorC.go(speed);  
 }

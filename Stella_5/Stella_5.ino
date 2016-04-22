@@ -36,16 +36,16 @@ uint8_t mutex[] = {0, 0, 0, 0, 0, 0};
 //Constants
 uint8_t speed= 255; //255,220
 uint8_t speed_min= 60;
-uint8_t speed_rotate = 45; //55, 70, 80
+uint8_t speed_rotate = 60; //55, 70, 80, 50
 uint8_t range = 10;
 uint8_t kicker_time = 30;
 int compass_angle;
 // line_min_value = 150;
 
-Motor dribbler = Motor(30, 8); // dir, pwm
+Motor motorB = Motor(30, 8); // dir, pwm
 Motor motorA = Motor(32, 7);
 Motor motorC = Motor(34, 6);
-Motor motorB = Motor(36, 4);
+Motor dribbler = Motor(36, 4);
 
 RelativeNXTCompass compass;
 HTIRSeekerV2 seeker;
@@ -104,7 +104,7 @@ void setup()
     PCICR = _BV(PCIE2);
     PCMSK2 = _BV(PCINT16) | _BV(PCINT17) | _BV(PCINT18) | _BV(PCINT19) | _BV(PCINT20) | _BV(PCINT21);
     pinMode(LIGHT_PWM, OUTPUT);
-    analogWrite(LIGHT_PWM, 150);  // theBest:210,230,250, 98, 100, 200, 230 70, 57, 55, 35(este stale vidi), 30(niekedy vidi), 20, 60, 40, 45, 40
+    analogWrite(LIGHT_PWM, 170);  // theBest:210,230,250, 98, 100, 200, 230 70, 57, 55, 35(este stale vidi), 30(niekedy vidi), 20, 60, 40, 45, 40
     
     Serial.begin(115200);
     //Serial3.begin(115200);
