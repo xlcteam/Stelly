@@ -12,7 +12,7 @@
 //Constants
 int speed = 255;
 int speed_min = 60;
-int speed_rotate = 90; // 11V == 90      15V == 70(65)
+int speed_rotate = 94; // 11V == 90      15V == 70(65)
 int range = 9;
 int line_min_value = 200;  // 150
 
@@ -143,7 +143,7 @@ void setup()
     PCICR = _BV(PCIE2);
     PCMSK2 = _BV(PCINT16) | _BV(PCINT17) | _BV(PCINT18) | _BV(PCINT19) | _BV(PCINT20) | _BV(PCINT21);
     pinMode(LIGHT_PWM, OUTPUT);
-    analogWrite(LIGHT_PWM, 165); //170
+    analogWrite(LIGHT_PWM, 170); //165
     
     vic_fn_add("dc", compass_default);
     vic_fn_add("lc", compass_load);

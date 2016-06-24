@@ -82,6 +82,7 @@ boolean check_light_sensors(){
                     up();
                 }               
                 delay(200); //250
+                stopAllMotors();
                 return true;
         }
    
@@ -91,13 +92,13 @@ boolean check_light_sensors(){
                 if (v_action == 'U'){
                    // back_right();
                    motorA.stop();
-                   motorB.go(speed-50);
-                   motorC.go(-speed+50);
+                   motorB.go(speed-40);
+                   motorC.go(-speed+40);
                 }else if (v_action == 'B'){
                     // up_right();
-                    motorA.go(speed-50);
+                    motorA.go(speed-40);
                     motorB.stop();
-                    motorC.go(-speed+50); 
+                    motorC.go(-speed+40); 
                 }else {
                     right();
                   }
@@ -106,14 +107,14 @@ boolean check_light_sensors(){
             case 'R':
                 if (v_action == 'U'){
                     // back_left();
-                    motorA.go(-speed+50);
+                    motorA.go(-speed+40);
                     motorB.stop();
-                    motorC.go(speed-50);
+                    motorC.go(speed-40);
                 }else if (v_action == 'B'){
                     // up_left();
                      motorA.stop();
-                     motorB.go(-speed+50);
-                     motorC.go(speed-50);
+                     motorB.go(-speed+40);
+                     motorC.go(speed-40);
                 }else {
                     left();
                   }
