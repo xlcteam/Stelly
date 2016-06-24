@@ -12,8 +12,8 @@
 /* constant definitions*/
 #define DRIBB_SENSOR_PORT 53
 
-#define TSOP_PORT A6 // right 7
-#define TSOP_PORT2 A7 // left 6
+#define TSOP_PORT A6 // right 
+#define TSOP_PORT2 A5 // left 
 
 #define LIGHT_PWM 5
 

@@ -73,8 +73,8 @@ void motion()
             break; 
       
         case 7:
-            left();
-            //up_left();
+            //left();
+            up_left();
             dribbler_on();
             break;
 
