@@ -78,32 +78,16 @@ int max_sensor()
 }
 
 void sensors_all(){  
-  while (1 ==1) { 
+  while (1 == 1) { 
     uint8_t dir, s1, s2, s3, s4, s5;
     seeker.read(&dir, &s1, &s2, &s3, &s4, &s5);
- 
+   uint8_t tsop = analogRead(TSOP_PORT);
+   uint8_t tsop2 = analogRead(TSOP_PORT2);
+  // lavy
+  Serial.print(tsop2); Serial.print(" ");
   // pravy
-  //vic_print(analogRead(TSOP_PORT)); vic_print(" ");
-  Serial.print(analogRead(TSOP_PORT)); Serial.print(" ");
-  
-  //lavy
-  //vic_print(analogRead(TSOP_PORT2));vic_print(" ");
-  Serial.print(analogRead(TSOP_PORT2)); Serial.print(" ");
-  
-  /*vic_print(dir);
-  vic_print(" ");
-  vic_print(s1);
-  vic_print(" ");
-  vic_print(s2);
-  vic_print(" ");
-  vic_print(s3);
-  vic_print(" ");
-  vic_print(s4);
-  vic_print(" ");
-  vic_print(s5);
-  //vic_print(" ");    
-  //vic_print(max_sensor());  
-  vic_println();*/
+  Serial.print(tsop); Serial.print(" ");
+
   Serial.print(dir);
   Serial.print(" ");
   Serial.print(s1);
@@ -115,15 +99,17 @@ void sensors_all(){
   Serial.print(s4);
   Serial.print(" ");
   Serial.print(s5);
-  //Serial.println(); 
+  Serial.print(" "); 
   
-  if ((analogRead(TSOP_PORT)) < analogRead(TSOP_PORT2)){
-    Serial.println("Pravy");
-  } else if ((analogRead(TSOP_PORT2)) < analogRead(TSOP_PORT)) { 
-      Serial.println("Lavy");
-    }
-    else {Serial.println("NIC");
-    }
+  if ((tsop + tsop2) < 2000) {
+    if (tsop < tsop2) {
+        Serial.println("Pravy");
+    } else (tsop2 < tsop) { 
+        Serial.println("Lavy");
+      }
+  } else {
+      Serial.println("NIC");
+      }
   }
 }
 
