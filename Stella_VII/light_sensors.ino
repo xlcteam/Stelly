@@ -42,7 +42,7 @@ boolean check_light_sensors()
                       back();
                 }
                 //back();
-                delay(140); //250
+                delay(155); //250, 140
                 //PCICR = _BV(PCIE2);
                 return true;
         }
@@ -52,13 +52,13 @@ boolean check_light_sensors()
                 if (v_action == 'U'){
                   // back_right();  
                     motorA.stop();
-                    motorB.go(-speed + 50); // +70
-                    motorC.go(speed - 50); // -70
+                    motorB.go(-speed + 70); // +70
+                    motorC.go(speed - 70); // -70
                 }else if (v_action == 'B'){
                    // up_right();
-                   motorA.go(-speed + 50); // +70
+                   motorA.go(-speed + 70); // +70
                    motorB.stop();
-                   motorC.go(speed - 50);// -70
+                   motorC.go(speed - 70);// -70
                 }
                 else {
                    right();
@@ -68,20 +68,20 @@ boolean check_light_sensors()
             case 'R':
                 if (v_action == 'U'){
                    //back_left();
-                   motorA.go(speed - 50); //-70
+                   motorA.go(speed - 70); //-70
                    motorB.stop();
-                   motorC.go(-speed + 50); //+70
+                   motorC.go(-speed + 70); //+70
                 }else if (v_action == 'B'){
                     //up_left();
                     motorA.stop();
-                    motorB.go(speed - 50); // -70
-                    motorC.go(-speed + 50); //+70
+                    motorB.go(speed - 70); // -70
+                    motorC.go(-speed + 70); //+70
                 }else {
                     left(); 
                 }
                 break; 
         }
-        delay(100); //450, 200, 100
+        delay(150); //450, 200, 100
         stopAllMotors();
         //PCICR = _BV(PCIE2);
         return true;

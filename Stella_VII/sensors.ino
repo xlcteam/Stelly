@@ -2,6 +2,7 @@ int max_sensor()
 {
     uint8_t dir, s1, s2, s3, s4, s5;
     uint16_t tsop, tsop2;
+    
   
     uint8_t tsop_range = 500; // 160,,300,250
   
@@ -11,6 +12,8 @@ int max_sensor()
     seeker.read(&dir, &s1, &s2, &s3, &s4, &s5);
   
     uint8_t sensor = 0;
+    
+ 
   
     switch (dir) {
         case 5:
@@ -39,7 +42,7 @@ int max_sensor()
               break;
             }
          } else {
-             sensor = 5;
+             sensor = 5; // sensor = 3;
              break;
          }
         //case 2:
@@ -62,7 +65,7 @@ int max_sensor()
                  break;
                }
             } else {
-                sensor = 5;
+                sensor = 5; // sensor = 6;
                 break;
               } 
         case 7:
@@ -106,7 +109,9 @@ void sensors_all(){
   while (1 == 1) { 
     uint16_t tsop = analogRead(TSOP_PORT); // pravy
     uint16_t tsop2 = analogRead(TSOP_PORT2); // lavy
-    uint8_t dir, s1, s2, s3, s4, s5;
+    
+    uint8_t dir, s1, s2, s3, s4, s5;    
+    
     seeker.read(&dir, &s1, &s2, &s3, &s4, &s5);
  
   // lavy
@@ -116,6 +121,8 @@ void sensors_all(){
   //pravy
   //vic_print(analogRead(TSOP_PORT2));vic_print(" ");
   Serial.print(tsop); Serial.print(" ");
+  
+  Serial.print(tsop3); Serial.print(" ");
   
   /*vic_print(dir);
   vic_print(" ");
