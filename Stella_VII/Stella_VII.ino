@@ -42,9 +42,9 @@ uint8_t kicker_time = 30;
 int compass_angle;
 // line_min_value = 150;
 
-Motor motorB = Motor(30, 8); // dir, pwm
-Motor motorA = Motor(32, 7);
-Motor motorC = Motor(34, 6);
+Motor motorC = Motor(30, 8); // dir, pwm
+Motor motorB = Motor(32, 7);
+Motor motorA = Motor(34, 6);
 Motor dribbler = Motor(36, 4);
 
 RelativeNXTCompass compass;
