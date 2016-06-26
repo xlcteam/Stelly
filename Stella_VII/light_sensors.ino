@@ -37,14 +37,23 @@ boolean check_light_sensors()
                 case 1:
                 //case 2:
                   if (v_action == 'B') {
-                      up();
+                      //up();
+                      motorA.go(-speed + 40);
+                      motorB.go(speed - 40);
+                      motorC.stop();
+                      //v_action = 'U';
                   } else { 
-                      back();
+                      //back();
+                      motorA.go(speed - 40);
+                      motorB.go(-speed + 40);
+                      motorC.stop();
+                      //v_action = 'B';
                 }
                 //back();
-                delay(155); //250, 140
+                delay(145); //250, 140, 155(up)
                 //PCICR = _BV(PCIE2);
                 return true;
+              
         }
     
         switch (h_action) {
@@ -54,11 +63,13 @@ boolean check_light_sensors()
                     motorA.stop();
                     motorB.go(-speed + 70); // +70
                     motorC.go(speed - 70); // -70
+
                 }else if (v_action == 'B'){
                    // up_right();
                    motorA.go(-speed + 70); // +70
                    motorB.stop();
                    motorC.go(speed - 70);// -70
+
                 }
                 else {
                    right();
@@ -71,13 +82,15 @@ boolean check_light_sensors()
                    motorA.go(speed - 70); //-70
                    motorB.stop();
                    motorC.go(-speed + 70); //+70
+
                 }else if (v_action == 'B'){
                     //up_left();
                     motorA.stop();
                     motorB.go(speed - 70); // -70
                     motorC.go(-speed + 70); //+70
+
                 }else {
-                    left(); 
+                    left();
                 }
                 break; 
         }

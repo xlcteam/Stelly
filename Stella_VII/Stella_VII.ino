@@ -36,15 +36,15 @@ uint8_t mutex[] = {0, 0, 0};
 //Constants
 uint8_t speed= 230; //255,220
 uint8_t speed_min= 60;
-uint8_t speed_rotate = 80; //55, 70, 80, 50
+uint8_t speed_rotate = 60; //55, 70, 80, 50
 uint8_t range = 10;
 uint8_t kicker_time = 30;
 int compass_angle;
 // line_min_value = 150;
 
-Motor motorA = Motor(30, 8); // dir, pwm
-Motor motorC = Motor(32, 7);
-Motor motorB = Motor(34, 6);
+Motor motorB = Motor(30, 8); // dir, pwm
+Motor motorA = Motor(32, 7);
+Motor motorC = Motor(34, 6);
 Motor dribbler = Motor(36, 4);
 
 RelativeNXTCompass compass;

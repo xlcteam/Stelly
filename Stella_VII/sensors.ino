@@ -86,16 +86,16 @@ int max_sensor()
       // tsop = right
         tsop = analogRead(TSOP_PORT); // pravy
         tsop2 = analogRead(TSOP_PORT2); // lavy
-         
+        
         if (tsop + tsop2 < 2000){ //2000
           // vidi lavy
-            if (tsop - tsop2 > 0){
+            if (tsop2 < tsop) {//(tsop - tsop2 > 0){
                 sensor = 3; 
-              Serial.println("Lavy");  
+              //Serial.println("Lavy");  
          // vidi pravy       
-            } else if (tsop2 - tsop > 0){
+            } else if (tsop < tsop2) {//(tsop2 - tsop > 0){
                 sensor = 6;
-                Serial.println("Pravy");
+                //Serial.println("Pravy");
             } else {
                 sensor = 5;
             }
@@ -122,7 +122,7 @@ void sensors_all(){
   //vic_print(analogRead(TSOP_PORT2));vic_print(" ");
   Serial.print(tsop); Serial.print(" ");
   
-  Serial.print(tsop3); Serial.print(" ");
+  //Serial.print(tsop3); Serial.print(" ");
   
   /*vic_print(dir);
   vic_print(" ");
