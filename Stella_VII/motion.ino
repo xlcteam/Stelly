@@ -216,10 +216,10 @@ void back_left()
     h_action = 'L';
     v_action = 'B';
   
-    motorA.go(speed);
+    motorA.go(speed + 5);
     motorB.stop();
     //motorB.go(compensation());
-    motorC.go(-speed);   
+    motorC.go(-speed - 5);
 }
 
 void lrotate(int spd)

@@ -34,7 +34,7 @@ uint8_t ws[] = {1, 1, 1};
 uint8_t mutex[] = {0, 0, 0};
   
 //Constants
-uint8_t speed= 230; //255,220
+uint8_t speed= 250; //255,220
 uint8_t speed_min= 60;
 uint8_t speed_rotate = 60; //55, 70, 80, 50
 uint8_t range = 10;

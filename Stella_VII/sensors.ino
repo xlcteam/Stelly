@@ -87,7 +87,7 @@ int max_sensor()
         tsop = analogRead(TSOP_PORT); // pravy
         tsop2 = analogRead(TSOP_PORT2); // lavy
         
-        if (tsop + tsop2 < 2000){ //2000
+        if (tsop + tsop2 < 2000) { //2000
           // vidi lavy
             if (tsop2 < tsop) {//(tsop - tsop2 > 0){
                 sensor = 3; 
