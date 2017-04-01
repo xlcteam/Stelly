@@ -1,24 +1,18 @@
-[submodule "Stella_X/libraries/Motor"]
-	path = Stella_X/libraries/Motor
+[submodule "Stella_X/sketchbook/libraries/Motor"]
+	path = Stella_X/sketchbook/libraries/Motor
 	url = https://github.com/xlcteam/Motor.git
-[submodule "Stella_X/libraries/PixyViSy"]
-	path = Stella_X/libraries/PixyViSy
+[submodule "Stella_X/sketchbook/libraries/PixyViSy"]
+	path = Stella_X/sketchbook/libraries/PixyViSy
 	url = https://github.com/xlcteam/PixyViSy.git
-[submodule "Stella_X/libraries/pixy"]
-	path = Stella_X/libraries/pixy
+[submodule "Stella_X/sketchbook/libraries/pixy"]
+	path = Stella_X/pixy-submodule
 	url = https://github.com/charmedlabs/pixy.git
-[submodule "Stella_X/libraries/vic"]
-	path = Stella_X/libraries/vic
+[submodule "Stella_X/sketchbook/libraries/vic"]
+	path = Stella_X/sketchbook/libraries/vic
 	url = https://github.com/xlcteam/vic.git
-[submodule "Stella_X/libraries/Arduino-Makefile"]
-	path = Stella_X/libraries/Arduino-Makefile
-	url = https://github.com/sudar/Arduino-Makefile.git
-[submodule "Stella_X/libraries/RelativeHMC6352"]
-	path = Stella_X/libraries/RelativeHMC6352
+[submodule "Stella_X/sketchbook/libraries/RelativeHMC6352"]
+	path = Stella_X/sketchbook/libraries/RelativeHMC6352
 	url = https://github.com/xlcteam/RelativeHMC6352.git
-[submodule "Stella_X/bin/ambu"]
-	path = Stella_X/bin/ambu
-	url = git@github.com:xlcteam/ambu.git
-[submodule "Stella_X/libraries/Buttons"]
-	path = Stella_X/libraries/Buttons
+[submodule "Stella_X/sketchbook/libraries/Buttons"]
+	path = Stella_X/sketchbook/libraries/Buttons
 	url = https://github.com/vargac/Buttons

@@ -45,13 +45,22 @@
 #define SCREENS_COUNT 4
 
 #define PIXY_FOV 70
+#define IR_BALL_SIZE 75
+#define ORANGE_BALL_SIZE 67
 
 #define WS_SAFE(f) do { if (!(ws[0] || ws[1] || ws[2])) {f;} } while (0)
 
+#define TASKS_COUNT 4
+#define TASK_NO 0
+#define TASK_DISPLAY 1
+#define TASK_TEST 2
+#define TASK_MOTION 3
+#define START_TASK TASK_NO
+
+void Arduino_IDE_will_generate_function_prototypes_here() {return;}
 
 uint8_t line_use_int = LINE_USE_INT;
 uint8_t use_pixy = USE_PIXY;
-
 uint8_t light_pwm = LINE_THRESH;
 uint8_t actual_screen;
 uint8_t motion_dbg = 0;
@@ -61,17 +70,7 @@ uint16_t delta_time;
 uint8_t motion_last_dir;
 uint8_t line_speed_down;
 
-#define IR_BALL_SIZE 75
-#define ORANGE_BALL_SIZE 67
-
 PixyViSy pixyViSy(1, 120, IR_BALL_SIZE);
-
-#define TASKS_COUNT 4
-#define TASK_NO 0
-#define TASK_DISPLAY 1
-#define TASK_TEST 2
-#define TASK_MOTION 3
-#define START_TASK TASK_NO
 
 void (*tasks[TASKS_COUNT])(void) = {
     NULL,

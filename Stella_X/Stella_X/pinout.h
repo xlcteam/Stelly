@@ -1,6 +1,8 @@
 #ifndef PINOUT_H
 #define PINOUT_H
 
+#include <Arduino.h>
+
 #define BTN1_PIN 27
 #define BTN2_PIN 25
 #define BTN3_PIN 24
