@@ -36,6 +36,6 @@ upload:
 		$(SRC_SKETCH)
 
 clean:
-	rm -rf build/*
+	rm -rf build/
 
 .PHONY: compile upload clean

@@ -57,6 +57,12 @@
 #define TASK_MOTION 3
 #define START_TASK TASK_NO
 
+/* Arduino puts function prototypes from all ino files "after any comments or
+   pre-processor statements (#includes or #defines), but before any other
+   statements (including type declarations)."
+   So below there is no special function, it actually does nothing, but
+   'lets' arduino to generate function prototypes here.
+*/
 void Arduino_IDE_will_generate_function_prototypes_here() {return;}
 
 uint8_t line_use_int = LINE_USE_INT;
