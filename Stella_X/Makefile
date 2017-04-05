@@ -12,7 +12,7 @@ SRC_SKETCH = $(CURR_DIR)/Stella_X/Stella_X.ino
 ifndef PORT
 PORT_OPTION =
 else
-PORT_OPTION = "--port $(PORT)"
+PORT_OPTION = --port $(PORT)
 endif
 BOARD = "arduino:avr:mega:cpu=atmega2560"
 
