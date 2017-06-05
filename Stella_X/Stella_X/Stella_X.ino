@@ -11,6 +11,16 @@
 
 #define STR(str) #str
 #define XSTR(str) STR(str)
+#define DEBUG(code) do {\
+    Serial.println("Debugging:");\
+    Serial.println(STR(code));\
+    uint32_t _dbg_time_start = micros();\
+    code\
+    uint32_t _dbg_time_end = micros();\
+    Serial.print("Done in ");\
+    Serial.print(_dbg_time_end - _dbg_time_start);\
+    Serial.println(" microseonds");\
+} while(0)
 
 #define LINE_USE_INT 1
 #define USE_PIXY 0 /* 1 - goal; 2 - ball */
