@@ -16,29 +16,74 @@ void halt(void)
     motorC.stop();
 }
 
-int16_t spd_to_north(int16_t speeds[3])
+int32_t P_term = 0;
+int32_t I_term = 0;
+int32_t D_term = 0;
+uint32_t PID_last_time = 0;
+bool PID_reset = true;
+
+int16_t PID(int16_t speeds[3])
 {
-    int16_t angle = compass_angle();
-    if (angle > 180) angle -= 360;
-
-    int16_t max_speed, max_diff, compensation;
-
-    max_speed = abs(speeds[0]);
-    if (abs(speeds[1]) > max_speed) { max_speed = abs(speeds[1]); }
-    if (abs(speeds[2]) > max_speed) { max_speed = abs(speeds[2]); }
-
-    max_diff = 255 - max_speed;
-
-    if (angle > TO_NORTH_THRESH) {
-        compensation = ROTATE_SPEED;
-    } else if (angle < -TO_NORTH_THRESH) {
-        compensation = -ROTATE_SPEED;
-    } else {
-        compensation = ROTATE_SPEED * angle / TO_NORTH_THRESH;
-        compensation = compensation * abs(angle) / TO_NORTH_THRESH;
+    int32_t min_limit = -1000;
+    int32_t max_limit = 1000;
+    for (uint8_t i = 0; i < 3; i++) {
+        if (255 - speeds[i] < max_limit) {
+            max_limit = 255 - speeds[i];
+        }
+        if (-255 - speeds[i] > min_limit) {
+            min_limit = -255 - speeds[i];
+        }
     }
 
-    return constrain(compensation, -max_diff, max_diff);
+    int32_t error = (int32_t)compass_angle();
+    if (error >= 180) error -= 360;
+
+    if (PID_reset) {
+        int32_t output = error * kP / 100;
+        if (output > max_limit) {
+            output = max_limit;
+        } else if (output < min_limit) {
+            output = min_limit;
+        }
+        PID_last_time = micros();
+
+        return output;
+    }
+
+    int32_t d_time = micros() - PID_last_time;
+
+    P_term = error * kP; // [error]%
+    int32_t output = (P_term + D_term) / 100;
+
+    // if P_term + D_term exceeds limits, don't use I_term
+    if (output > max_limit) {
+        output = max_limit;
+        I_term = 0;
+    } else if (output < min_limit) {
+        output = min_limit;
+        I_term = 0;
+    } else {
+        I_term += error * d_time / 1000 * kI / 1000; // [error]% * mS
+        output += I_term / 100;
+        // solve reset-windup
+        if (output > max_limit) {
+            I_term -= (output - max_limit) * 100;
+            output = max_limit;
+        } else if (output < min_limit) {
+            I_term += (min_limit - output) * 100;
+            output = min_limit;
+        }
+    }
+
+    PID_last_time = micros();
+
+    return output;
+}
+
+void restart_PID()
+{
+    P_term = I_term = D_term = 0;
+    PID_reset = true;
 }
 
 void move_raw(int16_t speeds[3])
@@ -48,9 +93,9 @@ void move_raw(int16_t speeds[3])
     motorC.go(speeds[2]);
 }
 
-void move_to_north(int16_t speeds[3])
+void move_PID(int16_t speeds[3])
 {
-    int16_t compensation = spd_to_north(speeds);
+    int16_t compensation = PID(speeds);
     motorA.go(speeds[0] + compensation);
     motorB.go(speeds[1] + compensation);
     motorC.go(speeds[2] + compensation);
@@ -59,49 +104,49 @@ void move_to_north(int16_t speeds[3])
 inline void move_up(uint8_t spd)
 {
     int16_t speeds[] = { -spd, spd, 0 };
-    move_to_north(speeds);
+    move_PID(speeds);
 }
 
 inline void move_right(uint8_t spd)
 {
     int16_t speeds[] = { -spd/2, -spd/2, spd };
-    move_to_north(speeds);
+    move_PID(speeds);
 }
 
 inline void move_back(uint8_t spd)
 {
     int16_t speeds[] = { spd, -spd, 0 };
-    move_to_north(speeds);
+    move_PID(speeds);
 }
 
 inline void move_left(uint8_t spd)
 {
     int16_t speeds[] = { spd/2, spd/2, -spd };
-    move_to_north(speeds);
+    move_PID(speeds);
 }
 
 inline void move_up_right(uint8_t spd)
 {
     int16_t speeds[] = { -spd, 0, spd };
-    move_to_north(speeds);
+    move_PID(speeds);
 }
 
 inline void move_back_right(uint8_t spd)
 {
     int16_t speeds[] = { 0, -spd, spd };
-    move_to_north(speeds);
+    move_PID(speeds);
 }
 
 inline void move_back_left(uint8_t spd)
 {
     int16_t speeds[] = { spd, 0, -spd };
-    move_to_north(speeds);
+    move_PID(speeds);
 }
 
 inline void move_up_left(uint8_t spd)
 {
     int16_t speeds[] = { 0, spd, -spd };
-    move_to_north(speeds);
+    move_PID(speeds);
 }
 
 inline void rotate(int16_t spd)
@@ -114,20 +159,25 @@ inline void rotate(int16_t spd)
 inline void centralize()
 {
     int16_t spds[] = {0};
-    move_to_north(spds);
+    move_PID(spds);
 }
 
 /* VIC FUNCTIONS */
 
-void vic_move_to_north(void)
+void vic_move_PID(void)
 {
     int16_t spds[3];
 
     if (vic_args("%d %d %d", &spds[0], &spds[1], &spds[2]) == 3) {
-        move_to_north(spds);
+        move_PID(spds);
     } else {
         vic_print_err(VIC_ERR_INVALID_ARGS);
     }
+}
+
+void vic_restart_PID(void)
+{
+    restart_PID();
 }
 
 void vic_mA(void) { int16_t s; vic_args("%d", &s); motorA.go(s); }
