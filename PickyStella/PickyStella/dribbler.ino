@@ -19,28 +19,6 @@ inline void dribbler_on()
     dribbler_state = 1;
 }
 
-/*inline void dribbler_switch()
-{
-    dribbler.go(255 * (dribbler_state = !dribbler_state));
-}*/
-
-/* with kick */
-/*void dribbler_switch_wk()
-{
-    if (dribbler_state == 1)
-        dribbler_kick();
-    else if (dribbler_state == -1)
-        dribbler_off();
-    else if (dribbler_state == 0)
-        dribbler_on();
-}
-
-inline void dribbler_kick()
-{
-    dribbler.go(-255);
-    dribbler_state = -1;
-}*/
-
 bool ball_in_dribbler()
 {
     static uint32_t l_time = millis();
@@ -65,11 +43,6 @@ void vic_dribbler_on(void)
 {
     dribbler_on();
 }
-
-/*void vic_dribbler_kick(void)
-{
-    dribbler_kick();
-}*/
 
 void vic_ball_in_dribbler(void)
 {

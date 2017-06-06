@@ -407,7 +407,6 @@ void pixy_motion_ball()
                     motion_last_dir = 0;
                     dribbler_off();
                     kick();
-                    //dribbler_kick();
                 } else {
                     uint16_t diff =
                         (compass_north() + 360 - start_north) % 360;
