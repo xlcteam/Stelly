@@ -19,6 +19,11 @@ inline void dribbler_on()
     dribbler_state = 1;
 }
 
+inline void dribbler_switch()
+{
+    digitalWrite(DRIBBLER_PIN, dribbler_state = !dribbler_state);
+}
+
 bool ball_in_dribbler()
 {
     static uint32_t l_time = millis();

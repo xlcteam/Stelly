@@ -94,7 +94,7 @@ void move_raw(int16_t speeds[4])
     motorA.go(speeds[0]);
     motorB.go(speeds[1]);
     motorC.go(speeds[2]);
-    motorD.go(speeds[3])
+    motorD.go(speeds[3]);
 }
 
 void move_PID(int16_t speeds[4])

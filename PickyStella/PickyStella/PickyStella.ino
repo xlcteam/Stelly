@@ -160,6 +160,7 @@ void setup()
     setup_buttons();
     setup_IR_sensors();
     setup_dribbler();
+    setup_kicker();
     setup_display();
     print_display_idle();
     setup_line_sensors();
