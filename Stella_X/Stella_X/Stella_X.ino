@@ -33,6 +33,10 @@
 #define ROTATE_SPEED 70
 #define LINE_SPEED 200
 
+#define kP 300
+#define kI 300
+#define kD 0
+
 #define LINE_TIME 10
 #define LINE_MAX_DIFF_TIME 10000
 #define LINE_D_TIME_MIN 100
