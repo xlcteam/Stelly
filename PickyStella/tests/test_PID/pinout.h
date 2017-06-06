@@ -1,1 +1,0 @@
-../../Stella_X/pinout.h
