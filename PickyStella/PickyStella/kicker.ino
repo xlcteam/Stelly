@@ -1,15 +1,16 @@
-void setup() {
+void setup() 
+{
   pinMode(KICKER_PIN,OUTPUT);
-  
   }
 
-void kick(void) {
+void kick(void) 
+{
   analogWrite(KICKER_PIN, HIGH);
   delay(KICKER_TIME);
   analogWrite(KICKER_PIN, LOW);
-  
   }
 
-void vic_kick(){
-  kick();
+void vic_kick()
+{
+  kick();  
   }

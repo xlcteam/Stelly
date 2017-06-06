@@ -1,6 +1,6 @@
 Motor motorA = Motor(MOTOR_A_DIR_PIN, MOTOR_A_PWM_PIN);
 Motor motorB = Motor(MOTOR_B_DIR_PIN, MOTOR_B_PWM_PIN);
-Motor motorC = Motor(MOTOR_C_DIR_PIN, MOTOR_C_PWM_PIN);//(MOTOR_D_DIR_PIN, MOTOR_D_PWM_PIN);
+Motor motorC = Motor(MOTOR_C_DIR_PIN, MOTOR_C_PWM_PIN);
 Motor motorD = Motor(MOTOR_D_DIR_PIN, MOTOR_D_PWM_PIN);
 
 void brake(void)
@@ -25,7 +25,7 @@ int32_t D_term = 0;
 uint32_t PID_last_time = 0;
 bool PID_reset = true;
 
-int16_t PID(int16_t speeds[3])
+int16_t PID(int16_t speeds[4])
 {
     int32_t min_limit = -1000;
     int32_t max_limit = 1000;

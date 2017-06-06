@@ -161,7 +161,8 @@ void motion_ball(uint16_t dir)
                 if (use_pixy == 2) {
                     if (compass_north() == start_north) {
                         WS_SAFE(move_up(speed); motion_last_dir = 0);
-                        dribbler_kick();
+                        dribbler_off();
+                        kick();
                     } else {
                         uint16_t diff =
                             (compass_north() + 360 - start_north) % 360;
@@ -181,7 +182,8 @@ void motion_ball(uint16_t dir)
                     pixy_motion_goal();
                 } else {
                     WS_SAFE(move_up(speed); motion_last_dir = 0);
-                    dribbler_kick();
+                    dribbler_off();
+                    kick();
                 }
             } else {
                 WS_SAFE(move_up(far ? speed : speed_near);motion_last_dir = 0);
@@ -403,7 +405,9 @@ void pixy_motion_ball()
                 if (compass_north() == start_north) {
                     WS_SAFE(move_up(PIXY_BALL_SPEED));
                     motion_last_dir = 0;
-                    dribbler_kick();
+                    dribbler_off();
+                    kick();
+                    //dribbler_kick();
                 } else {
                     uint16_t diff =
                         (compass_north() + 360 - start_north) % 360;
@@ -464,7 +468,8 @@ void pixy_motion_goal()
             break;
         case 'K':
             WS_SAFE(move_up(SPEED); motion_last_dir = 0);
-            dribbler_kick();
+            dribbler_off();
+            kick();
             break;
         case 'N':
             if (goal_dir == 'L') {

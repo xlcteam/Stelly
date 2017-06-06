@@ -1,32 +1,31 @@
-Motor dribbler = Motor(MOTOR_DRIBBLER_DIR_PIN, MOTOR_DRIBBLER_PWM_PIN);//(MOTOR_C_DIR_PIN, MOTOR_C_PWM_PIN);
 int8_t dribbler_state;
 
 void setup_dribbler()
 {
-    pinMode()//(DRIBBLER_PIN, OUTPUT);
+    pinMode(DRIBBLER_PIN, OUTPUT);
     pinMode(DRIBBLER_SENSOR_PIN, INPUT);
     dribbler_off();
 }
 
 inline void dribbler_off()
 {
-    dribbler.stop();
+    digitalWrite(DRIBBLER_PIN,0);
     dribbler_state = 0;
 }
 
 inline void dribbler_on()
 {
-    dribbler.go(255);
+    digitalWrite(DRIBBLER_PIN, 1);
     dribbler_state = 1;
 }
 
-inline void dribbler_switch()
+/*inline void dribbler_switch()
 {
     dribbler.go(255 * (dribbler_state = !dribbler_state));
-}
+}*/
 
 /* with kick */
-void dribbler_switch_wk()
+/*void dribbler_switch_wk()
 {
     if (dribbler_state == 1)
         dribbler_kick();
@@ -40,7 +39,7 @@ inline void dribbler_kick()
 {
     dribbler.go(-255);
     dribbler_state = -1;
-}
+}*/
 
 bool ball_in_dribbler()
 {
@@ -67,10 +66,10 @@ void vic_dribbler_on(void)
     dribbler_on();
 }
 
-void vic_dribbler_kick(void)
+/*void vic_dribbler_kick(void)
 {
     dribbler_kick();
-}
+}*/
 
 void vic_ball_in_dribbler(void)
 {
