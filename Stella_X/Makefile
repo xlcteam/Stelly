@@ -7,7 +7,9 @@ ARDUINO = $(ARDUINO_DIR)/arduino
 SKETCHBOOK = $(CURR_DIR)/sketchbook
 PREFS_FILE = $(CURR_DIR)/.arduino_prefs.txt
 BUILD_DIR = $(CURR_DIR)/build
+ifndef SRC_SKETCH
 SRC_SKETCH = $(CURR_DIR)/Stella_X/Stella_X.ino
+endif
 
 ifndef PORT
 PORT_OPTION =

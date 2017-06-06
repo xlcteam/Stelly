@@ -15,6 +15,7 @@ void motion_start()
     line_sensors_update();
     motion_last_dir = 255;
     start_north = compass_north();
+    restart_PID();
     line_speed_down = 0;
     if (line_use_int) {
         for (uint8_t i = 0; i < LINE_SENSORS_COUNT; i++){

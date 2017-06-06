@@ -51,7 +51,8 @@ void setup_vic_funcs()
     vic_fn_add("bl", vic_move_back_left);
     vic_fn_add("ul", vic_move_up_left);
 
-    vic_fn_add("mv", vic_move_to_north);
+    vic_fn_add("rePID", vic_restart_PID);
+    vic_fn_add("mv", vic_move_PID);
 }
 
 void setup_vic_vars()
