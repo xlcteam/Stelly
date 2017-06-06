@@ -45,6 +45,7 @@
 #define LCD_DELAY 100
 #define BUTTONS_DELAY 10
 #define PIXY_TIME 20
+#define KICKER_TIME 60
 
 #define LINE_THRESH 130
 #define TO_NORTH_THRESH 30

@@ -33,6 +33,7 @@ void setup_vic_funcs()
     vic_fn_add("d0", vic_dribbler_off);
     vic_fn_add("dk", vic_dribbler_kick);
     vic_fn_add("db", vic_ball_in_dribbler);
+    vic _fn_add("k", vic_kick);
 
     /* motors */
     vic_fn_add("mA", vic_mA);
