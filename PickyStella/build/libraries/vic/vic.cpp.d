@@ -1,0 +1,23 @@
+/home/robotik/Stelly/Stella_X/build/libraries/vic/vic.cpp.o: \
+ /home/robotik/Stelly/Stella_X/sketchbook/libraries/vic/vic.cpp \
+ /opt/arduino-1.8.1/hardware/arduino/avr/cores/arduino/Arduino.h \
+ /opt/arduino-1.8.1/hardware/arduino/avr/cores/arduino/binary.h \
+ /opt/arduino-1.8.1/hardware/arduino/avr/cores/arduino/WCharacter.h \
+ /opt/arduino-1.8.1/hardware/arduino/avr/cores/arduino/WString.h \
+ /opt/arduino-1.8.1/hardware/arduino/avr/cores/arduino/HardwareSerial.h \
+ /opt/arduino-1.8.1/hardware/arduino/avr/cores/arduino/Stream.h \
+ /opt/arduino-1.8.1/hardware/arduino/avr/cores/arduino/Print.h \
+ /opt/arduino-1.8.1/hardware/arduino/avr/cores/arduino/Printable.h \
+ /opt/arduino-1.8.1/hardware/arduino/avr/cores/arduino/USBAPI.h \
+ /opt/arduino-1.8.1/hardware/arduino/avr/cores/arduino/Arduino.h \
+ /opt/arduino-1.8.1/hardware/arduino/avr/variants/mega/pins_arduino.h \
+ /home/robotik/Stelly/Stella_X/sketchbook/libraries/vic/src/vic.c \
+ /home/robotik/Stelly/Stella_X/sketchbook/libraries/vic/src/vic.h \
+ /home/robotik/Stelly/Stella_X/sketchbook/libraries/vic/src/vic-funcs.c \
+ /home/robotik/Stelly/Stella_X/sketchbook/libraries/vic/src/vic-funcs.h \
+ /home/robotik/Stelly/Stella_X/sketchbook/libraries/vic/src/vic-stdlib.h \
+ /home/robotik/Stelly/Stella_X/sketchbook/libraries/vic/src/vic-serial.c \
+ /home/robotik/Stelly/Stella_X/sketchbook/libraries/vic/src/vic-exec.c \
+ /home/robotik/Stelly/Stella_X/sketchbook/libraries/vic/src/vic-var.c \
+ /home/robotik/Stelly/Stella_X/sketchbook/libraries/vic/src/vic-var.h \
+ /home/robotik/Stelly/Stella_X/sketchbook/libraries/vic/src/vic-stdlib.c
