@@ -31,6 +31,7 @@
 #define PIXY_BALL_SPEED 150
 #define PIXY_BALL_SPEED_NEAR 130
 #define ROTATE_SPEED 70
+#define SPEED_ROTATE_CENTRALIZE 60
 #define LINE_SPEED 200
 
 #define kP 300
@@ -45,10 +46,11 @@
 #define LCD_DELAY 100
 #define BUTTONS_DELAY 10
 #define PIXY_TIME 20
+#define KICKER_TIME 4
 
 #define LINE_THRESH 130
 #define TO_NORTH_THRESH 30
-#define IR_FAR_THRESH 550
+#define IR_FAR_THRESH 640//550
 #define BALL_FAR_THRESH 400 /* for orange ball */
 #define IR_NO_BALL 1000
 
@@ -162,6 +164,7 @@ void setup()
     setup_display();
     print_display_idle();
     setup_line_sensors();
+    setup_kicker();
 
     last_time = millis();
 }

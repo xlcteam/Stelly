@@ -47,3 +47,14 @@ inline void vic_compass_set_north(void)
 {
     compass_set_north();
 }
+
+void centralizing() 
+{
+  int c = (int)compass_angle();
+    if (c > 180) {
+      c = 360 - c;
+      rotate(SPEED_ROTATE_CENTRALIZE/2 + (c*SPEED_ROTATE_CENTRALIZE/180));
+   } else {
+      rotate(-(SPEED_ROTATE_CENTRALIZE/2 + (c*SPEED_ROTATE_CENTRALIZE/180)));
+      } 
+  }

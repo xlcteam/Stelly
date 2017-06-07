@@ -1,6 +1,6 @@
 Motor motorA = Motor(MOTOR_A_DIR_PIN, MOTOR_A_PWM_PIN);
 Motor motorB = Motor(MOTOR_B_DIR_PIN, MOTOR_B_PWM_PIN);
-Motor motorC = Motor(MOTOR_D_DIR_PIN, MOTOR_D_PWM_PIN);
+Motor motorC = Motor(MOTOR_C_DIR_PIN, MOTOR_C_PWM_PIN);
 
 void brake(void)
 {
@@ -96,62 +96,62 @@ void move_raw(int16_t speeds[3])
 void move_PID(int16_t speeds[3])
 {
     int16_t compensation = PID(speeds);
-    motorA.go(speeds[0] + compensation);
-    motorB.go(speeds[1] + compensation);
-    motorC.go(speeds[2] + compensation);
+    motorA.go(speeds[0] - compensation);
+    motorB.go(speeds[1] - compensation);
+    motorC.go(speeds[2] - compensation);
 }
 
 inline void move_up(uint8_t spd)
-{
-    int16_t speeds[] = { -spd, spd, 0 };
-    move_PID(speeds);
-}
-
-inline void move_right(uint8_t spd)
-{
-    int16_t speeds[] = { -spd/2, -spd/2, spd };
-    move_PID(speeds);
-}
-
-inline void move_back(uint8_t spd)
 {
     int16_t speeds[] = { spd, -spd, 0 };
     move_PID(speeds);
 }
 
-inline void move_left(uint8_t spd)
+inline void move_right(uint8_t spd)
 {
     int16_t speeds[] = { spd/2, spd/2, -spd };
     move_PID(speeds);
 }
 
+inline void move_back(uint8_t spd)
+{
+    int16_t speeds[] = { -spd, spd, 0 };
+    move_PID(speeds);
+}
+
+inline void move_left(uint8_t spd)
+{
+    int16_t speeds[] = { -spd/2, -spd/2, spd };
+    move_PID(speeds);
+}
+
 inline void move_up_right(uint8_t spd)
-{
-    int16_t speeds[] = { -spd, 0, spd };
-    move_PID(speeds);
-}
-
-inline void move_back_right(uint8_t spd)
-{
-    int16_t speeds[] = { 0, -spd, spd };
-    move_PID(speeds);
-}
-
-inline void move_back_left(uint8_t spd)
 {
     int16_t speeds[] = { spd, 0, -spd };
     move_PID(speeds);
 }
 
-inline void move_up_left(uint8_t spd)
+inline void move_back_right(uint8_t spd)
 {
     int16_t speeds[] = { 0, spd, -spd };
     move_PID(speeds);
 }
 
+inline void move_back_left(uint8_t spd)
+{
+    int16_t speeds[] = { -spd, 0, spd };
+    move_PID(speeds);
+}
+
+inline void move_up_left(uint8_t spd)
+{
+    int16_t speeds[] = { 0, -spd, spd };
+    move_PID(speeds);
+}
+
 inline void rotate(int16_t spd)
 {
-    int16_t speeds[] = { spd, spd, spd };
+    int16_t speeds[] = { -spd, -spd, -spd };
     move_raw(speeds);
 }
 
@@ -161,6 +161,11 @@ inline void centralize()
     int16_t spds[] = {0};
     move_PID(spds);
 }
+
+/*void cetrilizing() 
+{
+  while(compass_angle < )
+  }*/
 
 /* VIC FUNCTIONS */
 

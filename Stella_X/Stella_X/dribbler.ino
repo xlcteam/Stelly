@@ -1,4 +1,4 @@
-Motor dribbler = Motor(MOTOR_C_DIR_PIN, MOTOR_C_PWM_PIN);
+Motor dribbler = Motor(MOTOR_D_DIR_PIN, MOTOR_D_PWM_PIN);
 int8_t dribbler_state;
 
 void setup_dribbler()
@@ -16,7 +16,7 @@ inline void dribbler_off()
 
 inline void dribbler_on()
 {
-    dribbler.go(255);
+    dribbler.go(-255);
     dribbler_state = 1;
 }
 
@@ -26,21 +26,23 @@ inline void dribbler_switch()
 }
 
 /* with kick */
-void dribbler_switch_wk()
+/*void dribbler_switch_wk()
 {
-    if (dribbler_state == 1)
-        dribbler_kick();
+    if (dribbler_state == 1){
+        //dribbler_kick();
+        dribbler_off();
+        kick(); }
     else if (dribbler_state == -1)
         dribbler_off();
     else if (dribbler_state == 0)
         dribbler_on();
-}
+}*/
 
-inline void dribbler_kick()
+/*inline void dribbler_kick()
 {
     dribbler.go(-255);
     dribbler_state = -1;
-}
+}*/
 
 bool ball_in_dribbler()
 {
@@ -67,10 +69,10 @@ void vic_dribbler_on(void)
     dribbler_on();
 }
 
-void vic_dribbler_kick(void)
+/*void vic_dribbler_kick(void)
 {
     dribbler_kick();
-}
+}*/
 
 void vic_ball_in_dribbler(void)
 {
