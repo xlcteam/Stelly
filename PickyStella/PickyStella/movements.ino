@@ -102,10 +102,10 @@ void move_raw(int16_t speeds[4])
 void move_PID(int16_t speeds[4])
 {
     int16_t compensation = PID(speeds);
-    motorA.go(speeds[0] + compensation);
-    motorB.go(speeds[1] + compensation);
-    motorC.go(speeds[2] + compensation);
-    motorD.go(speeds[3] + compensation);
+    motorA.go(speeds[0] - compensation);
+    motorB.go(speeds[1] - compensation);
+    motorC.go(speeds[2] - compensation);
+    motorD.go(speeds[3] - compensation);
 }
 
 inline void move_up(uint8_t spd)

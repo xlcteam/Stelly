@@ -47,7 +47,7 @@
 #define PIXY_TIME 20
 #define KICKER_TIME 60
 
-#define LINE_THRESH 130
+#define LINE_THRESH 200
 #define TO_NORTH_THRESH 30
 #define IR_FAR_THRESH 550
 #define BALL_FAR_THRESH 400 /* for orange ball */
@@ -56,14 +56,16 @@
 #define IR_SENSORS_COUNT 14
 #define BUTTONS_COUNT 4
 #define LEDS_COUNT 4
-#define LINE_SENSORS_COUNT 3
+#define LINE_SENSORS_COUNT 6
 #define SCREENS_COUNT 4
 
 #define PIXY_FOV 70
 #define IR_BALL_SIZE 75
 #define ORANGE_BALL_SIZE 67
 
-#define WS_SAFE(f) do { if (!(ws[0] || ws[1] || ws[2])) {f;} } while (0)
+#define WS_SAFE(f) do {\
+        if (!(ws[0] || ws[1] || ws[2] || ws[3] || ws[4] || ws[5])) {f;}\
+    } while (0)
 
 #define TASKS_COUNT 4
 #define TASK_NO 0
@@ -81,6 +83,7 @@
 void Arduino_IDE_will_generate_function_prototypes_here() {return;}
 
 uint8_t line_use_int = LINE_USE_INT;
+uint8_t last_line_use_int = !line_use_int;
 uint8_t use_pixy = USE_PIXY;
 uint8_t light_pwm = LINE_THRESH;
 uint8_t actual_screen;
@@ -118,26 +121,8 @@ void IDLE(void)
     dribbler_off();
 }
 
-uint32_t volatile ws[] = {0, 0, 0};
-uint8_t mutex[] = {0, 0, 0};
-
-ISR(PCINT0_vect)
-{
-    if (!mutex[0] && PINB & _BV(PB5) && !ws[0]) {
-        ws[0] = micros();
-        halt();
-    }
-
-    if (!mutex[1] && PINB & _BV(PB7) && !ws[1]) {
-        ws[1] = micros();
-        halt();
-    }
-
-    if (!mutex[2] && PINB & _BV(PB4) && !ws[2]) {
-        ws[2] = micros();
-        halt();
-    }
-}
+uint32_t volatile ws[] = {0, 0, 0, 0, 0, 0};
+uint8_t mutex = 0;
 
 void serial_output(char c)
 {
@@ -155,6 +140,7 @@ void setup()
     setup_vic_funcs();
     setup_vic_vars();
 
+    setup_compass();
     compass_set_north();
 
     setup_buttons();
