@@ -30,4 +30,3 @@ bool centered(uint16_t range)
     uint16_t c = (uint16_t) compass_angle();
     return ((c >= (360 - range)) || (c <= range));
 }
-
