@@ -48,6 +48,7 @@ int16_t PID(int16_t speeds[4])
         } else if (output < min_limit) {
             output = min_limit;
         }
+        PID_reset = false;
         PID_last_time = micros();
 
         return output;
@@ -86,6 +87,7 @@ int16_t PID(int16_t speeds[4])
 void restart_PID()
 {
     P_term = I_term = D_term = 0;
+    PID_last_time = micros();
     PID_reset = true;
 }
 
