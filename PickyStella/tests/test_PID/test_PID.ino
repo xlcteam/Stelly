@@ -38,6 +38,7 @@ void setup()
     Serial.print(" ");
     Serial.println("output");
 
+    setup_compass();
     compass_set_north();
 
     last_time = micros();
@@ -53,10 +54,6 @@ void loop()
         compass_set_north_val((compass_north() - 90) % 360);
         change_set_point = millis();
     }
-
-
-
-
 
     int32_t min_limit = -1000;
     int32_t max_limit = 1000;
@@ -100,10 +97,10 @@ void loop()
     last_time = micros();
 
     int16_t output_spds[4];
-    output_spds[0] = spds[0] + compensation;
-    output_spds[1] = spds[1] + compensation;
-    output_spds[2] = spds[2] + compensation;
-    output_spds[3] = spds[3] + compensation;
+    output_spds[0] = spds[0] - compensation;
+    output_spds[1] = spds[1] - compensation;
+    output_spds[2] = spds[2] - compensation;
+    output_spds[3] = spds[3] - compensation;
     move_raw(output_spds);
 
     Serial.print(PLOT_MIN);
