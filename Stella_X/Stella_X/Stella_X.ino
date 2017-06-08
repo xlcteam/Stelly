@@ -50,7 +50,7 @@
 
 #define LINE_THRESH 130
 #define TO_NORTH_THRESH 30
-#define IR_FAR_THRESH 640//550
+#define IR_FAR_THRESH 550
 #define BALL_FAR_THRESH 400 /* for orange ball */
 #define IR_NO_BALL 1000
 
@@ -91,6 +91,8 @@ uint32_t last_time;
 uint16_t delta_time;
 uint8_t motion_last_dir;
 uint8_t line_speed_down;
+uint8_t compass_right_goal_state;
+uint8_t compass_left_goal_state;
 
 PixyViSy pixyViSy(1, 120, IR_BALL_SIZE);
 

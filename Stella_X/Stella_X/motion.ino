@@ -84,7 +84,7 @@ void motion_line(uint8_t dir)
     uint32_t start_time = millis();
     int16_t line_speed = LINE_SPEED;
     if (line_speed_down) {
-        line_speed /= 3;
+        line_speed /= 2;
     }
 
     switch (dir) {
@@ -151,9 +151,24 @@ void motion_ball(uint16_t dir)
     int16_t speed_near = SPEED_NEAR;
     int16_t speed = SPEED;
     if (line_speed_down) {
-        speed_near /= 3;
-        speed /= 3;
+        speed_near /= 2;
+        speed /= 2;
     }
+
+    /*if (!((dir ==0) && (ball_in_dribbler()) && (use_pixy == 1))) {
+        if (compass_left_goal_state == 1 || compass_left_goal_state == 2) {
+            compass_set_north_val((compass_north() + 10) % 360);
+            compass_left_goal_state = 0;
+        } else if (compass_right_goal_state == 1 || compass_left_goal_state == 2) {
+            compass_set_north_val((compass_north() + 350) % 360);
+            compass_right_goal_state = 0;
+            }
+      }*/
+
+      /*if ( compass_north() != start_north) {
+        compass_set_north_val(start_north);
+        }
+    }*/
 
     switch (dir) {
         case 0:
@@ -465,17 +480,43 @@ void pixy_motion_goal()
             WS_SAFE(move_left(PIXY_SPEED); motion_last_dir = 6);
             dribbler_on();
             goal_dir = 'L';
+            /*compass_left_goal_state += 1;
+            compass_right_goal_state = 0;
+            if (compass_left_goal_state == 1) {
+                compass_set_north_val((compass_north() + 350) % 360);
+                WS_SAFE(move_up_left(PIXY_SPEED); motion_last_dir = 7);
+                compass_left_goal_state = 2;
+                dribbler_on();
+                goal_dir = 'L';
+            } else {
+                WS_SAFE(move_left(PIXY_SPEED); motion_last_dir = 6);
+                dribbler_on();
+                goal_dir = 'L';
+              }*/
             break;
         case 'R':
             WS_SAFE(move_right(PIXY_SPEED); motion_last_dir = 2);
             dribbler_on();
             goal_dir = 'R';
+            /*compass_right_goal_state += 1;
+            compass_left_goal_state = 0;
+            if (compass_right_goal_state == 1) {
+                compass_set_north_val((compass_north() + 10 ) % 360);
+                WS_SAFE(move_up_right(PIXY_SPEED); motion_last_dir = 1);
+                compass_right_goal_state = 2;
+                dribbler_on();
+                goal_dir = 'R';
+            } else { 
+                WS_SAFE(move_right(PIXY_SPEED); motion_last_dir = 2);
+                goal_dir = 'R';
+                dribbler_on();
+                }   */      
             break;
         case 'K':
-            WS_SAFE(move_up(SPEED); motion_last_dir = 0);
+           WS_SAFE(move_up(SPEED); motion_last_dir = 0);
             dribbler_off();
-            dribbler_kick();
             kick();
+            dribbler_kick();
             break;
         case 'N':
             if (goal_dir == 'L') {
