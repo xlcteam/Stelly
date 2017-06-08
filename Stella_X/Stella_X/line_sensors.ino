@@ -43,9 +43,9 @@ uint8_t process_ws()
     if (!ws[0] && !ws[1] && !ws[2]) {
         dir = 255;
     } else if (ws[0] && !ws[1] && !ws[2]) {
-        if (motion_last_dir < 180 && motion_last_dir > 15) {
+        if (motion_last_dir < 4 && motion_last_dir > 0) {
             dir = 5;
-        } else if (motion_last_dir > 180 && motion_last_dir < 345) {
+        } else if (motion_last_dir > 4 && motion_last_dir <= 7) {
             dir = 3;
         } else {
             dir = 4;
@@ -69,16 +69,16 @@ uint8_t process_ws()
     } else if (!ws[0] && ws[1] && ws[2]) {
         dir = 0;
     } else if (!ws[0] && !ws[1] && ws[2]) {
-        if (motion_last_dir > 180 || motion_last_dir == 0) {
+        if (motion_last_dir > 4 || motion_last_dir == 0) {
             dir = 2;
         } else {
-            dir = 0;
+            dir = 1;
         }
     } else if (!ws[0] && ws[1] && !ws[2]) {
-        if (motion_last_dir >= 0 && motion_last_dir < 180) {
+        if (motion_last_dir >= 0 && motion_last_dir < 4) {
             dir = 6;
         } else {
-            dir = 0;
+            dir = 7;
         }
     } else { /* (ws[0] && ws[1] && ws[2]) */
 
