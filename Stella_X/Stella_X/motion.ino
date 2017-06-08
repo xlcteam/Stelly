@@ -16,7 +16,6 @@ void motion_start()
     motion_last_dir = 255;
     start_north = compass_north();
     restart_PID();
-    line_speed_down = 0;
     if (line_use_int) {
         for (uint8_t i = 0; i < LINE_SENSORS_COUNT; i++){
             mutex[i] = 1;
@@ -42,19 +41,7 @@ void motion()
         time = millis();
     }
 
-    if (!line_use_int) {
-        for (uint8_t i = 0; i < LINE_SENSORS_COUNT; i++) {
-            ws[i] = read_line_sensor(i);
-        }
-    }
-    uint16_t dir = process_ws();
-    if (line_use_int) {
-        for (uint8_t i = 0; i < LINE_SENSORS_COUNT; i++) {
-            mutex[i] = 1;
-            ws[i] = read_line_sensor(i);
-            mutex[i] = 0;
-        }
-    }
+    uint16_t dir = line_sensors_dir();
 
     if (dir != 255) {
         motion_line(dir);
@@ -96,9 +83,6 @@ void motion_line(uint8_t dir)
     }
     uint32_t start_time = millis();
     int16_t line_speed = LINE_SPEED;
-    if (line_speed_down) {
-        line_speed /= 2;
-    }
 
     switch (dir) {
         case 0:
@@ -163,10 +147,6 @@ void motion_ball(uint16_t dir)
     }
     int16_t speed_near = SPEED_NEAR;
     int16_t speed = SPEED;
-    if (line_speed_down) {
-        speed_near /= 2;
-        speed /= 2;
-    }
 
     /*if (!((dir ==0) && (ball_in_dribbler()) && (use_pixy == 1))) {
         if (compass_left_goal_state == 1 || compass_left_goal_state == 2) {
