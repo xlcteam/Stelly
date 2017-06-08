@@ -34,8 +34,8 @@
 #define SPEED_ROTATE_CENTRALIZE 60
 #define LINE_SPEED 200
 
-#define kP 300
-#define kI 300
+#define kP 300  //zvysit ak sa dlho dotaca ..chyba*sek
+#define kI 300 //zvysit ak dlho je vychyleny od severu .. chyba 
 #define kD 0
 
 #define LINE_TIME 10
@@ -46,7 +46,7 @@
 #define LCD_DELAY 100
 #define BUTTONS_DELAY 10
 #define PIXY_TIME 20
-#define KICKER_TIME 4
+#define KICKER_TIME 60
 
 #define LINE_THRESH 130
 #define TO_NORTH_THRESH 30

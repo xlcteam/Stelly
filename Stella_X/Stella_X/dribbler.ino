@@ -20,6 +20,11 @@ inline void dribbler_on()
     dribbler_state = 1;
 }
 
+void dribbler_kick()
+{
+  dribbler.go(255);
+  }
+
 inline void dribbler_switch()
 {
     dribbler.go(255 * (dribbler_state = !dribbler_state));
@@ -41,7 +46,7 @@ inline void dribbler_switch()
 /*inline void dribbler_kick()
 {
     dribbler.go(-255);
-    dribbler_state = -1;
+    //dribbler_state = -1;
 }*/
 
 bool ball_in_dribbler()

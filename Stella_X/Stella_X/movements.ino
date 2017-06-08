@@ -158,7 +158,7 @@ inline void rotate(int16_t spd)
 /* may be dangerous */
 inline void centralize()
 {
-    int16_t spds[] = {0};
+    int16_t spds[] = {0, 0, 0};
     move_PID(spds);
 }
 

@@ -14,6 +14,8 @@ void kicker_dribbler()
 {
   dribbler_on();
   delay(1000);
+  dribbler.off();
+  delay(20);
   digitalWrite(KICKER_PIN, 1);
   delay(KICKER_TIME);
   digitalWrite(KICKER_PIN, 0);
