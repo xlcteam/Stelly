@@ -90,9 +90,9 @@ uint8_t process_ws()
 
     mutex = 1;
 
-    if (!ws[0] && !ws[1] && !ws[2]) {
+    if (!ws[0] && !ws[1] && !ws[2] && !ws[3] && !ws[4] && !ws[5]) {
         dir = 255;
-    } else if (ws[0] && !ws[1] && !ws[2]) {
+    } else if (ws[0] && !ws[1] && !ws[2] && !ws[3] && !ws[4] && !ws[5]) {
         if (motion_last_dir < 180 && motion_last_dir > 15) {
             dir = 5;
         } else if (motion_last_dir > 180 && motion_last_dir < 345) {
@@ -100,73 +100,68 @@ uint8_t process_ws()
         } else {
             dir = 4;
         }
-    } else if (ws[0] && ws[1] && !ws[2]) {
-        if (abs((int32_t)ws[0] - (int32_t)ws[1]) < LINE_MAX_DIFF_TIME) {
+    } else if (!ws[0] && !ws[1] && !ws[2] && ws[3] && !ws[4] && !ws[5]) {
+        if (motion_last_dir < 165 && motion_last_dir > 0) {
+            dir = 7;
+        } else if (motion_last_dir > 195 && motion_last_dir < 360) {
+            dir = 1;
+        } else {
+            dir = 0;
+        }
+    } else if (ws[0] && ((ws[1] || ws[2]) == (ws[4] || ws[5])) && !ws[3]) {
+        dir = 4;
+    } else if (!ws[0] && ((ws[1] || ws[2]) == (ws[4] || ws[5])) && ws[3]) {
+        dir = 0;
+    } else if (ws[0] && (ws[1] || ws[2]) && !ws[3] && !ws[4] && !ws[5]) {
+        dir = 5;
+        /*
+        if (abs((int32_t)ws[0] - (int32_t)ws[2]) < LINE_MAX_DIFF_TIME) {
             dir = 5;
-        } else if (ws[0] < ws[1]) {
+        } else if (!ws[2]) {
             dir = 5;
-        } else { /* ws[1] < ws[0] */
+        } else if (ws[0] < ws[2]) {
+            dir = 5;
+        } else { // ws[1] < ws[0]
             dir = 6;
         }
-    } else if (ws[0] && !ws[1] && ws[2]) {
+        */
+    } else if (ws[0] && !ws[1] && !ws[2] && !ws[3] && (ws[4] || ws[5])) {
+        dir = 3;
+        /*
         if (abs((int32_t)ws[0] - (int32_t)ws[2]) < LINE_MAX_DIFF_TIME) {
             dir = 3;
         } else if (ws[0] < ws[2]) {
             dir = 3;
-        } else { /* ws[2] < ws[0] */
+        } else { // ws[2] < ws[0]
             dir = 2;
         }
-    } else if (!ws[0] && ws[1] && ws[2]) {
-        dir = 0;
-    } else if (!ws[0] && !ws[1] && ws[2]) {
-        if (motion_last_dir > 180 || motion_last_dir == 0) {
+        */
+    } else if (!ws[0] && (ws[1] || ws[2]) && ws[3] && !ws[4] && !ws[5]) {
+        dir = 7;
+    } else if (!ws[0] && !ws[1] && !ws[2] && ws[3] && (ws[4] || ws[5])) {
+        dir = 1;
+    } else if ((ws[1] || ws[2]) && (ws[0] == ws[3]) && !ws[4] && !ws[5]) {
+        dir = 6;
+    } else if (!ws[1] && !ws[2] && (ws[0] == ws[3]) && (ws[4] || ws[5])) {
+        dir = 2;
+    } else if (ws[0] && (ws[1] || ws[2]) && ws[3] && (ws[4] || ws[5])) {
+        uint8_t latest_i = 0;
+        for (uint8_t i = 0; i < 6; i++) {
+            if (ws[i] > ws[latest_i]) {
+                latest_i = i;
+            }
+        }
+        if (latest_i == 0) {
+            dir = 0;
+        } else if (latest_i == 3) {
+            dir = 4;
+        } else if (latest_i == 1 || latest_i == 2) {
             dir = 2;
         } else {
-            dir = 0;
-        }
-    } else if (!ws[0] && ws[1] && !ws[2]) {
-        if (motion_last_dir >= 0 && motion_last_dir < 180) {
             dir = 6;
-        } else {
-            dir = 0;
         }
-    } else { /* (ws[0] && ws[1] && ws[2]) */
-
-        if (abs((int32_t)ws[0] - (int32_t)ws[1]) < LINE_MAX_DIFF_TIME
-        &&  abs((int32_t)ws[0] - (int32_t)ws[2]) < LINE_MAX_DIFF_TIME
-        &&  abs((int32_t)ws[1] - (int32_t)ws[2]) < LINE_MAX_DIFF_TIME) {
-            dir = line_last_dir;
-        } else if (abs((int32_t)ws[0] - (int32_t)ws[1]) < LINE_MAX_DIFF_TIME) {
-            if (ws[2] < ws[0]) {
-                dir = 1;
-            } else {
-                dir = 5;
-            }
-        } else if (abs((int32_t)ws[0] - (int32_t)ws[2]) < LINE_MAX_DIFF_TIME) {
-            if (ws[1] < ws[0]) {
-                dir = 7;
-            } else {
-                dir = 3;
-            }
-        } else if (abs((int32_t)ws[1] - (int32_t)ws[2]) < LINE_MAX_DIFF_TIME) {
-            if (ws[0] < ws[1]) {
-                dir = 4;
-            } else {
-                dir = 0;
-            }
-        } else if (ws[1] < ws[0] && ws[0] < ws[2]) {
-            dir = 6;
-        } else if (ws[2] < ws[0] && ws[0] < ws[1]) {
-            dir = 2;
-        } else if (ws[1] < ws[2]) {
-            dir = 7;
-        } else if (ws[2] < ws[1]) {
-            dir = 1;
-        } else if (ws[0] < ws[1] && ws[1] < ws[2]) {
-            dir = 5;
-        } else { /* ws[0] < ws[2] && ws[2] < ws[1] */
-            dir = 3;
-        }
+    } else { // very bad
+        dir = (line_last_dir / 45 + 4) % 4; // opposite direction
     }
 
     mutex = 0;

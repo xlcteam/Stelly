@@ -40,7 +40,13 @@ void motion()
         lcd.print(delta_time);
         time = millis();
     }
-    uint16_t dir = 255;
+
+    if (!line_use_int) {
+        for (uint8_t i = 0; i < 0; i++) {
+            ws[i] = read_line_sensor(i);
+        }
+    }
+    uint16_t dir = process_ws();
 
     if (dir != 255) {
         motion_line(dir);
