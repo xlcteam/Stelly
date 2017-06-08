@@ -158,6 +158,7 @@ void setup()
     setup_vic_funcs();
     setup_vic_vars();
 
+    setup_compass();
     compass_set_north();
 
     setup_buttons();
