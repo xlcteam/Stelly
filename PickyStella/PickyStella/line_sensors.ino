@@ -78,6 +78,31 @@ void line_sensors_update()
     led_set(2, line_use_int);
 }
 
+uint32_t predict_ws0()
+{
+    if ((ws[1] || ws[2]) && (ws[4] || ws[5]) && !ws[3]) {
+        uint32_t min_time = ~(uint32_t)1;
+        for (uint8_t i = 1; i < 6; i++) {
+            if (ws[i] != 0 && ws[i] < min_time) {
+                min_time = ws[i];
+            }
+        }
+        ws[0] = min_time - 2 * LINE_MAX_DIFF_TIME;
+    } else if ((ws[1] || ws[2]) && (ws[4] || ws[5]) && ws[3]) {
+        uint32_t min_time_i = 1;
+        for (uint8_t i = 1; i < 6; i++) {
+            if (ws[i] != 0 && ws[i] < ws[min_time_i]) {
+                min_time_i = i;
+            }
+        }
+        if (min_time_i != 3) {
+            ws[0] = ws[min_time_i] - 2 * LINE_MAX_DIFF_TIME;
+        }
+    } else {
+        ws[0] = 0;
+    }
+}
+
 /* decide where to move after reaching the white line (processes ws)
    dirs:
    0 - 7: multiplied by 45 gives angle where to move
