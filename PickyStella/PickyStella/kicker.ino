@@ -5,9 +5,9 @@ void setup_kicker()
 
 void kick(void) 
 {
-    analogWrite(KICKER_PIN, HIGH);
+    digitalWrite(KICKER_PIN, HIGH);
     delay(KICKER_TIME);
-    analogWrite(KICKER_PIN, LOW);
+    digitalWrite(KICKER_PIN, LOW);
 }
 
 void vic_kick(void)

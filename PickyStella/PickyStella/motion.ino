@@ -17,13 +17,12 @@ void motion_start()
     start_north = compass_north();
     restart_PID();
     line_speed_down = 0;
-    if (line_use_int) {
-        for (uint8_t i = 0; i < LINE_SENSORS_COUNT; i++){
-            mutex[i] = 1;
-            ws[i] = 0;
-            mutex[i] = 0;
-        }
+    mutex = 1;
+    for (uint8_t i = 0; i < LINE_SENSORS_COUNT; i++){
+        ws[i] = 0;
     }
+    mutex = 0;
+
     lcd.clear();
     lcd.print("motion");
     led_set(0, 1);
@@ -41,7 +40,13 @@ void motion()
         lcd.print(delta_time);
         time = millis();
     }
-    uint16_t dir = line_sensors_dir();
+
+    if (!line_use_int) {
+        for (uint8_t i = 0; i < 0; i++) {
+            ws[i] = read_line_sensor(i);
+        }
+    }
+    uint16_t dir = process_ws();
 
     if (dir != 255) {
         motion_line(dir);

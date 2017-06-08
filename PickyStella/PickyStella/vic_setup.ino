@@ -22,6 +22,11 @@ void setup_vic_funcs()
 
     /* line sensors */
     vic_fn_add("lS", vic_print_line_sensors);
+    vic_fn_add("lSws", vic_print_line_sensors_ws);
+    vic_fn_add("lSn", vic_print_line_sensors_nice);
+    vic_fn_add("lSwsn", vic_print_line_sensors_ws_nice);
+    vic_fn_add("zerows", vic_zero_ws);
+    vic_fn_add("clS", vic_calib_line_sensors);
 
     /* camera */
 #if USE_PIXY == 1
