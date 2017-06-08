@@ -102,7 +102,7 @@ void print_display_3(void)
 
 void print_display_4(void)
 {
-    lcd.print("WL  1 2 3");
+    lcd.print("WL  1 2 3 4 5 6");
     lcd.setCursor(0, 1);
     lcd.print(light_pwm);
     uint8_t i;

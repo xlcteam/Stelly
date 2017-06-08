@@ -96,6 +96,7 @@ void btn2_onPush(void)
     switch (task_id) {
         case TASK_NO:
             dribbler_switch();
+            if (!dribbler_is_on()) kick();
             break;
         case TASK_DISPLAY:
             actual_screen = actual_screen == 4 ? 1 : actual_screen + 1;

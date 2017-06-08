@@ -1,0 +1,1 @@
+../../PickyStella/pinout.h
