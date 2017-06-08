@@ -66,6 +66,10 @@
 #define WS_SAFE(f) do {\
         if (!(ws[0] || ws[1] || ws[2] || ws[3] || ws[4] || ws[5])) {f;}\
     } while (0)
+#define motorA_go(x) motorA.go(x)
+#define motorB_go(x) motorB.go(x)
+#define motorC_go(x) motorC.go(x)
+#define motorD_go(x) motorD.go(x)
 
 #define TASKS_COUNT 4
 #define TASK_NO 0
