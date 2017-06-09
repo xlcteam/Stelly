@@ -19,7 +19,7 @@ int32_t P_term = 0;
 int32_t I_term = 0;
 int32_t D_term = 0;
 
-int16_t spds[3] = { -100, 100, 0 };
+int16_t spds[3] = { 100, -100, 0 };
 
 void setup()
 {
@@ -100,9 +100,9 @@ void loop()
     last_time = micros();
 
     int16_t output_spds[3];
-    output_spds[0] = spds[0] + compensation;
-    output_spds[1] = spds[1] + compensation;
-    output_spds[2] = spds[2] + compensation;
+    output_spds[0] = spds[0] - compensation;
+    output_spds[1] = spds[1] - compensation;
+    output_spds[2] = spds[2] - compensation;
     move_raw(output_spds);
 
     Serial.print(PLOT_MIN);

@@ -93,19 +93,19 @@ void restart_PID()
 
 void move_raw(int16_t speeds[4])
 {
-    motorA.go(speeds[0]);
-    motorB.go(speeds[1]);
-    motorC.go(speeds[2]);
-    motorD.go(speeds[3]);
+    motorA_go(speeds[0]);
+    motorB_go(speeds[1]);
+    motorC_go(speeds[2]);
+    motorD_go(speeds[3]);
 }
 
 void move_PID(int16_t speeds[4])
 {
     int16_t compensation = PID(speeds);
-    motorA.go(speeds[0] - compensation);
-    motorB.go(speeds[1] - compensation);
-    motorC.go(speeds[2] - compensation);
-    motorD.go(speeds[3] - compensation);
+    motorA_go(speeds[0] - compensation);
+    motorB_go(speeds[1] - compensation);
+    motorC_go(speeds[2] - compensation);
+    motorD_go(speeds[3] - compensation);
 }
 
 inline void move_up(uint8_t spd)
@@ -187,10 +187,10 @@ void vic_restart_PID(void)
     restart_PID();
 }
 
-void vic_mA(void) { int16_t s; vic_args("%d", &s); motorA.go(s); }
-void vic_mB(void) { int16_t s; vic_args("%d", &s); motorB.go(s); }
-void vic_mC(void) { int16_t s; vic_args("%d", &s); motorC.go(s); }
-void vic_mD(void) { int16_t s; vic_args("%d", &s); motorD.go(s); }
+void vic_mA(void) { int16_t s; vic_args("%d", &s); motorA_go(s); }
+void vic_mB(void) { int16_t s; vic_args("%d", &s); motorB_go(s); }
+void vic_mC(void) { int16_t s; vic_args("%d", &s); motorC_go(s); }
+void vic_mD(void) { int16_t s; vic_args("%d", &s); motorD_go(s); }
 
 void vic_move_up(void)
 {
