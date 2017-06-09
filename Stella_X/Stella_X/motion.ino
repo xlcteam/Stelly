@@ -83,45 +83,46 @@ void motion_line(uint8_t dir)
     }
     uint32_t start_time = millis();
     int16_t line_speed = LINE_SPEED;
+    uint32_t line_time = LINE_BASE_TIME + (line_level - 1) * LINE_EXTRA_TIME;
 
     switch (dir) {
         case 0:
-            while (millis() - start_time < LINE_TIME) {
+            while (millis() - start_time < line_time) {
                 move_up(line_speed);
             }
             break;
         case 1:
-            while (millis() - start_time < LINE_TIME) {
+            while (millis() - start_time < line_time) {
                 move_up_right(line_speed);
             }
             break;
         case 2:
-            while (millis() - start_time < LINE_TIME) {
+            while (millis() - start_time < line_time) {
                 move_right(line_speed);
             }
             break;
         case 3:
-            while (millis() - start_time < LINE_TIME) {
+            while (millis() - start_time < line_time) {
                 move_back_right(line_speed);
             }
             break;
         case 4:
-            while (millis() - start_time < LINE_TIME) {
+            while (millis() - start_time < line_time) {
                 move_back(line_speed);
             }
             break;
         case 5:
-            while (millis() - start_time < LINE_TIME) {
+            while (millis() - start_time < line_time) {
                 move_back_left(line_speed);
             }
             break;
         case 6:
-            while (millis() - start_time < LINE_TIME) {
+            while (millis() - start_time < line_time) {
                 move_left(line_speed);
             }
             break;
         case 7:
-            while (millis() - start_time < LINE_TIME) {
+            while (millis() - start_time < line_time) {
                 move_up_left(line_speed);
             }
             break;

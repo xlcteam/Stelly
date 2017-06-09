@@ -41,9 +41,12 @@ uint8_t process_ws()
     mutex[2] = 1;
 
     if (!ws[0] && !ws[1] && !ws[2]) {
+        line_level = 0;
         dir = 255;
     } else if (ws[0] && !ws[1] && !ws[2]) {
+        line_level = 1;
         if (motion_last_dir < 4 && motion_last_dir > 0) {
+            if (line_last_dir
             dir = 5;
         } else if (motion_last_dir > 4 && motion_last_dir <= 7) {
             dir = 3;
@@ -51,37 +54,44 @@ uint8_t process_ws()
             dir = 4;
         }
     } else if (ws[0] && ws[1] && !ws[2]) {
+        line_level = 1;
         if (abs((int32_t)ws[0] - (int32_t)ws[1]) < LINE_MAX_DIFF_TIME) {
             dir = 5;
         } else if (ws[0] < ws[1]) {
             dir = 5;
         } else { /* ws[1] < ws[0] */
+            line_level = 2;
             dir = 6;
         }
     } else if (ws[0] && !ws[1] && ws[2]) {
+        line_level = 1;
         if (abs((int32_t)ws[0] - (int32_t)ws[2]) < LINE_MAX_DIFF_TIME) {
             dir = 3;
         } else if (ws[0] < ws[2]) {
             dir = 3;
         } else { /* ws[2] < ws[0] */
+            line_level = 2;
             dir = 2;
         }
     } else if (!ws[0] && ws[1] && ws[2]) {
+        line_level = 1;
         dir = 0;
     } else if (!ws[0] && !ws[1] && ws[2]) {
+        line_level = 1;
         if (motion_last_dir > 4 || motion_last_dir == 0) {
             dir = 2;
         } else {
             dir = 1;
         }
     } else if (!ws[0] && ws[1] && !ws[2]) {
+        line_level = 1;
         if (motion_last_dir >= 0 && motion_last_dir < 4) {
             dir = 6;
         } else {
             dir = 7;
         }
     } else { /* (ws[0] && ws[1] && ws[2]) */
-
+        line_level = 3;
         if (abs((int32_t)ws[0] - (int32_t)ws[1]) < LINE_MAX_DIFF_TIME
         &&  abs((int32_t)ws[0] - (int32_t)ws[2]) < LINE_MAX_DIFF_TIME
         &&  abs((int32_t)ws[1] - (int32_t)ws[2]) < LINE_MAX_DIFF_TIME) {
@@ -130,12 +140,10 @@ uint8_t process_ws()
 
 uint8_t line_sensors_dir()
 {
-    /*
     Serial.println("line sensors dir");
     Serial.print(ws[0]);
     Serial.print(" "); Serial.print(ws[1]);
     Serial.print(" "); Serial.println(ws[2]);
-    */
 
     // get data to process
     if (!line_use_int) {

@@ -130,10 +130,12 @@ uint8_t process_ws()
 
 uint8_t line_sensors_dir()
 {
+    /*
     Serial.println("line sensors dir");
     Serial.print(ws[0]);
     Serial.print(" "); Serial.print(ws[1]);
     Serial.print(" "); Serial.println(ws[2]);
+    */
 
     static uint8_t dir = 255;
     static uint32_t d_time = 0;
