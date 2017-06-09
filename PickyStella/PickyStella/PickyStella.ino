@@ -22,7 +22,7 @@
     Serial.println(" microseonds");\
 } while(0)
 
-#define LINE_USE_INT 1
+#define LINE_USE_INT 0
 #define USE_PIXY 0 /* 1 - goal; 2 - ball */
 
 #define SPEED 180
@@ -37,7 +37,7 @@
 #define kI 300
 #define kD 0
 
-#define LINE_TIME 10
+#define LINE_TIME 100
 #define LINE_MAX_DIFF_TIME 10000
 #define LINE_D_TIME_MIN 100
 #define LINE_TIME_MIN 400
@@ -66,6 +66,10 @@
 #define WS_SAFE(f) do {\
         if (!(ws[0] || ws[1] || ws[2] || ws[3] || ws[4] || ws[5])) {f;}\
     } while (0)
+#define motorA_go(x) motorA.go(x)
+#define motorB_go(x) motorB.go(x)
+#define motorC_go(x) motorC.go(x)
+#define motorD_go(x) motorD.go(x)
 
 #define TASKS_COUNT 4
 #define TASK_NO 0
