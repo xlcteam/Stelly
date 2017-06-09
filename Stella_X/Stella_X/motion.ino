@@ -16,7 +16,6 @@ void motion_start()
     motion_last_dir = 255;
     start_north = compass_north();
     restart_PID();
-    line_speed_down = 0;
     if (line_use_int) {
         for (uint8_t i = 0; i < LINE_SENSORS_COUNT; i++){
             mutex[i] = 1;
@@ -41,6 +40,7 @@ void motion()
         lcd.print(delta_time);
         time = millis();
     }
+
     uint16_t dir = line_sensors_dir();
 
     if (dir != 255) {
@@ -83,48 +83,46 @@ void motion_line(uint8_t dir)
     }
     uint32_t start_time = millis();
     int16_t line_speed = LINE_SPEED;
-    if (line_speed_down) {
-        line_speed /= 2;
-    }
+    uint32_t line_time = LINE_BASE_TIME + (line_level - 1) * LINE_EXTRA_TIME;
 
     switch (dir) {
         case 0:
-            while (millis() - start_time < LINE_TIME) {
+            while (millis() - start_time < line_time) {
                 move_up(line_speed);
             }
             break;
         case 1:
-            while (millis() - start_time < LINE_TIME) {
+            while (millis() - start_time < line_time) {
                 move_up_right(line_speed);
             }
             break;
         case 2:
-            while (millis() - start_time < LINE_TIME) {
+            while (millis() - start_time < line_time) {
                 move_right(line_speed);
             }
             break;
         case 3:
-            while (millis() - start_time < LINE_TIME) {
+            while (millis() - start_time < line_time) {
                 move_back_right(line_speed);
             }
             break;
         case 4:
-            while (millis() - start_time < LINE_TIME) {
+            while (millis() - start_time < line_time) {
                 move_back(line_speed);
             }
             break;
         case 5:
-            while (millis() - start_time < LINE_TIME) {
+            while (millis() - start_time < line_time) {
                 move_back_left(line_speed);
             }
             break;
         case 6:
-            while (millis() - start_time < LINE_TIME) {
+            while (millis() - start_time < line_time) {
                 move_left(line_speed);
             }
             break;
         case 7:
-            while (millis() - start_time < LINE_TIME) {
+            while (millis() - start_time < line_time) {
                 move_up_left(line_speed);
             }
             break;
@@ -150,10 +148,6 @@ void motion_ball(uint16_t dir)
     }
     int16_t speed_near = SPEED_NEAR;
     int16_t speed = SPEED;
-    if (line_speed_down) {
-        speed_near /= 2;
-        speed /= 2;
-    }
 
     /*if (!((dir ==0) && (ball_in_dribbler()) && (use_pixy == 1))) {
         if (compass_left_goal_state == 1 || compass_left_goal_state == 2) {
