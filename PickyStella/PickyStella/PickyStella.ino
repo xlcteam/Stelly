@@ -22,7 +22,7 @@
     Serial.println(" microseonds");\
 } while(0)
 
-#define LINE_USE_INT 1
+#define LINE_USE_INT 0
 #define USE_PIXY 0 /* 1 - goal; 2 - ball */
 
 #define SPEED 180
@@ -37,7 +37,7 @@
 #define kI 300
 #define kD 0
 
-#define LINE_TIME 10
+#define LINE_TIME 100
 #define LINE_MAX_DIFF_TIME 10000
 #define LINE_D_TIME_MIN 100
 #define LINE_TIME_MIN 400
