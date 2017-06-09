@@ -42,7 +42,7 @@ void motion()
     }
 
     if (!line_use_int) {
-        for (uint8_t i = 0; i < 0; i++) {
+        for (uint8_t i = 0; i < LINE_SENSORS_COUNT; i++) {
             ws[i] = read_line_sensor(i);
         }
     }

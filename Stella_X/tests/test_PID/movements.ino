@@ -1,6 +1,6 @@
 Motor motorA = Motor(MOTOR_A_DIR_PIN, MOTOR_A_PWM_PIN);
 Motor motorB = Motor(MOTOR_B_DIR_PIN, MOTOR_B_PWM_PIN);
-Motor motorC = Motor(MOTOR_D_DIR_PIN, MOTOR_D_PWM_PIN);
+Motor motorC = Motor(MOTOR_C_DIR_PIN, MOTOR_C_PWM_PIN);
 
 void brake(void)
 {
@@ -16,9 +16,9 @@ void halt(void)
     motorC.stop();
 }
 
-int32_t P_term = 0;
-int32_t I_term = 0;
-int32_t D_term = 0;
+int32_t P_term2 = 0;
+int32_t I_term2 = 0;
+int32_t D_term2 = 0;
 uint32_t PID_last_time = 0;
 bool PID_reset = true;
 
@@ -52,8 +52,8 @@ int16_t PID(int16_t speeds[3])
 
     int32_t d_time = micros() - PID_last_time;
 
-    P_term = error * kP; // [error]%
-    int32_t output = (P_term + D_term) / 100;
+    P_term2 = error * kP; // [error]%
+    int32_t output = (P_term2 + D_term2) / 100;
 
     // if P_term + D_term exceeds limits, don't use I_term
     if (output > max_limit) {
@@ -61,16 +61,16 @@ int16_t PID(int16_t speeds[3])
         I_term = 0;
     } else if (output < min_limit) {
         output = min_limit;
-        I_term = 0;
+        I_term2 = 0;
     } else {
-        I_term += error * d_time / 1000 * kI / 1000; // [error]% * mS
+        I_term2 += error * d_time / 1000 * kI / 1000; // [error]% * mS
         output += I_term / 100;
         // solve reset-windup
         if (output > max_limit) {
             I_term -= (output - max_limit) * 100;
             output = max_limit;
         } else if (output < min_limit) {
-            I_term += (min_limit - output) * 100;
+            I_term2 += (min_limit - output) * 100;
             output = min_limit;
         }
     }
@@ -82,7 +82,7 @@ int16_t PID(int16_t speeds[3])
 
 void restart_PID()
 {
-    P_term = I_term = D_term = 0;
+    P_term2 = I_term2 = D_term2 = 0;
     PID_reset = true;
 }
 
@@ -103,55 +103,55 @@ void move_PID(int16_t speeds[3])
 
 inline void move_up(uint8_t spd)
 {
-    int16_t speeds[] = { -spd, spd, 0 };
+    int16_t speeds[] = { spd, -spd, 0 };
     move_PID(speeds);
 }
 
 inline void move_right(uint8_t spd)
 {
-    int16_t speeds[] = { -spd/2, -spd/2, spd };
+    int16_t speeds[] = { spd/2, spd/2, -spd };
     move_PID(speeds);
 }
 
 inline void move_back(uint8_t spd)
 {
-    int16_t speeds[] = { spd, -spd, 0 };
+    int16_t speeds[] = { -spd, spd, 0 };
     move_PID(speeds);
 }
 
 inline void move_left(uint8_t spd)
 {
-    int16_t speeds[] = { spd/2, spd/2, -spd };
+    int16_t speeds[] = { -spd/2, -spd/2, spd };
     move_PID(speeds);
 }
 
 inline void move_up_right(uint8_t spd)
 {
-    int16_t speeds[] = { -spd, 0, spd };
+    int16_t speeds[] = { spd, 0, -spd };
     move_PID(speeds);
 }
 
 inline void move_back_right(uint8_t spd)
 {
-    int16_t speeds[] = { 0, -spd, spd };
+    int16_t speeds[] = { 0, spd, -spd };
     move_PID(speeds);
 }
 
 inline void move_back_left(uint8_t spd)
 {
-    int16_t speeds[] = { spd, 0, -spd };
+    int16_t speeds[] = { -spd, 0, spd };
     move_PID(speeds);
 }
 
 inline void move_up_left(uint8_t spd)
 {
-    int16_t speeds[] = { 0, spd, -spd };
+    int16_t speeds[] = { 0, -spd, spd };
     move_PID(speeds);
 }
 
 inline void rotate(int16_t spd)
 {
-    int16_t speeds[] = { spd, spd, spd };
+    int16_t speeds[] = { -spd, -spd, -spd };
     move_raw(speeds);
 }
 

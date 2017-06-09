@@ -25,26 +25,27 @@
 #define LINE_USE_INT 1
 #define USE_PIXY 0 /* 1 - goal; 2 - ball */
 
-#define SPEED 180
-#define SPEED_NEAR 160
+#define SPEED 220
+#define SPEED_NEAR 180
 #define PIXY_SPEED 150
 #define PIXY_BALL_SPEED 150
 #define PIXY_BALL_SPEED_NEAR 130
 #define ROTATE_SPEED 70
+#define SPEED_ROTATE_CENTRALIZE 60
 #define LINE_SPEED 200
 
-#define kP 300
-#define kI 300
+#define kP 300  //zvysit ak sa dlho dotaca ..chyba*sek
+#define kI 300 //zvysit ak dlho je vychyleny od severu .. chyba 
 #define kD 0
 
-#define LINE_TIME 10
+#define LINE_BASE_TIME 10
+#define LINE_EXTRA_TIME 2000
 #define LINE_MAX_DIFF_TIME 10000
-#define LINE_D_TIME_MIN 100
-#define LINE_TIME_MIN 400
 #define DRIBBLER_SENSOR_TIME 20
 #define LCD_DELAY 100
 #define BUTTONS_DELAY 10
 #define PIXY_TIME 20
+#define KICKER_TIME 60
 
 #define LINE_THRESH 130
 #define TO_NORTH_THRESH 30
@@ -88,7 +89,9 @@ uint8_t test_dbg = 0;
 uint32_t last_time;
 uint16_t delta_time;
 uint8_t motion_last_dir;
-uint8_t line_speed_down;
+uint8_t line_level;
+uint8_t compass_right_goal_state;
+uint8_t compass_left_goal_state;
 
 PixyViSy pixyViSy(1, 120, IR_BALL_SIZE);
 
@@ -154,6 +157,7 @@ void setup()
     setup_vic_funcs();
     setup_vic_vars();
 
+    setup_compass();
     compass_set_north();
 
     setup_buttons();
@@ -162,6 +166,7 @@ void setup()
     setup_display();
     print_display_idle();
     setup_line_sensors();
+    setup_kicker();
 
     last_time = millis();
 }
