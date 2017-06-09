@@ -36,11 +36,14 @@
 #define IR_BOTTOM2_PIN A5
 #define IR_BOTTOM3_PIN A4
 
-#define LINE_S1_PIN 11
-#define LINE_S2_PIN 13
-#define LINE_S3_PIN 12
-#define LINE_S4_PIN 10
-#define LINE_THRESH_PIN 9
+/* Warning: When changing, also edit line_sensors.ino !!! */
+#define LINE_S_FRONT_PIN 13 // (PCINT7, PB7)
+#define LINE_S_LEFT1_PIN 12 // the rightmost (PCINT6, PB6)
+#define LINE_S_LEFT2_PIN 15 // (PCINT9, PJ0)
+#define LINE_S_RIGHT1_PIN 11 // the leftmost (PCINT5, PB5)
+#define LINE_S_RIGHT2_PIN 14 // (PCINT10, PJ1)
+#define LINE_S_BACK_PIN 10 // (PCINT4, PB4)
+#define LINE_S_THRESH_PIN 9
 
 #define DRIBBLER_SENSOR_PIN 44
 #define DRIBBLER_PIN 28

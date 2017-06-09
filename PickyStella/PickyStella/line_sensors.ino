@@ -1,15 +1,16 @@
-uint8_t line_sensors[LINE_SENSORS_COUNT] =
-    { LINE_S1_PIN, LINE_S2_PIN, LINE_S4_PIN };
+uint8_t line_sensors[LINE_SENSORS_COUNT] = { LINE_S_FRONT_PIN,
+	LINE_S_RIGHT1_PIN, LINE_S_RIGHT2_PIN, LINE_S_BACK_PIN, LINE_S_LEFT1_PIN,
+	LINE_S_LEFT2_PIN };
+// PB7, PB5, PJ1, PB4, PB6, PJ0
 
 void setup_line_sensors()
 {
-    for (uint8_t i = 0; i < LINE_SENSORS_COUNT; i++) {
-        pinMode(line_sensors[i], INPUT);
-    }
-    pinMode(LINE_THRESH_PIN, OUTPUT);
-
+	for (uint8_t i = 0; i < LINE_SENSORS_COUNT; i++) {
+		pinMode(line_sensors[i], INPUT);
+	}
+	pinMode(LINE_S_THRESH_PIN, OUTPUT);
     PCMSK0 |= _BV(PCINT4) | _BV(PCINT5) | _BV(PCINT6) | _BV(PCINT7);
-
+    PCMSK1 |= _BV(PCINT9) | _BV(PCINT10);
     line_sensors_update();
 }
 
@@ -18,11 +19,62 @@ inline uint8_t read_line_sensor(uint8_t index)
     return digitalRead(line_sensors[index]);
 }
 
+ISR(PCINT0_vect)
+{
+    if (mutex) return;
+    if (PINB & _BV(PB4) && !ws[3]) {
+        ws[3] = micros();
+        halt();
+    }
+    if (PINB & _BV(PB5) && !ws[1]) {
+        ws[1] = micros();
+        halt();
+    }
+    if (PINB & _BV(PB6) && !ws[4]) {
+        ws[4] = micros();
+        halt();
+    }
+    if (PINB & _BV(PB7) && !ws[0]) {
+        ws[0] = micros();
+        halt();
+    }
+}
+
+ISR(PCINT1_vect)
+{
+    if (mutex) return;
+    if (PINJ & _BV(PJ0) && !ws[5]) {
+        ws[5] = micros();
+        halt();
+    }
+    if (PINJ & _BV(PJ1) && !ws[2]) {
+        ws[2] = micros();
+        halt();
+    }
+}
+
+
+void line_interrupt_on()
+{
+    PCICR |= _BV(PCIE0) | _BV(PCIE1);
+    last_line_use_int = line_use_int = 1;
+}
+
+void line_interrupt_off()
+{
+    PCICR &= ~(_BV(PCIE0) | _BV(PCIE1));
+    last_line_use_int = line_use_int = 0;
+}
+
 void line_sensors_update()
 {
-    analogWrite(LINE_THRESH_PIN, light_pwm);
-    PCICR &= ~_BV(PCIE0); // clear
-    PCICR |= (line_use_int & 0x01) << PCIE0; // set
+    if (last_line_use_int && !line_use_int) {
+        line_interrupt_off();
+    } else if (!last_line_use_int && line_use_int) {
+        line_interrupt_on();
+    }
+    last_line_use_int = line_use_int;
+    analogWrite(LINE_S_THRESH_PIN, light_pwm);
     led_set(2, line_use_int);
 }
 
@@ -36,13 +88,11 @@ uint8_t process_ws()
 {
     uint8_t dir;
 
-    mutex[0] = 1;
-    mutex[1] = 1;
-    mutex[2] = 1;
+    mutex = 1;
 
-    if (!ws[0] && !ws[1] && !ws[2]) {
+    if (!ws[0] && !ws[1] && !ws[2] && !ws[3] && !ws[4] && !ws[5]) {
         dir = 255;
-    } else if (ws[0] && !ws[1] && !ws[2]) {
+    } else if (ws[0] && !ws[1] && !ws[2] && !ws[3] && !ws[4] && !ws[5]) {
         if (motion_last_dir < 180 && motion_last_dir > 15) {
             dir = 5;
         } else if (motion_last_dir > 180 && motion_last_dir < 345) {
@@ -50,78 +100,71 @@ uint8_t process_ws()
         } else {
             dir = 4;
         }
-    } else if (ws[0] && ws[1] && !ws[2]) {
-        if (abs((int32_t)ws[0] - (int32_t)ws[1]) < LINE_MAX_DIFF_TIME) {
+    } else if (!ws[0] && !ws[1] && !ws[2] && ws[3] && !ws[4] && !ws[5]) {
+        if (motion_last_dir < 165 && motion_last_dir > 0) {
+            dir = 7;
+        } else if (motion_last_dir > 195 && motion_last_dir < 360) {
+            dir = 1;
+        } else {
+            dir = 0;
+        }
+    } else if (ws[0] && ((ws[1] || ws[2]) == (ws[4] || ws[5])) && !ws[3]) {
+        dir = 4;
+    } else if (!ws[0] && ((ws[1] || ws[2]) == (ws[4] || ws[5])) && ws[3]) {
+        dir = 0;
+    } else if (ws[0] && (ws[1] || ws[2]) && !ws[3] && !ws[4] && !ws[5]) {
+        dir = 5;
+        /*
+        if (abs((int32_t)ws[0] - (int32_t)ws[2]) < LINE_MAX_DIFF_TIME) {
             dir = 5;
-        } else if (ws[0] < ws[1]) {
+        } else if (!ws[2]) {
             dir = 5;
-        } else { /* ws[1] < ws[0] */
+        } else if (ws[0] < ws[2]) {
+            dir = 5;
+        } else { // ws[1] < ws[0]
             dir = 6;
         }
-    } else if (ws[0] && !ws[1] && ws[2]) {
+        */
+    } else if (ws[0] && !ws[1] && !ws[2] && !ws[3] && (ws[4] || ws[5])) {
+        dir = 3;
+        /*
         if (abs((int32_t)ws[0] - (int32_t)ws[2]) < LINE_MAX_DIFF_TIME) {
             dir = 3;
         } else if (ws[0] < ws[2]) {
             dir = 3;
-        } else { /* ws[2] < ws[0] */
+        } else { // ws[2] < ws[0]
             dir = 2;
         }
-    } else if (!ws[0] && ws[1] && ws[2]) {
-        dir = 0;
-    } else if (!ws[0] && !ws[1] && ws[2]) {
-        if (motion_last_dir > 180 || motion_last_dir == 0) {
+        */
+    } else if (!ws[0] && (ws[1] || ws[2]) && ws[3] && !ws[4] && !ws[5]) {
+        dir = 7;
+    } else if (!ws[0] && !ws[1] && !ws[2] && ws[3] && (ws[4] || ws[5])) {
+        dir = 1;
+    } else if ((ws[1] || ws[2]) && (ws[0] == ws[3]) && !ws[4] && !ws[5]) {
+        dir = 6;
+    } else if (!ws[1] && !ws[2] && (ws[0] == ws[3]) && (ws[4] || ws[5])) {
+        dir = 2;
+    } else if (ws[0] && (ws[1] || ws[2]) && ws[3] && (ws[4] || ws[5])) {
+        uint8_t latest_i = 0;
+        for (uint8_t i = 0; i < 6; i++) {
+            if (ws[i] > ws[latest_i]) {
+                latest_i = i;
+            }
+        }
+        if (latest_i == 0) {
+            dir = 0;
+        } else if (latest_i == 3) {
+            dir = 4;
+        } else if (latest_i == 1 || latest_i == 2) {
             dir = 2;
         } else {
-            dir = 0;
-        }
-    } else if (!ws[0] && ws[1] && !ws[2]) {
-        if (motion_last_dir >= 0 && motion_last_dir < 180) {
             dir = 6;
-        } else {
-            dir = 0;
         }
-    } else { /* (ws[0] && ws[1] && ws[2]) */
-
-        if (abs((int32_t)ws[0] - (int32_t)ws[1]) < LINE_MAX_DIFF_TIME
-        &&  abs((int32_t)ws[0] - (int32_t)ws[2]) < LINE_MAX_DIFF_TIME
-        &&  abs((int32_t)ws[1] - (int32_t)ws[2]) < LINE_MAX_DIFF_TIME) {
-            dir = line_last_dir;
-        } else if (abs((int32_t)ws[0] - (int32_t)ws[1]) < LINE_MAX_DIFF_TIME) {
-            if (ws[2] < ws[0]) {
-                dir = 1;
-            } else {
-                dir = 5;
-            }
-        } else if (abs((int32_t)ws[0] - (int32_t)ws[2]) < LINE_MAX_DIFF_TIME) {
-            if (ws[1] < ws[0]) {
-                dir = 7;
-            } else {
-                dir = 3;
-            }
-        } else if (abs((int32_t)ws[1] - (int32_t)ws[2]) < LINE_MAX_DIFF_TIME) {
-            if (ws[0] < ws[1]) {
-                dir = 4;
-            } else {
-                dir = 0;
-            }
-        } else if (ws[1] < ws[0] && ws[0] < ws[2]) {
-            dir = 6;
-        } else if (ws[2] < ws[0] && ws[0] < ws[1]) {
-            dir = 2;
-        } else if (ws[1] < ws[2]) {
-            dir = 7;
-        } else if (ws[2] < ws[1]) {
-            dir = 1;
-        } else if (ws[0] < ws[1] && ws[1] < ws[2]) {
-            dir = 5;
-        } else { /* ws[0] < ws[2] && ws[2] < ws[1] */
-            dir = 3;
-        }
+    } else { // very bad
+        dir = (line_last_dir / 45 + 4) % 4; // opposite direction
     }
 
-    mutex[0] = 0;
-    mutex[1] = 0;
-    mutex[2] = 0;
+    mutex = 0;
 
     line_last_dir = dir;
 
@@ -153,9 +196,9 @@ uint8_t line_sensors_dir()
 
     if (state == 0) {
         Serial.print("0 ");
-        mutex[0] = mutex[1] = mutex[2] = 1;
+        mutex = 1;
         uint8_t count = (bool)ws[0] + (bool)ws[1] + (bool)ws[2];
-        mutex[0] = mutex[1] = mutex[2] = 0;
+        mutex = 0;
         if (count == 0) {
             state = 0;
             dir = 255;
@@ -184,17 +227,17 @@ uint8_t line_sensors_dir()
 
     } else if (state == 1) {
         Serial.print("1 ");
-        mutex[0] = mutex[1] = mutex[2] = 1;
+        mutex = 1;
         uint8_t count = (bool)ws[0] + (bool)ws[1] + (bool)ws[2];
-        mutex[0] = mutex[1] = mutex[2] = 0;
+        mutex = 0;
         if (count == 1) {
             if (millis() - s_time > min_time) {
                 Serial.print("no line");
                 state = 0;
                 dir = 255;
-                mutex[0] = mutex[1] = mutex[2] = 1;
+                mutex = 1;
                 ws[0] = ws[1] = ws[2] = 0;
-                mutex[0] = mutex[1] = mutex[2] = 0;
+                mutex = 0;
             } else {
                 Serial.print("speed down");
                 line_speed_down = 1;
@@ -221,11 +264,11 @@ uint8_t line_sensors_dir()
             Serial.print("wait");
             d_time = millis();
         }
-        mutex[0] = mutex[1] = mutex[2] = 1;
+        mutex = 1;
         ws[0] = read_line_sensor(0) * micros();
         ws[1] = read_line_sensor(1) * micros();
         ws[2] = read_line_sensor(2) * micros();
-        mutex[0] = mutex[1] = mutex[2] = 0;
+        mutex = 0;
     }
 
     Serial.print("return "); Serial.println(dir);
@@ -250,4 +293,69 @@ void vic_print_line_sensors(void)
         vic_printf("%u ", read_line_sensor(i));
     }
     vic_out('\n');
+}
+
+void vic_print_line_sensors_ws(void)
+{
+    mutex = 1;
+    for (uint8_t i = 0; i < LINE_SENSORS_COUNT; i++) {
+        vic_printf("%lu ", ws[i]);
+    }
+    vic_out('\n');
+    mutex = 0;
+}
+
+void vic_print_line_sensors_nice(void)
+{
+    vic_printf("  %u\n", read_line_sensor(0));
+    vic_printf("%u%u %u%u\n", read_line_sensor(5), read_line_sensor(4),
+                              read_line_sensor(1), read_line_sensor(2));
+    vic_printf("  %u\n", read_line_sensor(3));
+}
+
+void vic_print_line_sensors_ws_nice(void)
+{
+    mutex = 1;
+    vic_printf("  %lu\n", ws[0]);
+    vic_printf("%lu %lu %lu %lu\n", ws[5], ws[4], ws[1], ws[2]);
+    vic_printf("  %lu\n", ws[3]);
+    mutex = 0;
+}
+
+void vic_zero_ws(void)
+{
+    mutex = 1;
+    ws[0] = ws[1] = ws[2] = ws[3] = ws[4] = ws[5] = 0;
+    mutex = 0;
+}
+
+void vic_calib_line_sensors(void)
+{
+    line_interrupt_off();
+    uint16_t thresh = light_pwm, thresh_min, thresh_max;
+    for (thresh_max = 0; thresh_max < 256; thresh_max++) {
+        light_pwm = thresh_max;
+        line_sensors_update();
+        if (read_line_sensor(0) == 0) {
+            delay(50);
+            if (read_line_sensor(0) == 0) {
+                break;
+            }
+        }
+        delay(20);
+    }
+    for (thresh_min = 255; thresh_min >= 0; thresh_min--) {
+        light_pwm = thresh_min;
+        line_sensors_update();
+        if (read_line_sensor(0) == 1) {
+            delay(50);
+            if (read_line_sensor(0) == 1) {
+                break;
+            }
+        }
+        delay(20);
+    }
+    vic_printf("min: %u max: %u suggest: %u",
+        thresh_min, thresh_max, (thresh_min + thresh_max) / 2);
+    light_pwm = thresh;
 }

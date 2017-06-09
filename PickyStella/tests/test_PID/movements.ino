@@ -19,9 +19,9 @@ void halt(void)
     motorD.stop();
 }
 
-int32_t P_term = 0;
-int32_t I_term = 0;
-int32_t D_term = 0;
+int32_t P_term_2 = 0;
+int32_t I_term_2 = 0;
+int32_t D_term_2 = 0;
 uint32_t PID_last_time = 0;
 bool PID_reset = true;
 
@@ -56,25 +56,25 @@ int16_t PID(int16_t speeds[4])
 
     int32_t d_time = micros() - PID_last_time;
 
-    P_term = error * kP; // [error]%
-    int32_t output = (P_term + D_term) / 100;
+    P_term_2 = error * kP; // [error]%
+    int32_t output = (P_term_2 + D_term_2) / 100;
 
-    // if P_term + D_term exceeds limits, don't use I_term
+    // if P_term_2 + D_term_2 exceeds limits, don't use I_term_2
     if (output > max_limit) {
         output = max_limit;
-        I_term = 0;
+        I_term_2 = 0;
     } else if (output < min_limit) {
         output = min_limit;
-        I_term = 0;
+        I_term_2 = 0;
     } else {
-        I_term += error * d_time / 1000 * kI / 1000; // [error]% * mS
-        output += I_term / 100;
+        I_term_2 += error * d_time / 1000 * kI / 1000; // [error]% * mS
+        output += I_term_2 / 100;
         // solve reset-windup
         if (output > max_limit) {
-            I_term -= (output - max_limit) * 100;
+            I_term_2 -= (output - max_limit) * 100;
             output = max_limit;
         } else if (output < min_limit) {
-            I_term += (min_limit - output) * 100;
+            I_term_2 += (min_limit - output) * 100;
             output = min_limit;
         }
     }
@@ -86,7 +86,7 @@ int16_t PID(int16_t speeds[4])
 
 void restart_PID()
 {
-    P_term = I_term = D_term = 0;
+    P_term_2 = I_term_2 = D_term_2 = 0;
     PID_last_time = micros();
     PID_reset = true;
 }
@@ -102,10 +102,10 @@ void move_raw(int16_t speeds[4])
 void move_PID(int16_t speeds[4])
 {
     int16_t compensation = PID(speeds);
-    motorA.go(speeds[0] - compensation);
-    motorB.go(speeds[1] - compensation);
-    motorC.go(speeds[2] - compensation);
-    motorD.go(speeds[3] - compensation);
+    motorA.go(speeds[0] + compensation);
+    motorB.go(speeds[1] + compensation);
+    motorC.go(speeds[2] + compensation);
+    motorD.go(speeds[3] + compensation);
 }
 
 inline void move_up(uint8_t spd)

@@ -47,20 +47,3 @@ bool centered(uint16_t range)
     uint16_t c = (uint16_t) compass_angle();
     return ((c >= (360 - range)) || (c <= range));
 }
-
-/* VIC FUNCTIONS */
-
-inline void vic_compass_angle(void)
-{
-    vic_printf("%u\n", compass_angle());
-}
-
-inline void vic_compass_north(void)
-{
-    vic_printf("%u\n", (uint16_t) compass_north());
-}
-
-inline void vic_compass_set_north(void)
-{
-    compass_set_north();
-}
