@@ -41,47 +41,57 @@ uint8_t process_ws()
     mutex[2] = 1;
 
     if (!ws[0] && !ws[1] && !ws[2]) {
+        line_level = 0;
         dir = 255;
     } else if (ws[0] && !ws[1] && !ws[2]) {
-        if (motion_last_dir < 180 && motion_last_dir > 15) {
+        line_level = 1;
+        if (motion_last_dir < 4 && motion_last_dir > 0) {
+            if (line_last_dir
             dir = 5;
-        } else if (motion_last_dir > 180 && motion_last_dir < 345) {
+        } else if (motion_last_dir > 4 && motion_last_dir <= 7) {
             dir = 3;
         } else {
             dir = 4;
         }
     } else if (ws[0] && ws[1] && !ws[2]) {
+        line_level = 1;
         if (abs((int32_t)ws[0] - (int32_t)ws[1]) < LINE_MAX_DIFF_TIME) {
             dir = 5;
         } else if (ws[0] < ws[1]) {
             dir = 5;
         } else { /* ws[1] < ws[0] */
+            line_level = 2;
             dir = 6;
         }
     } else if (ws[0] && !ws[1] && ws[2]) {
+        line_level = 1;
         if (abs((int32_t)ws[0] - (int32_t)ws[2]) < LINE_MAX_DIFF_TIME) {
             dir = 3;
         } else if (ws[0] < ws[2]) {
             dir = 3;
         } else { /* ws[2] < ws[0] */
+            line_level = 2;
             dir = 2;
         }
     } else if (!ws[0] && ws[1] && ws[2]) {
+        line_level = 1;
         dir = 0;
     } else if (!ws[0] && !ws[1] && ws[2]) {
-        if (motion_last_dir > 180 || motion_last_dir == 0) {
+        line_level = 1;
+        if (motion_last_dir > 4 || motion_last_dir == 0) {
             dir = 2;
         } else {
-            dir = 0;
+            dir = 1;
         }
     } else if (!ws[0] && ws[1] && !ws[2]) {
-        if (motion_last_dir >= 0 && motion_last_dir < 180) {
+        line_level = 1;
+        if (motion_last_dir >= 0 && motion_last_dir < 4) {
             dir = 6;
         } else {
-            dir = 0;
+            dir = 7;
         }
     } else { /* (ws[0] && ws[1] && ws[2]) */
-
+        line_level = 3;
         if (abs((int32_t)ws[0] - (int32_t)ws[1]) < LINE_MAX_DIFF_TIME
         &&  abs((int32_t)ws[0] - (int32_t)ws[2]) < LINE_MAX_DIFF_TIME
         &&  abs((int32_t)ws[1] - (int32_t)ws[2]) < LINE_MAX_DIFF_TIME) {
@@ -135,100 +145,23 @@ uint8_t line_sensors_dir()
     Serial.print(" "); Serial.print(ws[1]);
     Serial.print(" "); Serial.println(ws[2]);
 
-    static uint8_t dir = 255;
-    static uint32_t d_time = 0;
-    static uint32_t s_time = 0;
-    static uint32_t min_time = 0;
-    static uint8_t state = 0;
-
-#if 0
+    // get data to process
     if (!line_use_int) {
-        /* load actual values */
         for (uint8_t i = 0; i < LINE_SENSORS_COUNT; i++) {
-            ws[i]  = read_line_sensor(i) * micros();
+            ws[i] = read_line_sensor(i) * micros();
         }
     }
-#endif
-    line_speed_down = 0;
 
-    if (state == 0) {
-        Serial.print("0 ");
-        mutex[0] = mutex[1] = mutex[2] = 1;
-        uint8_t count = (bool)ws[0] + (bool)ws[1] + (bool)ws[2];
-        mutex[0] = mutex[1] = mutex[2] = 0;
-        if (count == 0) {
-            state = 0;
-            dir = 255;
-        } else if (count == 1) {
-            if (ws[0] == 0) {
-                Serial.print("speed down");
-                state = 1;
-                min_time = LINE_TIME_MIN;
-                dir = motion_last_dir;
-                line_speed_down = 1;
-            } else {
-                Serial.print("ws0");
-                state = 2;
-                min_time = LINE_TIME_MIN / 2;
-                dir = 4;
-            }
-            d_time = s_time = millis();
-        } else {
-            state = 2;
-            min_time = (count == 2) ? LINE_TIME_MIN : LINE_TIME_MIN * 2;
-            d_time = s_time = millis();
-            dir = process_ws();
-            Serial.print(dir);
-            Serial.print(" "); Serial.print(count);
-        }
+    uint16_t dir = process_ws();
 
-    } else if (state == 1) {
-        Serial.print("1 ");
-        mutex[0] = mutex[1] = mutex[2] = 1;
-        uint8_t count = (bool)ws[0] + (bool)ws[1] + (bool)ws[2];
-        mutex[0] = mutex[1] = mutex[2] = 0;
-        if (count == 1) {
-            if (millis() - s_time > min_time) {
-                Serial.print("no line");
-                state = 0;
-                dir = 255;
-                mutex[0] = mutex[1] = mutex[2] = 1;
-                ws[0] = ws[1] = ws[2] = 0;
-                mutex[0] = mutex[1] = mutex[2] = 0;
-            } else {
-                Serial.print("speed down");
-                line_speed_down = 1;
-            }
-        } else {
-            state = 2;
-            d_time = s_time = millis();
-            dir = process_ws();
-            Serial.print(dir);
+    // fill ws with actual values
+    if (line_use_int) {
+        for (uint8_t i = 0; i < LINE_SENSORS_COUNT; i++) {
+            mutex[i] = 1;
+            ws[i] = read_line_sensor(i) * micros();
+            mutex[i] = 0;
         }
-
-    } else if (state == 2) {
-        Serial.print("2 ");
-        uint8_t dir_a = process_ws();
-        if (dir_a != dir) {
-            if (millis() - d_time > LINE_D_TIME_MIN
-            &&  millis() - s_time > min_time) {
-                state = dir_a == 255 ? 0 : 2; // mozno rozlisit 1 a 2
-                d_time = s_time = millis();
-                dir = dir_a;
-                Serial.print(dir);
-            }
-        } else {
-            Serial.print("wait");
-            d_time = millis();
-        }
-        mutex[0] = mutex[1] = mutex[2] = 1;
-        ws[0] = read_line_sensor(0) * micros();
-        ws[1] = read_line_sensor(1) * micros();
-        ws[2] = read_line_sensor(2) * micros();
-        mutex[0] = mutex[1] = mutex[2] = 0;
     }
-
-    Serial.print("return "); Serial.println(dir);
 
     return dir;
 }
