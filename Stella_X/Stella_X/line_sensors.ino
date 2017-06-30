@@ -1,14 +1,17 @@
 uint8_t line_sensors[LINE_SENSORS_COUNT] =
-    { LINE_S1_PIN, LINE_S2_PIN, LINE_S4_PIN };
+    { LINE_FRONT_PIN, LINE_LEFT_PIN, LINE_RIGHT_PIN };
+/* all interrupt pins are on the same port, so we can use any one of them
+   to determine PCMSK, PCICR and PCIE
+*/
 
 void setup_line_sensors()
 {
     for (uint8_t i = 0; i < LINE_SENSORS_COUNT; i++) {
-        pinMode(line_sensors[i], INPUT);
+        uint8_t pin = line_sensors[i];
+        pinMode(pin, INPUT);
+        *digitalPinToPCMSK(LINE_FRONT_PIN) |= _BV(digitalPinToPCMSKbit(pin));
     }
     pinMode(LINE_THRESH_PIN, OUTPUT);
-
-    PCMSK0 |= _BV(PCINT4) | _BV(PCINT5) | _BV(PCINT6) | _BV(PCINT7);
 
     line_sensors_update();
 }
@@ -21,8 +24,13 @@ inline uint8_t read_line_sensor(uint8_t index)
 void line_sensors_update()
 {
     analogWrite(LINE_THRESH_PIN, light_pwm);
-    PCICR &= ~_BV(PCIE0); // clear
-    PCICR |= (line_use_int & 0x01) << PCIE0; // set
+
+    *digitalPinToPCICR(LINE_FRONT_PIN) &=
+        ~_BV(digitalPinToPCICRbit(LINE_FRONT_PIN)); // clear
+    if (line_use_int) {
+        *digitalPinToPCICR(LINE_FRONT_PIN) |=
+            _BV(digitalPinToPCICRbit(LINE_FRONT_PIN)); // set
+    }
     led_set(2, line_use_int);
 }
 

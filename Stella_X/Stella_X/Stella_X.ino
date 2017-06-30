@@ -123,17 +123,17 @@ uint8_t mutex[] = {0, 0, 0};
 
 ISR(PCINT0_vect)
 {
-    if (!mutex[0] && PINB & _BV(PB5) && !ws[0]) {
+    if (!mutex[0] && !ws[0] && read_line_sensor(0)) {
         ws[0] = micros();
         halt();
     }
 
-    if (!mutex[1] && PINB & _BV(PB7) && !ws[1]) {
+    if (!mutex[1] && !ws[1] && read_line_sensor(1)) {
         ws[1] = micros();
         halt();
     }
 
-    if (!mutex[2] && PINB & _BV(PB4) && !ws[2]) {
+    if (!mutex[2] && !ws[2] && read_line_sensor(2)) {
         ws[2] = micros();
         halt();
     }

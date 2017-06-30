@@ -36,10 +36,9 @@
 #define IR_BOTTOM2_PIN A5
 #define IR_BOTTOM3_PIN A4
 
-#define LINE_S1_PIN 11
-#define LINE_S2_PIN 13
-#define LINE_S3_PIN 12
-#define LINE_S4_PIN 10
+#define LINE_FRONT_PIN 11
+#define LINE_RIGHT_PIN 13
+#define LINE_LEFT_PIN 10
 #define LINE_THRESH_PIN 9
 
 #define DRIBBLER_SENSOR_PIN 44
