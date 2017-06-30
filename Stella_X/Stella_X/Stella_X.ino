@@ -70,6 +70,7 @@
 #define TASK_MOTION 3
 #define START_TASK TASK_NO
 
+#include "prototypes.h"
 /* Arduino puts function prototypes from all ino files "after any comments or
    pre-processor statements (#includes or #defines), but before any other
    statements (including type declarations)."

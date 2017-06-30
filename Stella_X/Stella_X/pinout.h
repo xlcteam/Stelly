@@ -44,8 +44,6 @@
 #define DRIBBLER_SENSOR_PIN 44
 #define DRIBBLER_PIN 28
 
-#define KICKER_PIN 26
-
 #define MOTOR_A_DIR_PIN 46
 #define MOTOR_B_DIR_PIN 41
 #define MOTOR_C_DIR_PIN 48

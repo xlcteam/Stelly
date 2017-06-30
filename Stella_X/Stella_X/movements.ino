@@ -101,52 +101,84 @@ void move_PID(int16_t speeds[3])
     motorC.go(speeds[2] + compensation);
 }
 
-inline void move_up(uint8_t spd)
+inline void move_up(uint8_t spd, uint8_t PID)
 {
     int16_t speeds[] = { -spd, spd, 0 };
-    move_PID(speeds);
+    if (PID) {
+        move_PID(speeds);
+    } else {
+        move_raw(speeds);
+    }
 }
 
-inline void move_right(uint8_t spd)
+inline void move_right(uint8_t spd, uint8_t PID)
 {
     int16_t speeds[] = { -spd/2, -spd/2, spd };
-    move_PID(speeds);
+    if (PID) {
+        move_PID(speeds);
+    } else {
+        move_raw(speeds);
+    }
 }
 
-inline void move_back(uint8_t spd)
+inline void move_back(uint8_t spd, uint8_t PID)
 {
     int16_t speeds[] = { spd, -spd, 0 };
-    move_PID(speeds);
+    if (PID) {
+        move_PID(speeds);
+    } else {
+        move_raw(speeds);
+    }
 }
 
-inline void move_left(uint8_t spd)
+inline void move_left(uint8_t spd, uint8_t PID)
 {
     int16_t speeds[] = { spd/2, spd/2, -spd };
-    move_PID(speeds);
+    if (PID) {
+        move_PID(speeds);
+    } else {
+        move_raw(speeds);
+    }
 }
 
-inline void move_up_right(uint8_t spd)
+inline void move_up_right(uint8_t spd, uint8_t PID)
 {
     int16_t speeds[] = { -spd, 0, spd };
-    move_PID(speeds);
+    if (PID) {
+        move_PID(speeds);
+    } else {
+        move_raw(speeds);
+    }
 }
 
-inline void move_back_right(uint8_t spd)
+inline void move_back_right(uint8_t spd, uint8_t PID)
 {
     int16_t speeds[] = { 0, -spd, spd };
-    move_PID(speeds);
+    if (PID) {
+        move_PID(speeds);
+    } else {
+        move_raw(speeds);
+    }
 }
 
-inline void move_back_left(uint8_t spd)
+inline void move_back_left(uint8_t spd, uint8_t PID)
 {
     int16_t speeds[] = { spd, 0, -spd };
-    move_PID(speeds);
+    if (PID) {
+        move_PID(speeds);
+    } else {
+        move_raw(speeds);
+    }
 }
 
-inline void move_up_left(uint8_t spd)
+inline void move_up_left(uint8_t spd, uint8_t PID)
 {
     int16_t speeds[] = { 0, spd, -spd };
-    move_PID(speeds);
+    if (PID) {
+        move_PID(speeds);
+    } else {
+        move_raw(speeds);
+    }
 }
 
 inline void rotate(int16_t spd)
@@ -155,7 +187,7 @@ inline void rotate(int16_t spd)
     move_raw(speeds);
 }
 
-/* may be dangerous */
+/* may be dangerous (Germany "rotating" bug) */
 inline void centralize()
 {
     int16_t spds[] = {0};
@@ -164,12 +196,16 @@ inline void centralize()
 
 /* VIC FUNCTIONS */
 
-void vic_move_PID(void)
+void vic_move(void)
 {
-    int16_t spds[3];
+    int16_t spds[3], without_PID = 0;
 
-    if (vic_args("%d %d %d", &spds[0], &spds[1], &spds[2]) == 3) {
-        move_PID(spds);
+    if (vic_args("%d %d %d %d", &spds[0],&spds[1],&spds[2],&without_PID) >= 3){
+        if (without_PID) {
+            move_raw(spds);
+        } else {
+            move_PID(spds);
+        }
     } else {
         vic_print_err(VIC_ERR_INVALID_ARGS);
     }
@@ -186,9 +222,9 @@ void vic_mC(void) { int16_t s; vic_args("%d", &s); motorC.go(s); }
 
 void vic_move_up(void)
 {
-    uint8_t spd;
-    if (vic_args("%hhu", &spd) == 1) {
-        move_up(spd);
+    uint8_t spd, without_PID = 0;
+    if (vic_args("%hhu %hhu", &spd, &without_PID) >= 1) {
+        move_up(spd, !without_PID);
     } else {
         vic_print_err(VIC_ERR_INVALID_ARGS);
     }
@@ -196,9 +232,9 @@ void vic_move_up(void)
 
 void vic_move_right(void)
 {
-    uint8_t spd;
-    if (vic_args("%hhu", &spd) == 1) {
-        move_right(spd);
+    uint8_t spd, without_PID = 0;
+    if (vic_args("%hhu %hhu", &spd, &without_PID) >= 1) {
+        move_right(spd, !without_PID);
     } else {
         vic_print_err(VIC_ERR_INVALID_ARGS);
     }
@@ -206,9 +242,9 @@ void vic_move_right(void)
 
 void vic_move_back(void)
 {
-    uint8_t spd;
-    if (vic_args("%hhu", &spd) == 1) {
-        move_back(spd);
+    uint8_t spd, without_PID = 0;
+    if (vic_args("%hhu %hhu", &spd, &without_PID) >= 1) {
+        move_back(spd, !without_PID);
     } else {
         vic_print_err(VIC_ERR_INVALID_ARGS);
     }
@@ -216,9 +252,9 @@ void vic_move_back(void)
 
 void vic_move_left(void)
 {
-    uint8_t spd;
-    if (vic_args("%hhu", &spd) == 1) {
-        move_left(spd);
+    uint8_t spd, without_PID = 0;
+    if (vic_args("%hhu %hhu", &spd, &without_PID) >= 1) {
+        move_left(spd, !without_PID);
     } else {
         vic_print_err(VIC_ERR_INVALID_ARGS);
     }
@@ -226,9 +262,9 @@ void vic_move_left(void)
 
 void vic_move_up_right(void)
 {
-    uint8_t spd;
-    if (vic_args("%hhu", &spd) == 1) {
-        move_up_right(spd);
+    uint8_t spd, without_PID = 0;
+    if (vic_args("%hhu %hhu", &spd, &without_PID) >= 1) {
+        move_up_right(spd, !without_PID);
     } else {
         vic_print_err(VIC_ERR_INVALID_ARGS);
     }
@@ -236,9 +272,9 @@ void vic_move_up_right(void)
 
 void vic_move_back_right(void)
 {
-    uint8_t spd;
-    if (vic_args("%hhu", &spd) == 1) {
-        move_back_right(spd);
+    uint8_t spd, without_PID = 0;
+    if (vic_args("%hhu %hhu", &spd, &without_PID) >= 1) {
+        move_back_right(spd, !without_PID);
     } else {
         vic_print_err(VIC_ERR_INVALID_ARGS);
     }
@@ -246,9 +282,9 @@ void vic_move_back_right(void)
 
 void vic_move_back_left(void)
 {
-    uint8_t spd;
-    if (vic_args("%hhu", &spd) == 1) {
-        move_back_left(spd);
+    uint8_t spd, without_PID = 0;
+    if (vic_args("%hhu %hhu", &spd, &without_PID) >= 1) {
+        move_back_left(spd, !without_PID);
     } else {
         vic_print_err(VIC_ERR_INVALID_ARGS);
     }
@@ -256,9 +292,9 @@ void vic_move_back_left(void)
 
 void vic_move_up_left(void)
 {
-    uint8_t spd;
-    if (vic_args("%hhu", &spd) == 1) {
-        move_up_left(spd);
+    uint8_t spd, without_PID = 0;
+    if (vic_args("%hhu %hhu", &spd, &without_PID) >= 1) {
+        move_up_left(spd, !without_PID);
     } else {
         vic_print_err(VIC_ERR_INVALID_ARGS);
     }
