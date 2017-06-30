@@ -114,6 +114,7 @@ uint8_t process_ws()
     uint8_t dir;
 
     mutex = 1;
+    predict_ws0();
 
     if (!ws[0] && !ws[1] && !ws[2] && !ws[3] && !ws[4] && !ws[5]) {
         dir = 255;
