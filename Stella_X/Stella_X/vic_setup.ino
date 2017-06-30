@@ -31,8 +31,7 @@ void setup_vic_funcs()
     /* dribbler & kicker */
     vic_fn_add("d1", vic_dribbler_on);
     vic_fn_add("d0", vic_dribbler_off);
-    //vic_fn_add("dk", vic_dribbler_kick);
-    vic_fn_add("k", vic_kick);
+    vic_fn_add("dk", vic_dribbler_kick);
     vic_fn_add("db", vic_ball_in_dribbler);
 
     /* motors */

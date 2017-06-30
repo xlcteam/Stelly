@@ -40,7 +40,6 @@ void motion()
         lcd.print(delta_time);
         time = millis();
     }
-
     uint16_t dir = line_sensors_dir();
 
     if (dir != 255) {
@@ -149,29 +148,12 @@ void motion_ball(uint16_t dir)
     int16_t speed_near = SPEED_NEAR;
     int16_t speed = SPEED;
 
-    /*if (!((dir ==0) && (ball_in_dribbler()) && (use_pixy == 1))) {
-        if (compass_left_goal_state == 1 || compass_left_goal_state == 2) {
-            compass_set_north_val((compass_north() + 10) % 360);
-            compass_left_goal_state = 0;
-        } else if (compass_right_goal_state == 1 || compass_left_goal_state == 2) {
-            compass_set_north_val((compass_north() + 350) % 360);
-            compass_right_goal_state = 0;
-            }
-      }*/
-
-      /*if ( compass_north() != start_north) {
-        compass_set_north_val(start_north);
-        }
-    }*/
-
     switch (dir) {
         case 0:
             if (ball_in_dribbler()) {
                 if (use_pixy == 2) {
                     if (compass_north() == start_north) {
                         WS_SAFE(move_up(speed); motion_last_dir = 0);
-                        dribbler_off();
-                        kick();
                         dribbler_kick();
                     } else {
                         uint16_t diff =
@@ -192,8 +174,6 @@ void motion_ball(uint16_t dir)
                     pixy_motion_goal();
                 } else {
                     WS_SAFE(move_up(speed); motion_last_dir = 0);
-                    dribbler_off();
-                    kick();
                     dribbler_kick();
                 }
             } else {
@@ -327,9 +307,7 @@ void motion_ball(uint16_t dir)
             break;
 
         case ~(uint16_t)0:
-            //halt();
-            centralize();
-            //centralizing();
+            halt();
             dribbler_off();
             break;
     }
@@ -418,10 +396,7 @@ void pixy_motion_ball()
                 if (compass_north() == start_north) {
                     WS_SAFE(move_up(PIXY_BALL_SPEED));
                     motion_last_dir = 0;
-                    dribbler_off();
-                    kick();
                     dribbler_kick();
-                    
                 } else {
                     uint16_t diff =
                         (compass_north() + 360 - start_north) % 360;
@@ -474,42 +449,14 @@ void pixy_motion_goal()
             WS_SAFE(move_left(PIXY_SPEED); motion_last_dir = 6);
             dribbler_on();
             goal_dir = 'L';
-            /*compass_left_goal_state += 1;
-            compass_right_goal_state = 0;
-            if (compass_left_goal_state == 1) {
-                compass_set_north_val((compass_north() + 350) % 360);
-                WS_SAFE(move_up_left(PIXY_SPEED); motion_last_dir = 7);
-                compass_left_goal_state = 2;
-                dribbler_on();
-                goal_dir = 'L';
-            } else {
-                WS_SAFE(move_left(PIXY_SPEED); motion_last_dir = 6);
-                dribbler_on();
-                goal_dir = 'L';
-              }*/
             break;
         case 'R':
             WS_SAFE(move_right(PIXY_SPEED); motion_last_dir = 2);
             dribbler_on();
             goal_dir = 'R';
-            /*compass_right_goal_state += 1;
-            compass_left_goal_state = 0;
-            if (compass_right_goal_state == 1) {
-                compass_set_north_val((compass_north() + 10 ) % 360);
-                WS_SAFE(move_up_right(PIXY_SPEED); motion_last_dir = 1);
-                compass_right_goal_state = 2;
-                dribbler_on();
-                goal_dir = 'R';
-            } else { 
-                WS_SAFE(move_right(PIXY_SPEED); motion_last_dir = 2);
-                goal_dir = 'R';
-                dribbler_on();
-                }   */      
             break;
         case 'K':
-           WS_SAFE(move_up(SPEED); motion_last_dir = 0);
-            dribbler_off();
-            kick();
+            WS_SAFE(move_up(SPEED); motion_last_dir = 0);
             dribbler_kick();
             break;
         case 'N':
