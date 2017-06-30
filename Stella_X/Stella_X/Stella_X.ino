@@ -24,6 +24,7 @@
 
 #define LINE_USE_INT 1
 #define USE_PIXY 0 /* 1 - goal; 2 - ball */
+#define USE_LEGO_COMPASS 1
 
 #define SPEED 180
 #define SPEED_NEAR 160
