@@ -418,8 +418,8 @@ void pixy_motion_ball()
                 if (compass_north() == start_north) {
                     WS_SAFE(move_up(PIXY_BALL_SPEED));
                     motion_last_dir = 0;
-                    dribbler_off();
-                    kick();
+                    //dribbler_off();
+                    //kick();
                     dribbler_kick();
                     
                 } else {
@@ -508,8 +508,8 @@ void pixy_motion_goal()
             break;
         case 'K':
            WS_SAFE(move_up(SPEED); motion_last_dir = 0);
-            dribbler_off();
-            kick();
+            //dribbler_off();
+            //kick();
             dribbler_kick();
             break;
         case 'N':

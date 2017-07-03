@@ -25,7 +25,7 @@
 #define LINE_USE_INT 1
 #define USE_PIXY 0 /* 1 - goal; 2 - ball */
 
-#define SPEED 220
+#define SPEED 160//220,180
 #define SPEED_NEAR 180
 #define PIXY_SPEED 150
 #define PIXY_BALL_SPEED 150

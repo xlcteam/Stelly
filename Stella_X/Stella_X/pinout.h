@@ -47,13 +47,13 @@
 
 #define KICKER_PIN 26
 
-#define MOTOR_A_DIR_PIN 41
-#define MOTOR_B_DIR_PIN 48
-#define MOTOR_C_DIR_PIN 23
-#define MOTOR_D_DIR_PIN 46
-#define MOTOR_A_PWM_PIN 3
-#define MOTOR_B_PWM_PIN 7
-#define MOTOR_C_PWM_PIN 2
-#define MOTOR_D_PWM_PIN 8
+#define MOTOR_A_DIR_PIN 46//41
+#define MOTOR_B_DIR_PIN 41//48
+#define MOTOR_C_DIR_PIN 48//23
+#define MOTOR_D_DIR_PIN 23//46
+#define MOTOR_A_PWM_PIN 8//3
+#define MOTOR_B_PWM_PIN 3//7
+#define MOTOR_C_PWM_PIN 7//2
+#define MOTOR_D_PWM_PIN 2//8
 
 #endif /* PINOUT_H */

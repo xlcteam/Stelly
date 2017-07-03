@@ -22,7 +22,7 @@ inline void dribbler_on()
 
 void dribbler_kick()
 {
-  dribbler.go(255);
+  dribbler.go(-255);
   }
 
 inline void dribbler_switch()
@@ -74,10 +74,10 @@ void vic_dribbler_on(void)
     dribbler_on();
 }
 
-/*void vic_dribbler_kick(void)
+void vic_dribbler_kick(void)
 {
     dribbler_kick();
-}*/
+}
 
 void vic_ball_in_dribbler(void)
 {

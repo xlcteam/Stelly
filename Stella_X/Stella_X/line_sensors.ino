@@ -46,7 +46,7 @@ uint8_t process_ws()
     } else if (ws[0] && !ws[1] && !ws[2]) {
         line_level = 1;
         if (motion_last_dir < 4 && motion_last_dir > 0) {
-            if (line_last_dir
+            //if (line_last_dir
             dir = 5;
         } else if (motion_last_dir > 4 && motion_last_dir <= 7) {
             dir = 3;
