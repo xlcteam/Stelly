@@ -57,10 +57,7 @@ void loop()
 
     uint32_t time_start = micros();
     mpu.resetFIFO();
-    fifoCount = mpu.getFIFOCount();
-    do {
-        fifoCount = mpu.getFIFOCount();
-    } while (fifoCount < packetSize);
+    while (mpu.getFIFOCount() < packetSize) ;
 
     mpu.getFIFOBytes(fifoBuffer, packetSize);
     mpu.dmpGetQuaternion(&q, fifoBuffer);
