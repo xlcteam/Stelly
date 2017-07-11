@@ -16,3 +16,6 @@
 [submodule "Stella_X/sketchbook/libraries/Buttons"]
 	path = Stella_X/sketchbook/libraries/Buttons
 	url = https://github.com/vargac/Buttons
+[submodule "Stella_X/i2cdevlib-submodule"]
+	path = Stella_X/i2cdevlib-submodule
+	url = git@github.com:jrowberg/i2cdevlib.git
