@@ -37,7 +37,7 @@
 #define kI 300
 #define kD 0
 
-#define LINE_TIME 100
+#define LINE_TIME 200 // 100
 #define LINE_MAX_DIFF_TIME 10000
 #define LINE_D_TIME_MIN 100
 #define LINE_TIME_MIN 400
@@ -47,7 +47,7 @@
 #define PIXY_TIME 20
 #define KICKER_TIME 60
 
-#define LINE_THRESH 200
+#define LINE_THRESH 135//200
 #define TO_NORTH_THRESH 30
 #define IR_FAR_THRESH 550
 #define BALL_FAR_THRESH 400 /* for orange ball */
