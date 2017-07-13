@@ -1,4 +1,4 @@
-#if USE_LEGO_COMPASS == 1
+#if COMPASS_TYPE == LEGO_COMPASS
 
 uint16_t north;
 
@@ -50,7 +50,7 @@ bool centered(uint16_t range)
     return ((c >= (360 - range)) || (c <= range));
 }
 
-#else
+#elif COMPASS_TYPE == HMC6352_COMPASS
 
 RelativeHMC6352 compass = RelativeHMC6352();
 
@@ -79,6 +79,76 @@ inline void compass_set_north_val(uint16_t value)
 inline void compass_set_north(void)
 {
     compass.set_north();
+}
+
+bool centered(uint16_t range)
+{
+    uint16_t c = (uint16_t) compass_angle();
+    return ((c >= (360 - range)) || (c <= range));
+}
+
+#elif COMPASS_TYPE == MPU6050_COMPASS
+
+MPU6050 mpu;
+uint16_t packetSize;
+uint8_t fifoBuffer[64];
+Quaternion q;
+VectorFloat gravity;
+float euler[3];
+float ypr[3];
+uint16_t north;
+
+void setup_compass(void)
+{
+    Wire.begin();
+    north = 0;
+    mpu.initialize();
+    if (mpu.testConnection() == 0 || mpu.dmpInitialize() != 0) {
+        vic_println("MPU6050 setup crashed!");
+        return;
+    }
+    mpu.setXGyroOffset(16);
+    mpu.setYGyroOffset(-54);
+    mpu.setZGyroOffset(21);
+    mpu.setXAccelOffset(-2865);
+    mpu.setYAccelOffset(-1282);
+    mpu.setZAccelOffset(2091);
+
+    mpu.setDMPEnabled(true);
+    packetSize = mpu.dmpGetFIFOPacketSize();
+}
+
+inline uint16_t compass_angle(void)
+{
+    return (compass_angle_raw() - north + 360) % 360;
+}
+
+uint16_t compass_angle_raw(void)
+{
+    mpu.resetFIFO();
+    while (mpu.getFIFOCount() < packetSize) ;
+
+    mpu.getFIFOBytes(fifoBuffer, packetSize);
+    mpu.dmpGetQuaternion(&q, fifoBuffer);
+    mpu.dmpGetGravity(&gravity, &q);
+    mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
+
+    return (uint16_t)(ypr[0] * 180/M_PI + 360.0) % 360;
+}
+
+inline uint16_t compass_north(void)
+{
+    return north;
+}
+
+inline void compass_set_north_val(uint16_t value)
+{
+    north = value;
+}
+
+inline void compass_set_north(void)
+{
+    north = compass_angle_raw();
 }
 
 bool centered(uint16_t range)

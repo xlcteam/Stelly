@@ -2,6 +2,8 @@
 #include <Motor.h>
 #include <Wire.h>
 #include <RelativeHMC6352.h>
+#include <I2Cdev.h>
+#include <MPU6050_6Axis_MotionApps20.h>
 #include <SPI.h>
 #include <Pixy.h>
 #include <PixyViSy.h>
@@ -24,7 +26,10 @@
 
 #define LINE_USE_INT 1
 #define USE_PIXY 0 /* 1 - goal; 2 - ball */
-#define USE_LEGO_COMPASS 1
+#define COMPASS_TYPE MPU6050_COMPASS
+#define LEGO_COMPASS 1
+#define HMC6352_COMPASS 2
+#define MPU6050_COMPASS 3
 
 #define SPEED 180
 #define SPEED_NEAR 160
