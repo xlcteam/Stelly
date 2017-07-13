@@ -1,6 +1,6 @@
 Stella_X/build
 Stella_X/.arduino_prefs.txt
+Stella_X/Stella_X/custom_defines.h
 PickyStella/build
 PickyStella/.arduino_prefs.txt
 *.swp
-

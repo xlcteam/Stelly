@@ -1,3 +1,7 @@
+#ifndef STELLA_X_VER
+#define STELLA_X_VER 1
+#endif
+
 #include <LiquidCrystal.h>
 #include <Motor.h>
 #include <Wire.h>
@@ -10,6 +14,7 @@
 #include <vic.h>
 #include <Buttons.h>
 #include "pinout.h"
+#include "custom_defines.h"
 
 #define STR(str) #str
 #define XSTR(str) STR(str)
@@ -26,7 +31,13 @@
 
 #define LINE_USE_INT 1
 #define USE_PIXY 0 /* 1 - goal; 2 - ball */
+
+#if STELLA_X_VER == 1
 #define COMPASS_TYPE MPU6050_COMPASS
+#elif STELLA_X_VER == 2
+#define COMPASS_TYPE HMC6352_COMPASS
+#endif
+
 #define LEGO_COMPASS 1
 #define HMC6352_COMPASS 2
 #define MPU6050_COMPASS 3

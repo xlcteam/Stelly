@@ -19,9 +19,15 @@ ifdef COMPILE
 ACTION_OPTION = --verify
 endif
 
+ifndef VERSION
+VERSION = 1
+endif
+
 BOARD = "arduino:avr:mega:cpu=atmega2560"
 
 define do_action
+	sed -i '1s;^;#define STELLA_X_VER $(VERSION)\n;' $(1)
+	-trap "sed -i '1d' $(1)" 2 ;\
 	$(ARDUINO) $(ACTION_OPTION)\
 		--board $(BOARD)\
 		$(PORT_OPTION)\
@@ -30,10 +36,13 @@ define do_action
 		--pref build.path=$(BUILD_DIR)\
 		--preserve-temp-files\
 		$(1)
+	sed -i '1d' $(1)
 endef
 
 
 Stella_X:
+	echo "#ifndef CUSTOM_DEFINES_H\n#define CUSTOM_DEFINES_H\n$(subst =, ,$(patsubst %,#define %\n,$(DEFINES)))#endif"\
+		> $(CURR_DIR)/Stella_X/custom_defines.h
 	$(call do_action,$(CURR_DIR)/Stella_X/Stella_X.ino)
 
 %.ino: FORCE
@@ -49,7 +58,7 @@ serial_monitor:
 	picocom -b 115200 -c --imap lfcrlf --omap crlf,delbs $(PORT)
 
 clean:
-	rm -rf build/
+	rm -rf build/ Stella_X/custom_defines.h
 
 FORCE:
 
