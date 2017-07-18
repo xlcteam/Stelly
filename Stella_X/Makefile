@@ -41,8 +41,9 @@ endef
 
 
 Stella_X:
-	echo "#ifndef CUSTOM_DEFINES_H\n#define CUSTOM_DEFINES_H\n$(subst =, ,$(patsubst %,#define %\n,$(DEFINES)))#endif"\
+	#echo "#ifndef CUSTOM_DEFINES_H\n#define CUSTOM_DEFINES_H\n$(subst =, ,$(patsubst %,#define %\n,$(DEFINES)))#endif"\
 		> $(CURR_DIR)/Stella_X/custom_defines.h
+	echo "" > $(CURR_DIR)/Stella_X/custom_defines.h
 	$(call do_action,$(CURR_DIR)/Stella_X/Stella_X.ino)
 
 %.ino: FORCE
