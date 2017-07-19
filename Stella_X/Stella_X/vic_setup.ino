@@ -22,6 +22,7 @@ void setup_vic_funcs()
 
     /* line sensors */
     vic_fn_add("lS", vic_print_line_sensors);
+    vic_fn_add("ldbg", vic_debug_line);
 
     /* camera */
 #if USE_PIXY == 1

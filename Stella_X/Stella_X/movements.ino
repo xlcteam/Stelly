@@ -101,6 +101,40 @@ void move_PID(int16_t speeds[3])
     motorC.go(speeds[2] + compensation);
 }
 
+// dir - values as motion_last_dir
+void move_dir(uint16_t dir, uint8_t spd, uint8_t PID)
+{
+    switch (dir) {
+        case 0:
+            move_up(spd, PID);
+            break;
+        case 1:
+            move_up_right(spd, PID);
+            break;
+        case 2:
+            move_right(spd, PID);
+            break;
+        case 3:
+            move_back_right(spd, PID);
+            break;
+        case 4:
+            move_back(spd, PID);
+            break;
+        case 5:
+            move_back_left(spd, PID);
+            break;
+        case 6:
+            move_left(spd, PID);
+            break;
+        case 7:
+            move_up_left(spd, PID);
+            break;
+        default:
+            halt();
+            break;
+    }
+}
+
 inline void move_up(uint8_t spd, uint8_t PID)
 {
     int16_t speeds[] = { -spd, spd, 0 };
@@ -190,7 +224,7 @@ inline void rotate(int16_t spd)
 /* may be dangerous (Germany "rotating" bug) */
 inline void centralize()
 {
-    int16_t spds[] = {0};
+    int16_t spds[] = {0, 0, 0};
     move_PID(spds);
 }
 

@@ -107,12 +107,12 @@ void setup_compass(void)
         vic_println("MPU6050 setup crashed!");
         return;
     }
-    mpu.setXGyroOffset(16);
-    mpu.setYGyroOffset(-54);
-    mpu.setZGyroOffset(21);
-    mpu.setXAccelOffset(-2865);
-    mpu.setYAccelOffset(-1282);
-    mpu.setZAccelOffset(2091);
+    mpu.setXGyroOffset(21);
+    mpu.setYGyroOffset(-783);
+    mpu.setZGyroOffset(24);
+    mpu.setXAccelOffset(-2818);
+    mpu.setYAccelOffset(-1266);
+    mpu.setZAccelOffset(2225);
 
     mpu.setDMPEnabled(true);
     packetSize = mpu.dmpGetFIFOPacketSize();

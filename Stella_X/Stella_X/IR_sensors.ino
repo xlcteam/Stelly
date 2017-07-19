@@ -2,13 +2,11 @@ uint8_t IR_sensors_pins[IR_SENSORS_COUNT] = { IR_BOTTOM2_PIN, IR1_PIN, IR2_PIN,
     IR3_PIN, IR4_PIN, IR5_PIN, IR6_PIN, IR7_PIN, IR8_PIN, IR9_PIN, IR10_PIN,
     IR11_PIN, IR_BOTTOM3_PIN, IR_BOTTOM1_PIN };
 uint16_t IR_vals_far[IR_SENSORS_COUNT] =
-    { 812, 1009, 1009, 1010, 1012, 1012, 1013,
-      1015, 1016, 1015, 1014, 1014, 1014, 1014 };
+    { 1024, 1021, 1022, 1022, 1022, 1024, 1024,
+       1024, 1022, 1022, 1022, 1022, 1024, 1022};
 uint16_t IR_vals_near[IR_SENSORS_COUNT] =
-    { 164, 157, 159, 166, 194, 164, 157,
-       161, 159, 177, 165, 165, 245,  220}; //362};
-    /*{ 171, 213, 213, 209, 237, 213, 194,
-      362, 211, 362, 362, 270, 174, 164 };*/
+    { 251, 411, 509, 430, 489, 448, 393,
+       486, 568, 491, 349, 354, 298, 321 };
 
 void setup_IR_sensors()
 {

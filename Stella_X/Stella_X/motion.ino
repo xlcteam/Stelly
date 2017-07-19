@@ -13,15 +13,17 @@ void motion_start()
         last_dirs[i] = ~0;
     }
     line_sensors_update();
-    motion_last_dir = 255;
+    motion_last_dir = stop_next_to_line = 255;
+    stop_next_to_line_time = 0;
     start_north = compass_north();
     restart_PID();
     if (line_use_int) {
+        MUTEX(1);
         for (uint8_t i = 0; i < LINE_SENSORS_COUNT; i++){
-            mutex[i] = 1;
             ws[i] = 0;
-            mutex[i] = 0;
+            ws_tmp[i] = 0;
         }
+        MUTEX(0);
     }
     lcd.clear();
     lcd.print("motion");
@@ -73,6 +75,32 @@ void motion()
     }
 }
 
+void motion_move(uint8_t dir, uint8_t spd) // 0-8 (not 255)
+{
+    vic_printf("%u %u\n", dir, stop_next_to_line);
+    if (dir == stop_next_to_line) {
+        spd = MIN_SPEED;
+        stop_next_to_line_time = millis();
+    } else {
+        uint8_t diff = ((int16_t)stop_next_to_line - dir + 8) % 8;
+        if (diff == 1 || diff == 7) {
+            dir = (dir + diff) % 8;
+            spd = ((uint16_t)spd + MIN_SPEED) / 2;
+        } else {
+            if (stop_next_to_line != 255
+            && millis() - stop_next_to_line_time > 500) { // TODO: constant
+                stop_next_to_line = 255;
+            }
+        }
+    }
+    WS_SAFE(move_dir(dir, spd); motion_last_dir = dir;);
+    if (dir <= 1 || dir >= 7) {
+        dribbler_on();
+    } else {
+        dribbler_off();
+    }
+}
+
 void motion_line(uint8_t dir)
 {
     if (motion_print) {
@@ -80,9 +108,16 @@ void motion_line(uint8_t dir)
         lcd.print("line: ");
         lcd.print(dir);
     }
+    static uint32_t last_time = 0;
     uint32_t start_time = millis();
     int16_t line_speed = LINE_SPEED;
     uint32_t line_time = LINE_BASE_TIME + (line_level - 1) * LINE_EXTRA_TIME;
+    if (start_time - last_time > 2000) { // TODO: constant
+        line_time += 4 * LINE_EXTRA_TIME;
+    }
+    last_time = start_time;
+    vic_printf("set %u\n", stop_next_to_line);
+    stop_next_to_line_time = millis();
 
     switch (dir) {
         case 0:
@@ -151,158 +186,79 @@ void motion_ball(uint16_t dir)
     switch (dir) {
         case 0:
             if (ball_in_dribbler()) {
-                if (use_pixy == 2) {
-                    if (compass_north() == start_north) {
-                        WS_SAFE(move_up(speed); motion_last_dir = 0);
-                        dribbler_kick();
-                    } else {
-                        uint16_t diff =
-                            (compass_north() + 360 - start_north) % 360;
-                        if (diff < TO_NORTH_THRESH) {
-                            compass_set_north_val(start_north);
-                        } else if (diff < 180) {
-                            WS_SAFE(rotate(ROTATE_SPEED));
-                            compass_set_north();
-                        } else if (diff < 360 - TO_NORTH_THRESH) {
-                            WS_SAFE(rotate(-ROTATE_SPEED));
-                            compass_set_north();
-                        } else {
-                            compass_set_north_val(start_north);
-                        }
-                    }
-                } else if (use_pixy == 1) {
+                if (use_pixy == 1) {
                     pixy_motion_goal();
                 } else {
                     WS_SAFE(move_up(speed); motion_last_dir = 0);
                     dribbler_kick();
                 }
             } else {
-                WS_SAFE(move_up(far ? speed : speed_near);motion_last_dir = 0);
-                dribbler_on();
+                motion_move(0, far ? speed : speed_near);
             }
             ball_side = 'N';
             break;
 
         case 15:
-            WS_SAFE(move_up_right(far ? SPEED : SPEED_NEAR);motion_last_dir=1);
-            dribbler_on();
+            motion_move(1, far ? speed : speed_near);
             ball_side = 'R';
             break;
 
         case 30:
-            if (far) {
-                WS_SAFE(move_up_right(speed); motion_last_dir = 1);
-            } else {
-                WS_SAFE(move_right(speed); motion_last_dir = 2);
-            }
-            dribbler_on();
+            motion_move(far ? 1 : 2, speed);
             ball_side = 'R';
             break;
 
         case 60:
-            if (far) {
-                WS_SAFE(move_right(speed); motion_last_dir = 2);
-            } else {
-                WS_SAFE(move_back_right(speed); motion_last_dir = 3);
-            }
-            dribbler_off();
+            motion_move(far ? 2 : 3, speed);
             ball_side = 'R';
             break;
 
         case 90:
-            if (far) {
-                WS_SAFE(move_right(speed); motion_last_dir = 2);
-            } else {
-                WS_SAFE(move_back_right(speed); motion_last_dir = 3);
-            }
-            dribbler_off();
+            motion_move(far ? 2 : 3, speed);
             ball_side = 'R';
             break;
 
         case 120:
-            if (far) {
-                WS_SAFE(move_back_right(speed); motion_last_dir = 3);
-            } else {
-                WS_SAFE(move_back(speed); motion_last_dir = 4);
-            }
-            dribbler_off();
+            motion_move(far ? 3 : 4, speed);
             ball_side = 'R';
             break;
 
         case 150:
-            if (far) {
-                WS_SAFE(move_back(speed); motion_last_dir = 4);
-            } else {
-                WS_SAFE(move_back_left(speed); motion_last_dir = 5);
-            }
-            dribbler_off();
+            motion_move(far ? 4 : 5, speed);
             ball_side = 'R';
             break;
 
         case 180:
-            if (far) {
-                WS_SAFE(move_back(speed); motion_last_dir = 4);
-            } else if (ball_side == 'L') {
-                WS_SAFE(move_back_right(speed); motion_last_dir = 3);
-            } else {
-                WS_SAFE(move_back_left(speed); motion_last_dir = 5);
-            }
-            dribbler_off();
+            motion_move(far ? 4 : (ball_side == 'L' ? 3 : 5), speed);
             break;
 
         case 210:
-            if (far) {
-                WS_SAFE(move_back(speed); motion_last_dir = 4);
-            } else {
-                WS_SAFE(move_back_right(speed); motion_last_dir = 3);
-            }
-            dribbler_off();
+            motion_move(far ? 4 : 3, speed);
             ball_side = 'L';
             break;
 
         case 240:
-            if (far) {
-                WS_SAFE(move_back_left(speed); motion_last_dir = 5);
-            } else {
-                WS_SAFE(move_back(speed); motion_last_dir = 4);
-            }
-            dribbler_off();
+            motion_move(far ? 5 : 4, speed);
             ball_side = 'L';
             break;
 
         case 270:
-            if (far) {
-                WS_SAFE(move_left(speed); motion_last_dir = 6);
-            } else {
-                WS_SAFE(move_back_left(speed); motion_last_dir = 5);
-            }
-            dribbler_off();
+            motion_move(far ? 6 : 5, speed);
             ball_side = 'L';
             break;
 
         case 300:
-            if (far) {
-                WS_SAFE(move_left(speed); motion_last_dir = 6);
-            } else {
-                WS_SAFE(move_back_left(speed); motion_last_dir = 5);
-            }
-            dribbler_on();
+            motion_move(far ? 6 : 5, speed);
             ball_side = 'L';
             break;
 
         case 330:
-            if (far) {
-                WS_SAFE(move_up_left(speed); motion_last_dir = 7);
-            } else {
-                WS_SAFE(move_left(speed); motion_last_dir = 6);
-            }
-            dribbler_on();
+            motion_move(far ? 7 : 6, speed);
             ball_side = 'L';
             break;
 
         case 345:
-            WS_SAFE(move_up_left(far ? SPEED : SPEED_NEAR);motion_last_dir=7);
-            dribbler_on();
+            motion_move(7, far ? speed : speed_near);
             ball_side = 'L';
             break;
 

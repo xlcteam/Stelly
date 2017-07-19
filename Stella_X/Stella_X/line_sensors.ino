@@ -1,8 +1,10 @@
 uint8_t line_sensors[LINE_SENSORS_COUNT] =
-    { LINE_FRONT_PIN, LINE_LEFT_PIN, LINE_RIGHT_PIN };
+    { LINE_FRONT_PIN, LINE_RIGHT_PIN, LINE_LEFT_PIN };
 /* all interrupt pins are on the same port, so we can use any one of them
    to determine PCMSK, PCICR and PCIE
 */
+
+bool line_sensors_vic_dbg = false;
 
 void setup_line_sensors()
 {
@@ -44,15 +46,15 @@ uint8_t process_ws()
 {
     uint8_t dir;
 
-    mutex[0] = 1;
-    mutex[1] = 1;
-    mutex[2] = 1;
+    MUTEX(1);
 
     if (!ws[0] && !ws[1] && !ws[2]) {
         line_level = 0;
         dir = 255;
     } else if (ws[0] && !ws[1] && !ws[2]) {
         line_level = 1;
+        dir = 4; stop_next_to_line = 0;
+        /*
         if (motion_last_dir < 4 && motion_last_dir > 0) {
             dir = 5;
         } else if (motion_last_dir > 4 && motion_last_dir <= 7) {
@@ -60,31 +62,39 @@ uint8_t process_ws()
         } else {
             dir = 4;
         }
+        */
     } else if (ws[0] && ws[1] && !ws[2]) {
         line_level = 1;
         if (abs((int32_t)ws[0] - (int32_t)ws[1]) < LINE_MAX_DIFF_TIME) {
-            dir = 5;
+            dir = 5; stop_next_to_line = 1;
         } else if (ws[0] < ws[1]) {
-            dir = 5;
+            dir = 5; stop_next_to_line = 1;
         } else { /* ws[1] < ws[0] */
             line_level = 2;
-            dir = 6;
+            dir = 5; stop_next_to_line = 2;
         }
     } else if (ws[0] && !ws[1] && ws[2]) {
         line_level = 1;
         if (abs((int32_t)ws[0] - (int32_t)ws[2]) < LINE_MAX_DIFF_TIME) {
-            dir = 3;
+            dir = 3; stop_next_to_line = 7;
         } else if (ws[0] < ws[2]) {
-            dir = 3;
+            dir = 3; stop_next_to_line = 7;
         } else { /* ws[2] < ws[0] */
             line_level = 2;
-            dir = 2;
+            dir = 3; stop_next_to_line = 6;
         }
     } else if (!ws[0] && ws[1] && ws[2]) {
-        line_level = 1;
-        dir = 0;
+        line_level = 2;
+        if (abs((int32_t)ws[1] - (int32_t)ws[2]) < LINE_MAX_DIFF_TIME) {
+            dir = 0; stop_next_to_line = 4;
+        } else if (ws[1] < ws[2]) {
+            dir = 0; stop_next_to_line = 4;
+        } else { /* ws[2] < ws[1] */
+            dir = 0; stop_next_to_line = 4;
+        }
     } else if (!ws[0] && !ws[1] && ws[2]) {
         line_level = 1;
+        stop_next_to_line = 6;
         if (motion_last_dir > 4 || motion_last_dir == 0) {
             dir = 2;
         } else {
@@ -92,6 +102,7 @@ uint8_t process_ws()
         }
     } else if (!ws[0] && ws[1] && !ws[2]) {
         line_level = 1;
+        stop_next_to_line = 2;
         if (motion_last_dir >= 0 && motion_last_dir < 4) {
             dir = 6;
         } else {
@@ -134,11 +145,10 @@ uint8_t process_ws()
         } else { /* ws[0] < ws[2] && ws[2] < ws[1] */
             dir = 3;
         }
+        stop_next_to_line = (dir + 4) % 8;
     }
 
-    mutex[0] = 0;
-    mutex[1] = 0;
-    mutex[2] = 0;
+    MUTEX(0);
 
     line_last_dir = dir;
 
@@ -147,30 +157,88 @@ uint8_t process_ws()
 
 uint8_t line_sensors_dir()
 {
-    /*
-    Serial.println("line sensors dir");
-    Serial.print(ws[0]);
-    Serial.print(" "); Serial.print(ws[1]);
-    Serial.print(" "); Serial.println(ws[2]);
-    */
+	uint32_t time = micros();
 
     // get data to process
     if (!line_use_int) {
         for (uint8_t i = 0; i < LINE_SENSORS_COUNT; i++) {
-            ws[i] = read_line_sensor(i) * micros();
+            ws_tmp[i] = read_line_sensor(i) * time;
         }
+    }
+
+    MUTEX(1);
+	for (uint8_t i = 0; i < LINE_SENSORS_COUNT; i++) {
+		if (ws[i] == 0) {
+			ws[i] = ws_tmp[i];
+		} else if (ws_tmp[i] != 0) {
+            ws[i] = ws_tmp[i];
+            //Serial.println("b");
+            /*
+        } else if (ws_tmp[(i+1)%3] || ws_tmp[(i+2)%3]) {
+            Serial.println(time);
+            if (time - ws[i] > 500000) {
+                ws[i] = 0;
+                Serial.println("c");
+            }
+            */
+            /* TODO: bellow constant */
+        } else if (time - ws[i] > 50000 + (line_level - 1) * LINE_EXTRA_TIME * 1000) {
+            //Serial.println(time);
+            ws[i] = 0;
+            //Serial.println("d");
+        }
+	}
+    MUTEX(0);
+
+    /*
+    if (time - ws_last[4] < 500000 && (ws[0] || ws[1] || ws[2])) {
+        Serial.print("ws_last: ");
+        for (uint8_t i = 0; i < LINE_SENSORS_COUNT; i++) {
+            if (ws[i] == 0) {
+                ws[i] = ws_last[i];
+                Serial.print(i);
+            }
+        }
+        Serial.println();
+    }
+    */
+
+    bool print_dbg = line_sensors_vic_dbg && (ws[0] || ws[1] || ws[2]);
+
+    if (print_dbg) {
+        Serial.println("line");
+        Serial.print(ws[0]);
+        Serial.print(" "); Serial.print(ws[1]);
+        Serial.print(" "); Serial.println(ws[2]);
     }
 
     uint16_t dir = process_ws();
 
-    // fill ws with actual values
+    // fill ws_tmp with actual values
     if (line_use_int) {
+        MUTEX(1);
         for (uint8_t i = 0; i < LINE_SENSORS_COUNT; i++) {
-            mutex[i] = 1;
-            ws[i] = read_line_sensor(i) * micros();
-            mutex[i] = 0;
+            ws_tmp[i] = read_line_sensor(i) * micros();
         }
+        MUTEX(0);
     }
+
+    if (print_dbg) {
+        Serial.print("dir "); Serial.println(dir);
+    }
+
+    /*
+	if (dir != 255 && ws_last[3] != dir) {
+        for (uint8_t i = 0; i < LINE_SENSORS_COUNT; i++) {
+            ws_last[i] = ws[i];
+        }
+		ws_last[3] = dir;
+		ws_last[4] = time;
+        Serial.println("change 2");
+	} else if (dir != 255 && ws_last[3] == dir) {
+        ws_last[4] = time;
+    }
+    */
 
     return dir;
 }
@@ -192,4 +260,11 @@ void vic_print_line_sensors(void)
         vic_printf("%u ", read_line_sensor(i));
     }
     vic_out('\n');
+}
+
+void vic_debug_line(void)
+{
+    uint8_t dbg = 1;
+    vic_args("%hhu", &dbg);
+    line_sensors_vic_dbg = dbg;
 }

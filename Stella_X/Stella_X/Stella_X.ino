@@ -42,27 +42,28 @@
 #define HMC6352_COMPASS 2
 #define MPU6050_COMPASS 3
 
-#define SPEED 180
-#define SPEED_NEAR 160
+#define SPEED 160
+#define SPEED_NEAR 140
 #define PIXY_SPEED 150
 #define PIXY_BALL_SPEED 150
 #define PIXY_BALL_SPEED_NEAR 130
 #define ROTATE_SPEED 70
 #define LINE_SPEED 200
+#define MIN_SPEED 80
 
 #define kP 300
 #define kI 300
 #define kD 0
 
-#define LINE_BASE_TIME 10
-#define LINE_EXTRA_TIME 2000
-#define LINE_MAX_DIFF_TIME 10000
+#define LINE_BASE_TIME 20
+#define LINE_EXTRA_TIME 100
+#define LINE_MAX_DIFF_TIME 20000 // 15000
 #define DRIBBLER_SENSOR_TIME 20
 #define LCD_DELAY 100
 #define BUTTONS_DELAY 10
 #define PIXY_TIME 20
 
-#define LINE_THRESH 130
+#define LINE_THRESH 95
 #define TO_NORTH_THRESH 30
 #define IR_FAR_THRESH 550
 #define BALL_FAR_THRESH 400 /* for orange ball */
@@ -79,6 +80,7 @@
 #define ORANGE_BALL_SIZE 67
 
 #define WS_SAFE(f) do { if (!(ws[0] || ws[1] || ws[2])) {f;} } while (0)
+#define MUTEX(state) mutex[0] = mutex[1] = mutex[2] = state
 
 #define TASKS_COUNT 4
 #define TASK_NO 0
@@ -106,6 +108,8 @@ uint32_t last_time;
 uint16_t delta_time;
 uint8_t motion_last_dir;
 uint8_t line_level;
+uint8_t stop_next_to_line;
+uint32_t stop_next_to_line_time;
 uint8_t compass_right_goal_state;
 uint8_t compass_left_goal_state;
 
@@ -136,23 +140,25 @@ void IDLE(void)
     dribbler_off();
 }
 
-uint32_t volatile ws[] = {0, 0, 0};
+uint32_t volatile ws_tmp[] = {0, 0, 0};
+uint32_t ws[] = {0, 0, 0};
+uint32_t ws_last[] = {0, 0, 0, 255, 0}; // [3] is dir
 uint8_t mutex[] = {0, 0, 0};
 
 ISR(PCINT0_vect)
 {
-    if (!mutex[0] && !ws[0] && read_line_sensor(0)) {
-        ws[0] = micros();
+    if (!mutex[0] && !ws_tmp[0] && read_line_sensor(0)) {
+        ws_tmp[0] = micros();
         halt();
     }
 
-    if (!mutex[1] && !ws[1] && read_line_sensor(1)) {
-        ws[1] = micros();
+    if (!mutex[1] && !ws_tmp[1] && read_line_sensor(1)) {
+        ws_tmp[1] = micros();
         halt();
     }
 
-    if (!mutex[2] && !ws[2] && read_line_sensor(2)) {
-        ws[2] = micros();
+    if (!mutex[2] && !ws_tmp[2] && read_line_sensor(2)) {
+        ws_tmp[2] = micros();
         halt();
     }
 }
