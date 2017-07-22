@@ -20,6 +20,8 @@ def graph():
                 figure.clear()
                 ser.write('IRra\n')
                 data = map(int, ser.readline().split()[:-2])
+                while data == []:
+                    data = map(int, ser.readline().split()[:-2])
                 ser.read(3)
 
                 plt.bar(range(-1, len(data) + 1), data[-1:]+data+data[:1])
@@ -43,6 +45,8 @@ def measure():
                 ser.write('IRra\n')
                 ser.read(3)
                 data_part = map(int, ser.readline().split())
+                while data_part == []:
+                    data_part = map(int, ser.readline().split())
                 data.append(data_part)
             count = len(data_part)
             print map(lambda a: sum(a) / len(a), zip(*data))

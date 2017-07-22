@@ -58,6 +58,9 @@ MPU6050cal:
 serial_monitor:
 	picocom -b 115200 -c --imap lfcrlf --omap crlf,delbs $(PORT)
 
+IR:
+	python2 $(CURR_DIR)/IR.py $(PORT) 115200
+
 clean:
 	rm -rf build/ Stella_X/custom_defines.h
 
