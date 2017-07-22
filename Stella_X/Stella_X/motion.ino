@@ -87,8 +87,8 @@ void motion_move(uint8_t dir, uint8_t spd) // 0-8 (not 255)
             dir = (dir + diff) % 8;
             spd = ((uint16_t)spd + MIN_SPEED) / 2;
         } else {
-            if (stop_next_to_line != 255
-            && millis() - stop_next_to_line_time > 500) { // TODO: constant
+            if (stop_next_to_line != 255 && millis() - stop_next_to_line_time
+            > STOP_NEXT_TO_LINE_RESET_TIME) {
                 stop_next_to_line = 255;
             }
         }
@@ -112,11 +112,10 @@ void motion_line(uint8_t dir)
     uint32_t start_time = millis();
     int16_t line_speed = LINE_SPEED;
     uint32_t line_time = LINE_BASE_TIME + (line_level - 1) * LINE_EXTRA_TIME;
-    if (start_time - last_time > 2000) { // TODO: constant
-        line_time += 4 * LINE_EXTRA_TIME;
+    if (start_time - last_time > LINE_START_TIME) {
+        line_time += 3 * LINE_EXTRA_TIME;
     }
     last_time = start_time;
-    vic_printf("set %u\n", stop_next_to_line);
     stop_next_to_line_time = millis();
 
     switch (dir) {

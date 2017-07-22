@@ -181,8 +181,7 @@ uint8_t line_sensors_dir()
                 Serial.println("c");
             }
             */
-            /* TODO: bellow constant */
-        } else if (time - ws[i] > 50000 + (line_level - 1) * LINE_EXTRA_TIME * 1000) {
+        } else if (time - ws[i] > WS_ZERO_TIME + (line_level - 1) * LINE_EXTRA_TIME * 1000) {
             //Serial.println(time);
             ws[i] = 0;
             //Serial.println("d");
