@@ -53,7 +53,7 @@ int PID_D = 0;
 //////////////////////////////////////////////////////
 int spd = 150;
 //////////////////////////////////////////////////////
-
+int in_radlica=0;
 int x = 0;
 int input;
 int setpoint = 0;
@@ -241,52 +241,68 @@ void za_loptou() {
   if (analogRead(A6) > 100) {
     motors_off();
   }
-  else {
+  else { 
     uint8_t dir_1, s1_1, s3_1, s5_1, s7_1, s9_1;
     uint8_t dir_2, s1_2, s3_2, s5_2, s7_2, s9_2;
     IRseeker1(&dir_1, &s1_1, &s3_1, &s5_1, &s7_1, &s9_1);
     IRseeker2(&dir_2, &s1_2, &s3_2, &s5_2, &s7_2, &s9_2);
+    //strategicke zrichlenie
+    if(s5_1>100){
+      vpred(220);
+      delay(200);
+      return;
+    }
     if (dir_1 != 0 && dir_2 != 0) {
       if (s1_1 + s3_1 + s5_1 + s7_1 + s9_1 > s1_2 + s3_2 + s5_2 + s7_2 + s9_2)
         switch (dir_1) {
           case 1:
             // Serial.println("11");
+            in_radlica=0;
             vzad(spd);
             break;
           case 2:
             // Serial.println("12");
+            in_radlica=0;
             vlavo_vzad(spd);
             break;
           case 3:
             //   Serial.println("13");
+            in_radlica=0;
             vlavo_vzad(spd);
             break;
           case 4:
             //    Serial.println("14");
+            in_radlica=0;
             vlavo(spd);
             break;
           case 5:
             //    Serial.println("15");
+            in_radlica++;
             vpred(spd);
             break;
           case 6:
             //  Serial.println("16");
+            in_radlica=0;
             vpravo(spd);
             break;
           case 7:
             //    Serial.println("17");
+            in_radlica=0;
             vpravo_vzad(spd);
             break;
           case 8:
             //      Serial.println("18");
+            in_radlica=0;
             vzad(spd);
             break;
           case 9:
             //     Serial.println("19");
+            in_radlica=0;
             vzad(spd);
             break;
           default:
             //     Serial.println("00");
+            in_radlica=0;
             na_mieste();
             break;
         }
@@ -295,21 +311,25 @@ void za_loptou() {
         switch (dir_2) {
           case 1:
             //  Serial.println("21");
+            in_radlica=0;
             vpravo_vzad(spd);
             break;
 
           case 2:
             //   Serial.println("22");
+            in_radlica=0;
             vpravo_vzad(spd);
             break;
 
           case 3:
             //   Serial.println("23");
+            in_radlica=0;
             vzad(spd);
             break;
 
           case 4:
             //Serial.println("24");
+            in_radlica=0;
             if (s5_2 > 100) {
               vpravo(spd);
             }
@@ -320,6 +340,7 @@ void za_loptou() {
 
           case 5:
             // Serial.println("25");
+            in_radlica=0;
             if (s5_2 > 100) {
               vpravo(spd);
             }
@@ -330,6 +351,7 @@ void za_loptou() {
 
           case 6:
             //Serial.println("26");
+            in_radlica=0;
             if (s5_2 > 100) {
               vpravo(spd);
             }
@@ -340,21 +362,25 @@ void za_loptou() {
 
           case 7:
             //  Serial.println("27");
+            in_radlica=0;
             vzad(spd);
             break;
 
           case 8:
             //  Serial.println("28");
+            in_radlica=0;
             vlavo_vzad(spd);
             break;
 
           case 9:
             // Serial.println("29");
+            in_radlica=0;
             vlavo_vzad(spd);
             break;
 
           default:
             // Serial.println("00");
+            in_radlica=0;
             na_mieste();
             break;
         }
@@ -365,38 +391,47 @@ void za_loptou() {
       switch (dir_1) {
         case 1:
           // Serial.println("11");
+          in_radlica=0;
           vzad(spd);
           break;
         case 2:
           // Serial.println("12");
+          in_radlica=0;
           vlavo_vzad(spd);
           break;
         case 3:
           //Serial.println("13");
+          in_radlica=0;
           vlavo_vzad(spd);
           break;
         case 4:
           // Serial.println("14");
+          in_radlica=0;
           vlavo(spd);
           break;
         case 5:
           //Serial.println("15");
+          in_radlica++;
           vpred(spd);
           break;
         case 6:
           // Serial.println("16");
+          in_radlica=0;
           vpravo(spd);
           break;
         case 7:
           //Serial.println("17");
+          in_radlica=0;
           vpravo_vzad(spd);
           break;
         case 8:
           // Serial.println("18");
+          in_radlica=0;
           vzad(spd);
           break;
         case 9:
           //Serial.println("19");
+          in_radlica=0;
           vzad(spd);
           break;
         default:
@@ -404,21 +439,25 @@ void za_loptou() {
           switch (dir_2) {
             case 1:
               //Serial.println("21");
+              in_radlica=0;
               vpravo_vzad(spd);
               break;
 
             case 2:
               // Serial.println("22");
+              in_radlica=0;
               vpravo_vzad(spd);
               break;
 
             case 3:
               // Serial.println("23");
+              in_radlica=0;
               vzad(spd);
               break;
 
             case 4:
               //  Serial.println("24");
+              in_radlica=0;
               if (s5_2 > 100) {
                 vpravo(spd);
               }
@@ -429,6 +468,7 @@ void za_loptou() {
 
             case 5:
               // Serial.println("25");
+              in_radlica=0;
               if (s5_2 > 100) {
                 vpravo(spd);
               }
@@ -439,6 +479,7 @@ void za_loptou() {
 
             case 6:
               // Serial.println("26");
+              in_radlica=0;
               if (s5_2 > 100) {
                 vpravo(spd);
               }
@@ -449,21 +490,25 @@ void za_loptou() {
 
             case 7:
               // Serial.println("27");
+              in_radlica=0;
               vzad(spd);
               break;
 
             case 8:
               //Serial.println("28");
+              in_radlica=0;
               vlavo_vzad(spd);
               break;
 
             case 9:
               // Serial.println("29");
+              in_radlica=0;
               vlavo_vzad(spd);
               break;
 
             default:
               // Serial.println("00");
+              in_radlica=0;
               na_mieste();
           }
 
