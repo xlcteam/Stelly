@@ -8,8 +8,8 @@
 #define LINE_THRESH_PIN 11
 
 #define LINE_STRONG_TIME 80
-#define LINE_TIME 300
-#define LINE_BACK_TIME 400 // aplied for 3, 4, 5
+#define LINE_TIME 350
+#define LINE_BACK_TIME 450 // aplied for 3, 4, 5
 #define STOP_LINE_TIME 0
 #define MUTEX(state) mutex = (state)
 #define LINE_USE_INT 1
@@ -25,7 +25,7 @@ uint8_t touch_line;
 uint32_t start;
 uint8_t touch_line_dir;
 
-int spd = 150;
+int spd = 160;
 int line_spd = 80;
 int line_strong_spd = 250;
 
