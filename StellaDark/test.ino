@@ -9,8 +9,37 @@ void test_sensors() {
   Serial.println(compass());
   delay(50);
 }
-void test_motors(){
-    motorA.go(255);
-    motorB.go(255);
-    motorC.go(255);
-                  }
+void test_motors() {
+  motorA.go(255);
+  motorB.go(255);
+  motorC.go(255);
+  delay(1000);
+  motorA.go(100);
+  motorB.go(100);
+  motorC.go(100);
+  delay(1000);
+  motorA.go(0);
+  motorB.go(0);
+  motorC.go(0);
+  delay(1000);
+  motorA.go(-100);
+  motorB.go(-100);
+  motorC.go(-100);
+  delay(1000);
+  motorA.go(-255);
+  motorB.go(-255);
+  motorC.go(-255);
+  delay(1000);
+}
+void test_frequency() {
+  static int position_in_program = 0;
+  static long last_time = 0;
+  position_in_program++;
+  if (position_in_program % 2 == 0) {
+    Serial.print("frequency is:");
+    Serial.println(millis() - last_time);
+  }
+  else {
+    last_time = millis();
+  }
+}

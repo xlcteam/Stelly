@@ -14,27 +14,34 @@ long PID_I = 0;
 int PID_D = 0;
 //////////////////////////////////////////////////////
 #define P 3;
-#define I 0.07//0.008;
-#define D 10//10;
+#define I 0.07
+#define D 10
 #define D_change 3
 //////////////////////////////////////////////////////
 #define max_I 100*100
 #define min_I -100*100
 //////////////////////////////////////////////////////
+#define BALL_P 0.7//1.5
+#define BALL_P_DISTANCE 0.05
+#define BALL_I 0
+#define BALL_D 3//7
+#define D_change_ball 2
+//////////////////////////////////////////////////////
 // TODO What about using "static"
-int input;
-int out;
-int error;
-int last_input = 0;
-long last_time = 0;
-int last_error = 0;
-long now = 0;
-int error_index = -1;
-int errors[D_change] = { 0 };
 
 int PID(int16_t speeds[3], int setpoint) {
-  input = compass();
-  if ( input > 180 || input < -180) { // TODO Is it possible?
+  static int input;
+  static int out;
+  static int error;
+  static int last_input = 0;
+  static long last_time = 0;
+  static int last_error = 0;
+  static long now = 0;
+  static int error_index = -1;
+  static int errors[D_change] = { 0 };
+
+  input = robot_angle();
+  if ( input > 180 || input < -180) { // TODO Is it possible?//multi check data
     input = last_input;
   }
   int16_t maximal_value = -1000;
@@ -49,7 +56,7 @@ int PID(int16_t speeds[3], int setpoint) {
   maximal_value = 255 - maximal_value;
   minimal_value = -255 - minimal_value;
 
-  error = setpoint - input; // TODO Couldn't we do this with compass_set_north?
+  error = setpoint - input; 
 
   error_index = (error_index + 1) % D_change;
   errors[error_index] = error;
@@ -67,12 +74,12 @@ int PID(int16_t speeds[3], int setpoint) {
       PID_I += ((now - last_time) * error ) * I ;
     }
     /* TODO Alternative - perhaps more straightforward
-    PID_I += ((now - last_time) * error ) * I ;
-    if (PID_I < min_I) {
+      PID_I += ((now - last_time) * error ) * I ;
+      if (PID_I < min_I) {
         PID_I = min_I;
-    } else if (PID_I > max_I) {
+      } else if (PID_I > max_I) {
         PID_I = max_I;
-    }
+      }
     */
     PID_D = (errors[(D_change - 1) - error_index] - error) * D;
 
@@ -89,6 +96,9 @@ int PID(int16_t speeds[3], int setpoint) {
     PID_I = 0;
     PID_D = 0;
     out = 0;
+    //    for(int i=0;i<D_change_ball;i++){
+    //      errors[i]=0;
+    //      }
   }
 
   last_time = now;
@@ -97,7 +107,81 @@ int PID(int16_t speeds[3], int setpoint) {
 
   return out;
 }
+///////////////////////////////////////////////////////////////
 
+int centering_to_ball() {
+  static int error_index_ball = 0;
+  static int errors_ball[D_change_ball] {0};
+  static long  last_time_ball = 0;
+  static int  last_error_ball = 0;
+  static int  last_input_ball = 0;
+  static int PID_P_ball = 0;
+  static long PID_I_ball = 0;
+  static int PID_D_ball = 0;
+  int spd;
+  int error_ball;
+  int now_ball;
+  int out_ball;
+  int strength;
+  error_ball = IR_V3();
+  strength = IR_V3_strength();
+  if (error_ball < 10 && error_ball > -10) {
+    spd = spd_vpred_strong;
+  }
+  else {
+    spd = spd_vpred;
+  }
+  int maximal_value_ball = 255 - spd ;
+  int minimal_value_ball = -255 + spd ;
+  error_index_ball = (error_index_ball + 1) % D_change_ball;
+  errors_ball[error_index_ball] = error_ball;
+
+  now_ball = millis();
+  if (error_ball != 0) {
+    PID_P_ball = (error_ball * BALL_P) * (BALL_P_DISTANCE * strength);
+    if (PID_I_ball + ((now_ball - last_time_ball) * error_ball ) * BALL_I  < min_I) {
+      PID_I_ball = min_I;
+    }
+    else if (PID_I_ball + ((now_ball - last_time_ball) * error_ball ) * BALL_I > max_I ) {
+      PID_I_ball = max_I;
+    }
+    else {
+      PID_I_ball += ((now_ball - last_time_ball) * error_ball ) * BALL_I ;
+    }
+
+    PID_D_ball = (errors_ball[(D_change_ball - 1) - error_index_ball] - error_ball) * BALL_D;
+
+    out_ball = PID_P_ball + (PID_I_ball / 100) - PID_D_ball;
+    if (out_ball > maximal_value_ball) {
+      out_ball = maximal_value_ball;
+    } else if (out_ball < minimal_value_ball) {
+      out_ball = minimal_value_ball;
+    }
+
+  }
+  else {
+    PID_P_ball = 0;
+    PID_I_ball = 0;
+    PID_D_ball = 0;
+    out_ball = 0;
+  }
+
+  last_time_ball = now_ball;
+  last_error_ball = error_ball;
+  last_input_ball = error_ball;
+//  Serial.print(error_ball);
+//  Serial.print("      ");
+//  Serial.print(strength);
+//  Serial.print("      ");
+//  Serial.print(PID_P_ball );
+//  Serial.print("      ");
+//  Serial.print(PID_I_ball / 100);
+//  Serial.print("      ");
+//  Serial.print( PID_D_ball);
+//  Serial.print("      ");
+//  Serial.println(out_ball);
+  return out_ball;
+}
 // direct means without rotating; "spds" should be an array of size 3
 void move_direct(int16_t *spds)
 {
@@ -108,7 +192,8 @@ void move_direct(int16_t *spds)
 }
 
 void vpred(int16_t spd) {
-  int16_t speeds[3] = {spd, -spd, 0};
+  int compensation = centering_to_ball();
+  int16_t speeds[3] = {spd_vpred + compensation / 2, -spd_vpred + compensation / 2, -compensation};
   motion_last_dir = 0;
   move_direct(speeds);
 }
