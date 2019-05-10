@@ -32,14 +32,15 @@ void test_motors() {
   delay(1000);
 }
 void test_frequency() {
-  static int position_in_program = 0;
+  static bool position_in_program = 0;
   static long last_time = 0;
-  position_in_program++;
-  if (position_in_program % 2 == 0) {
+  if (position_in_program == 1) {
     Serial.print("frequency is:");
     Serial.println(millis() - last_time);
+    position_in_program = 0;
   }
   else {
     last_time = millis();
+    position_in_program = 1;
   }
 }

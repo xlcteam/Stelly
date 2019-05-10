@@ -5,18 +5,18 @@ char action;
 uint32_t time, loop_count = 0;
 uint16_t min_time = ~0, max_time = 0, average_time = 0;
 
-int angle_goal() {
-  static int no_goal = 0;
-  static int last_goal_angle = 0;
+int8_t angle_goal() {
+  static int8_t no_goal = 0;
+  static int8_t last_goal_angle = 0;
   pixyViSy.update();
   goal_angle = pixyViSy.getBallAngle();
-  if (goal_angle == 0) {
+  if (goal_angle == ~0) {
     no_goal++;
     if (no_goal > 15) {
       goal_angle = 0;
       return 255;
     }
-    else {
+    else {   
       goal_angle = last_goal_angle;
     }
   }
