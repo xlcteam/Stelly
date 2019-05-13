@@ -2,6 +2,7 @@
 #define TCA_COMPASS 0
 #define TCA_IR_FRONT 1
 #define TCA_IR_BACK 2
+#define TCA_IR_V3 3
 
 void tcaselect(uint8_t i) {
   if (i > 7) return;
@@ -57,7 +58,7 @@ uint16_t compass_real_north()
     return _compass_north;
 }
 
-// IR_SEEKER
+// IR_SEEKERs V2
 
 void HTIRSeekerV2(uint8_t *dir, uint8_t *s1, uint8_t *s2,
                   uint8_t *s3, uint8_t *s4, uint8_t *s5)
@@ -78,7 +79,6 @@ void HTIRSeekerV2(uint8_t *dir, uint8_t *s1, uint8_t *s2,
         }
     }
 }
-
 void IRseeker1(uint8_t *dir, uint8_t *s1, uint8_t *s3,
               uint8_t *s5, uint8_t *s7, uint8_t *s9)
 {
@@ -92,3 +92,29 @@ void IRseeker2(uint8_t *dir, uint8_t *s1, uint8_t *s3,
     tcaselect(TCA_IR_BACK);
     HTIRSeekerV2(dir, s1, s3, s5, s7, s9);
 }
+//IR_Seeker V3
+int IR_V3(){
+   tcaselect(TCA_IR_V3);
+  int value;
+    Wire.beginTransmission(0x38>> 1);
+    Wire.write(0x04); 
+    Wire.endTransmission();
+    Wire.requestFrom(0x38>> 1, 1);
+    value=Wire.read();
+    while (Wire.available()) Wire.read();
+    if(value>127){
+      value=value-255;
+      }
+    return value;
+  }
+int IR_V3_strength(){
+   tcaselect(TCA_IR_V3);
+  int value;
+    Wire.beginTransmission(0x38>> 1);
+    Wire.write(0x05); 
+    Wire.endTransmission();
+    Wire.requestFrom(0x38>> 1, 1);
+    value=Wire.read();
+    while (Wire.available()) Wire.read();
+    return 158-value;   //158=maximum
+  }
