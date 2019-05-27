@@ -44,3 +44,7 @@ void test_frequency() {
     position_in_program = 1;
   }
 }
+void ColorCode_test() {
+  pixyViSy.update(3);
+  Serial.println( pixyViSy.getColorCode());
+}

@@ -8,7 +8,7 @@ uint16_t min_time = ~0, max_time = 0, average_time = 0;
 int16_t angle_goal() {
   static uint8_t no_goal_cnt = 0;
   static int16_t last_goal_angle = GOAL_ANGLE_NO_GOAL;
-  pixyViSy.update();
+  pixyViSy.update(2);
 
   if (pixyViSy.getBallDist() == ~(uint16_t)0) {
     if (no_goal_cnt > 15) {
@@ -26,6 +26,9 @@ int16_t angle_goal() {
 }
 
 int robot_angle() {
+  if(defend){
+    return compass();
+  }else{
   static int last_relevant_angle = 0;
   int goal_angle;
   goal_angle = angle_goal();
@@ -36,5 +39,9 @@ int robot_angle() {
     last_relevant_angle = compass();
     return -goal_angle;
   }
+    }
 }
-
+bool ColorCode() {
+  pixyViSy.update(3);
+  return pixyViSy.getColorCode();
+}
