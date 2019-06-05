@@ -18,7 +18,7 @@ void setup_line_sensors()
 
 inline uint8_t read_line_sensor(uint8_t index)
 {
-    return digitalRead(line_sensors[index]);
+  return digitalRead(line_sensors[index]);
 }
 
 void line_sensors_update()
@@ -41,87 +41,87 @@ void line_sensors_update()
 uint8_t line_last_dir;
 uint8_t process_ws()
 {
-    uint8_t dir;
+  uint8_t dir;
 
-    MUTEX(1);
-  
-    if (!ws[0] && !ws[1] && !ws[2]) {
-        dir = 255;
-    } else if (ws[0] && !ws[1] && !ws[2]) {
-        dir = 0;
-    } else if (!ws[0] && ws[1] && !ws[2]) {
-        if (motion_last_dir == 3) {
-            dir = 3;
-        } else if (motion_last_dir <= 5 && motion_last_dir >= 4) {
-            dir = 4;
-        } else {
-            dir = 2;
-        }
-    } else if (!ws[0] && !ws[1] && ws[2]) {
-        if (motion_last_dir == 5) {
-            dir = 5;
-        } else if (motion_last_dir <= 4 && motion_last_dir >= 3) {
-            dir = 4;
-        } else {
-            dir = 6;
-        }
-    } else if (ws[0] && ws[1] && !ws[2]) {
-        dir = 1;
-    } else if (ws[0] && !ws[1] && ws[2]) {
-        dir = 7;
-    } else if (!ws[0] && ws[1] && ws[2]) {
-        if (motion_last_dir <= 6 && motion_last_dir >= 5) {
-            dir = 5;
-        } else if (motion_last_dir <= 3 && motion_last_dir >= 2) {
-            dir = 3;
-        } else {
-            dir = 4;
-        }
+  MUTEX(1);
+
+  if (!ws[0] && !ws[1] && !ws[2]) {
+    dir = 255;
+  } else if (ws[0] && !ws[1] && !ws[2]) {
+    dir = 0;
+  } else if (!ws[0] && ws[1] && !ws[2]) {
+    if (motion_last_dir == 3) {
+      dir = 3;
+    } else if (motion_last_dir <= 5 && motion_last_dir >= 4) {
+      dir = 4;
     } else {
-        dir = line_last_dir;
+      dir = 2;
     }
+  } else if (!ws[0] && !ws[1] && ws[2]) {
+    if (motion_last_dir == 5) {
+      dir = 5;
+    } else if (motion_last_dir <= 4 && motion_last_dir >= 3) {
+      dir = 4;
+    } else {
+      dir = 6;
+    }
+  } else if (ws[0] && ws[1] && !ws[2]) {
+    dir = 1;
+  } else if (ws[0] && !ws[1] && ws[2]) {
+    dir = 7;
+  } else if (!ws[0] && ws[1] && ws[2]) {
+    if (motion_last_dir <= 6 && motion_last_dir >= 5) {
+      dir = 5;
+    } else if (motion_last_dir <= 3 && motion_last_dir >= 2) {
+      dir = 3;
+    } else {
+      dir = 4;
+    }
+  } else {
+    dir = line_last_dir;
+  }
 
-    MUTEX(0);
+  MUTEX(0);
 
-    line_last_dir = dir;
+  line_last_dir = dir;
 
-    return dir;
+  return dir;
 }
 
 uint8_t line_sensors_dir()
 {
-    uint32_t time = micros();
+  uint32_t time = micros();
 
-    // get data to process
-    if (!line_use_int) {
-        for (uint8_t i = 0; i < LINE_SENSORS_COUNT; i++) {
-            ws[i] = read_line_sensor(i);
-        }
+  // get data to process
+  if (!line_use_int) {
+    for (uint8_t i = 0; i < LINE_SENSORS_COUNT; i++) {
+      ws[i] = read_line_sensor(i);
     }
+  }
 
-    bool print_dbg = (ws[0] || ws[1] || ws[2]);
+  bool print_dbg = (ws[0] || ws[1] || ws[2]);
 
-    if (print_dbg) {
-        Serial.println("line");
-        Serial.print(ws[0]);
-        Serial.print(" "); Serial.print(ws[1]);
-        Serial.print(" "); Serial.println(ws[2]);
+  if (print_dbg) {
+    Serial.println("line");
+    Serial.print(ws[0]);
+    Serial.print(" "); Serial.print(ws[1]);
+    Serial.print(" "); Serial.println(ws[2]);
+  }
+
+  uint16_t dir = process_ws();
+
+  // fill ws_tmp with actual values
+  if (line_use_int) {
+    MUTEX(1);
+    for (uint8_t i = 0; i < LINE_SENSORS_COUNT; i++) {
+      ws[i] = read_line_sensor(i);
     }
+    MUTEX(0);
+  }
 
-    uint16_t dir = process_ws();
+  if (print_dbg) {
+    Serial.print("dir "); Serial.println(dir);
+  }
 
-    // fill ws_tmp with actual values
-    if (line_use_int) {
-        MUTEX(1);
-        for (uint8_t i = 0; i < LINE_SENSORS_COUNT; i++) {
-            ws[i] = read_line_sensor(i);
-        }
-        MUTEX(0);
-    }
-
-    if (print_dbg) {
-        Serial.print("dir "); Serial.println(dir);
-    }
-
-    return dir;
+  return dir;
 }

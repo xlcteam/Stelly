@@ -13,6 +13,9 @@ int PID_P = 0;
 long PID_I = 0;
 int PID_D = 0;
 //////////////////////////////////////////////////////
+#define P_TEAM 5
+#define P_TEAM_NEAR 18
+//////////////////////////////////////////////////////
 #define P 3;
 #define I 0.07
 #define D 10
@@ -27,8 +30,6 @@ int PID_D = 0;
 #define BALL_D 3//7
 #define D_change_ball 2
 //////////////////////////////////////////////////////
-// TODO What about using "static"
-
 int PID(int16_t speeds[3], int setpoint) {
   static int input;
   static int out;
@@ -41,7 +42,7 @@ int PID(int16_t speeds[3], int setpoint) {
   static int errors[D_change] = { 0 };
 
   input = robot_angle();
-  if ( input > 180 || input < -180) { // TODO Is it possible?//multi check data
+  if ( input > 180 || input < -180) {
     input = last_input;
   }
   int16_t maximal_value = -1000;
@@ -56,7 +57,7 @@ int PID(int16_t speeds[3], int setpoint) {
   maximal_value = 255 - maximal_value;
   minimal_value = -255 - minimal_value;
 
-  error = setpoint - input; 
+  error = setpoint - input;
 
   error_index = (error_index + 1) % D_change;
   errors[error_index] = error;
@@ -169,17 +170,17 @@ int centering_to_ball() {
   last_time_ball = now_ball;
   last_error_ball = error_ball;
   last_input_ball = error_ball;
-//  Serial.print(error_ball);
-//  Serial.print("      ");
-//  Serial.print(strength);
-//  Serial.print("      ");
-//  Serial.print(PID_P_ball );
-//  Serial.print("      ");
-//  Serial.print(PID_I_ball / 100);
-//  Serial.print("      ");
-//  Serial.print( PID_D_ball);
-//  Serial.print("      ");
-//  Serial.println(out_ball);
+  //  Serial.print(error_ball);
+  //  Serial.print("      ");
+  //  Serial.print(strength);
+  //  Serial.print("      ");
+  //  Serial.print(PID_P_ball );
+  //  Serial.print("      ");
+  //  Serial.print(PID_I_ball / 100);
+  //  Serial.print("      ");
+  //  Serial.print( PID_D_ball);
+  //  Serial.print("      ");
+  //  Serial.println(out_ball);
   return out_ball;
 }
 // direct means without rotating; "spds" should be an array of size 3
@@ -249,4 +250,19 @@ void motors_off() {
   motorA.go(0);
   motorB.go(0);
   motorC.go(0);
+}
+void move_team_distance() {
+  if (TEAM_DISTANCE + TEAM_DISTANCE_TOLERATION < distance) {
+    //too far away
+    vpred((distance - TEAM_DISTANCE)  * P_TEAM);
+  }
+  else if (TEAM_DISTANCE - TEAM_DISTANCE_TOLERATION > distance) {
+    //too close
+    vzad((TEAM_DISTANCE - distance) * P_TEAM_NEAR);
+    Serial.println((TEAM_DISTANCE - distance) * P_TEAM * P_TEAM_NEAR);
+  }
+  else {
+    //OK
+    na_mieste();
+  }
 }

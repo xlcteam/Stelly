@@ -12,17 +12,15 @@ inline uint16_t block_area(Block& block)
     return block.height * block.width;
 }
 
-PixyViSy::PixyViSy(uint16_t pixel_Fx, uint16_t pixel_Fy, uint8_t flag)
+PixyViSy::PixyViSy(uint16_t pixel_Fx, uint16_t pixel_Fy)
 {
     pixy.init();
 
     Fyp = pixel_Fy;
     Fxp = pixel_Fx;
-    process_flag = flag;
 
     goal_height = def_goal_height;
     ball_size = def_IR_ball_size;
-    if (flag & PIXYVISY_BALL) ball_size = def_orange_ball_size;
 
     ball_sig = goal_sig = 0;
     min_ball_area = min_goal_area = 0;
@@ -34,41 +32,35 @@ void PixyViSy::printParams()
 {
     Serial.print("Fyp: ");           Serial.println(Fyp);
     Serial.print("Fxp: ");           Serial.println(Fxp);
-    Serial.print("process_flag: ");  Serial.println(process_flag, BIN);
     Serial.print("goal_sig: ");      Serial.println(goal_sig);
     Serial.print("goal_height: ");   Serial.println(goal_height);
-    Serial.print("ball_size: ");     Serial.println(ball_size);
+    Serial.print("goal_angle: ");    Serial.println(goal_angle);
     Serial.print("min_goal_area: "); Serial.println(min_goal_area);
     Serial.print("ball_sig: ");      Serial.println(ball_sig);
+    Serial.print("ball_size: ");     Serial.println(ball_size);
     Serial.print("min_ball_area: "); Serial.println(min_ball_area);
+    Serial.print("teammate_sig: ");  Serial.println(team_sig);
+    Serial.print("teammate_angle: ");Serial.println(team_angle);
 }
 
-void PixyViSy::update(uint8_t x)
+void PixyViSy::update(uint8_t flag)
 {
     setDefValues();
     blocks_count = pixy.getBlocks();
-    switch(x){
-    	case 1:
-    		processGoal();
-    		break;
-    	case 2:
-    		processBall();
-    		break;
-    	case 3:
-    		processColorCode();
-    		break;
-	}
 
-//    if (blocks_count == 0) {
-//        return;
-//    }
-//    if (process_flag & PIXYVISY_GOAL) {
-//        processGoal();
-//    }
-//    if (process_flag & PIXYVISY_BALL) {
-//        processBall();
-//    }
-	
+    if (blocks_count == 0) {
+        return;
+    }
+
+    if (flag & PIXYVISY_GOAL) {
+        processGoal(flag & PIXYVISY_ANGG);
+    }
+    if (flag & PIXYVISY_BALL) {
+        processBall();
+    }
+    if (flag & PIXYVISY_TEAM) {
+        processTeam();
+    }
 }
 
 void PixyViSy::processBall()
@@ -87,7 +79,23 @@ void PixyViSy::processBall()
     ball_angle = getAngleH(ball.x);
 }
 
-void PixyViSy::processGoal()
+uint16_t PixyViSy::valueGoalBlock(Block& block, int16_t Z)
+{
+    uint16_t value = 0;
+    if (block.x > h_center) {
+        value = 100 * block.width / (block.x - h_center);
+    } else if (block.x < h_center) {
+        value = 100 * block.width / (h_center - block.x);
+    } else {
+        value = 100 * block.width * 2;
+    }
+    if (getRealX(block.width, Z) > ball_size) {
+        value *= 4;
+    }
+    return value;
+}
+
+void PixyViSy::processGoal(bool set_angle)
 {
     uint16_t max[3];
     uint8_t goal_blocks_count = findNMax(goal_sig, 3, max, min_goal_area);
@@ -96,24 +104,10 @@ void PixyViSy::processGoal()
         return;
     }
 
-    /* counting left_pixels, right_pixels, goal_pix_height */
+    /* counting goal_pix_height */
     for (uint8_t i = 0; i < goal_blocks_count; i++) {
         Block& block = pixy.blocks[max[i]];
-
         goal_pix_height += block.height;
-
-        /* x coordinates of block's borders */
-        uint16_t left_border = block.x - block.width / 2;
-        uint16_t right_border = block.x + block.width / 2;
-
-        if (right_border < h_center) {
-            goal_left_pixels += block.width;
-        } else if (left_border > h_center) {
-            goal_right_pixels += block.width;
-        } else {
-            goal_left_pixels += h_center - left_border;
-            goal_right_pixels += right_border - h_center;
-        }
     }
     // counting distance and suggesting action
     goal_pix_height /= goal_blocks_count; // average value
@@ -123,6 +117,8 @@ void PixyViSy::processGoal()
     int16_t ball_left = getPixX(-ball_size/2, goal_dist);
     int16_t ball_right = getPixX(ball_size/2, goal_dist);
 
+    Block& best = pixy.blocks[max[0]];
+    uint16_t best_val = valueGoalBlock(best, goal_dist);
     for (uint8_t i = 0; i < goal_blocks_count; i++) {
         Block& block = pixy.blocks[max[i]];
         // x coordinates of goal_block's borders
@@ -131,55 +127,52 @@ void PixyViSy::processGoal()
 
         if (goal_left <= ball_left && goal_right >= ball_right) {
             goal_action = 'K'; // as "Kick"
+            if (set_angle) {
+                goal_angle = getAngleH(block.x);
+            }
             return;
         }
+
+        uint16_t block_val = valueGoalBlock(block, goal_dist);
+        if (block_val > best_val) {
+            best = block;
+            best_val = block_val;
+        }
     }
-    if (goal_left_pixels > goal_right_pixels) {
+    if (best.x < h_center) {
         goal_action = 'L'; // as "move Left"
     } else {
         goal_action = 'R'; // as "move Right"
     }
+    if (set_angle) {
+        goal_angle = getAngleH(best.x);
+    }
 }
-void PixyViSy::processColorCode()
-{
-  bool detected;
-  static uint8_t not_detected=51;
-  detected = 0;
-  for (int j = 0; j < blocks_count; j++)
-  {
-    if (pixy.blocks[j].signature == ColorCodesig) {	//55dec==67oct
-      detected = 1;
-      break;
-    }
-  }
-  
-  if (detected) {
-    not_detected=0;
-    ColorCode=1;
-  }else {
-    not_detected++;
-    if(not_detected>20){
-      ColorCode=0;
-      not_detected=51;
-      }
-      else{
-        ColorCode=1;
-        }
-    }
 
+void PixyViSy::processTeam()
+{
+    uint16_t team_i;
+    if (findNMax(team_sig, 1, &team_i, min_team_area) == 0) {
+        return;
+    }
+    Block& team = pixy.blocks[team_i];
+    team_dist = getRealZ(team_size, team.height, 'Y');
+    team_angle = getAngleH(team.x);
+    team_dx = getRealX(team.x, team_dist);
 }
+
 void PixyViSy::setDefValues()
 {
     blocks_count = 0;
-    goal_left_pixels = 0;
-    goal_right_pixels = 0;
     goal_pix_height = 0;
     goal_action = 'N'; // as "Nothing"
-    goal_dist = ~0;
-    ball_dist = ~0;
+    goal_dist = PIXYVISY_NOBLOCK;
+    goal_angle = 0;
+    ball_dist = PIXYVISY_NOBLOCK;
     ball_angle = 0;
-    ColorCode=1;
-    ColorCodesig=55;
+    team_dist = PIXYVISY_NOBLOCK;
+    team_angle = 0;
+    team_dx = 0;
 }
 
 uint16_t PixyViSy::findNMax(uint8_t sig, uint16_t n, uint16_t *out_blocks,

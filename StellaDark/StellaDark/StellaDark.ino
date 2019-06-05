@@ -16,8 +16,11 @@
 
 #define MIN_GOAL_AREA 100
 #define GOAL_ANGLE_NO_GOAL 255
-
-PixyViSy pixyViSy(FOC_LEN_X, FOC_LEN_Y, PIXYVISY_GOAL | PIXYVISY_BALL);
+#define MAX_NO_TEAM_TIME 1000
+#define TEAM_DISTANCE 30
+#define TEAM_DISTANCE_TOLERATION 5
+#define IR_ATACK_VALUE 25
+PixyViSy pixyViSy(FOC_LEN_X, FOC_LEN_Y);
 
 #define LINE_SENSORS_COUNT 3
 #define LINE_FRONT_PIN A0
@@ -48,7 +51,9 @@ int line_spd = 80;
 int line_strong_spd = 250;
 int spd_vpred = 180;//180
 int spd_vpred_strong = 220;//220
-bool defend=0;
+bool defend = 0;
+int16_t last_distance;
+int16_t distance;
 
 ISR(PCINT1_vect)
 {
@@ -75,7 +80,8 @@ void setup()
   compass_set_north();
   pixyViSy.setGoalSig(GOAL_SIG);
   pixyViSy.setBallSig(BALL_SIG);
-  pixyViSy.setColorCodeSig(COLOR_CODE_SIG);
+  pixyViSy.setTeamSig(COLOR_CODE_SIG);
+  pixyViSy.setTeamSize(5);
   pixyViSy.setMinGoalArea(MIN_GOAL_AREA);
   pinMode(A7, INPUT);
   pinMode(A6, INPUT);
@@ -83,7 +89,7 @@ void setup()
     if (analogRead(A7) > 100) {
       compass_set_north();
     }
-     motors_off();
+    motors_off();
   }
   ws[0] = ws[1] = ws[2] = 0;
 }
@@ -92,12 +98,18 @@ void loop()
 
   touch_line = line_sensors_dir();
   if (touch_line == 255) {
-    if((!ColorCode())&&IR_V3_strength()>30){
+
+    pixyViSy.update(PIXYVISY_TEAM);
+    distance = team_distance();
+    if (distance == PIXYVISY_NOBLOCK || IR_ATACK_VALUE > IR_V3_strength()) {
+      defend = 0;
+      za_loptou();
+    }
+    else {
+      defend = 1;
       defender();
-      }
-      else{
-      za_loptou(); 
-       }
+    }
+
   } else {
     uint8_t dir_from_line = (touch_line + 4) % 8;
     switch (dir_from_line) {
@@ -229,7 +241,7 @@ void from_line(void (* p_fun)(int16_t), bool back)
 
 void za_loptou()
 {
-  defend=0;
+  defend = 0;
   if (analogRead(A6) > 100) {
     motors_off();
     return;
@@ -471,9 +483,11 @@ void za_loptou()
     }
   }
 }
-void defender(){
-  defend=1;
-    if (analogRead(A6) > 100) {
+
+void defender() {
+
+  defend = 1;
+  if (analogRead(A6) > 100) {
     motors_off();
     return;
   }
@@ -508,7 +522,7 @@ void defender(){
 
         case 5:
           //    Serial.println("15");
-          na_mieste();
+          move_team_distance();
           break;
 
         case 6:
@@ -533,7 +547,7 @@ void defender(){
 
         default:
           //     Serial.println("00");
-          na_mieste();
+          move_team_distance();
           break;
       }
     } else { // stronger signal from IRSEEKER2
@@ -597,7 +611,7 @@ void defender(){
 
         default:
           // Serial.println("00");
-          vzad(80);
+          na_mieste();
           break;
       }
     }
@@ -625,7 +639,7 @@ void defender(){
 
       case 5:
         //Serial.println("15");
-        na_mieste();
+        move_team_distance();
         break;
 
       case 6:
@@ -708,9 +722,9 @@ void defender(){
             break;
 
           default:
-          // Serial.println("00");
-            vzad(80);
+            // Serial.println("00");
+            move_team_distance();
         }
     }
   }
-  }
+}
