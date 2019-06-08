@@ -12,11 +12,15 @@
 
 #define GOAL_SIG 1
 #define BALL_SIG 2
+#define COLOR_CODE_SIG 55 //in decimal 
 
 #define MIN_GOAL_AREA 100
 #define GOAL_ANGLE_NO_GOAL 255
-
-PixyViSy pixyViSy(FOC_LEN_X, FOC_LEN_Y, PIXYVISY_GOAL | PIXYVISY_BALL);
+#define MAX_NO_TEAM_TIME 1000
+#define TEAM_DISTANCE 30
+#define TEAM_DISTANCE_TOLERATION 5
+#define IR_ATACK_VALUE 25
+PixyViSy pixyViSy(FOC_LEN_X, FOC_LEN_Y);
 
 #define LINE_SENSORS_COUNT 3
 #define LINE_FRONT_PIN A0
@@ -47,6 +51,9 @@ int line_spd = 80;
 int line_strong_spd = 250;
 int spd_vpred = 180;//180
 int spd_vpred_strong = 220;//220
+bool defend = 0;
+int16_t last_distance;
+int16_t distance;
 
 ISR(PCINT1_vect)
 {
@@ -73,6 +80,8 @@ void setup()
   compass_set_north();
   pixyViSy.setGoalSig(GOAL_SIG);
   pixyViSy.setBallSig(BALL_SIG);
+  pixyViSy.setTeamSig(COLOR_CODE_SIG);
+  pixyViSy.setTeamSize(5);
   pixyViSy.setMinGoalArea(MIN_GOAL_AREA);
   pinMode(A7, INPUT);
   pinMode(A6, INPUT);
@@ -80,17 +89,27 @@ void setup()
     if (analogRead(A7) > 100) {
       compass_set_north();
     }
-     motors_off();
+    motors_off();
   }
   ws[0] = ws[1] = ws[2] = 0;
 }
 void loop()
 {
 
-   test_frequency();
   touch_line = line_sensors_dir();
   if (touch_line == 255) {
-    za_loptou();
+
+    pixyViSy.update(PIXYVISY_TEAM);
+    distance = team_distance();
+    if (distance == PIXYVISY_NOBLOCK || IR_ATACK_VALUE > IR_V3_strength()) {
+      defend = 0;
+      za_loptou();
+    }
+    else {
+      defend = 1;
+      defender();
+    }
+
   } else {
     uint8_t dir_from_line = (touch_line + 4) % 8;
     switch (dir_from_line) {
@@ -99,7 +118,7 @@ void loop()
           delay(LINE_TIME);*/
 
         /* IRseeker2(&dir, &s1, &s3, &s5, &s7, &s9);
-          touch_line_dir = dir;
+          touch_line_dir = dir;.
           while (touch_line_dir == dir) {
           IRseeker2(&dir, &s1, &s3, &s5, &s7, &s9);
           motors_off();
@@ -222,6 +241,7 @@ void from_line(void (* p_fun)(int16_t), bool back)
 
 void za_loptou()
 {
+  defend = 0;
   if (analogRead(A6) > 100) {
     motors_off();
     return;
@@ -459,6 +479,251 @@ void za_loptou()
           default:
             // Serial.println("00");
             na_mieste();
+        }
+    }
+  }
+}
+
+void defender() {
+
+  defend = 1;
+  if (analogRead(A6) > 100) {
+    motors_off();
+    return;
+  }
+  uint8_t dir_1, s1_1, s3_1, s5_1, s7_1, s9_1;
+  uint8_t dir_2, s1_2, s3_2, s5_2, s7_2, s9_2;
+  IRseeker1(&dir_1, &s1_1, &s3_1, &s5_1, &s7_1, &s9_1);
+  IRseeker2(&dir_2, &s1_2, &s3_2, &s5_2, &s7_2, &s9_2);
+
+  if (dir_1 != 0 && dir_2 != 0) { // both sensors received the signal
+    if (s1_1 + s3_1 + s5_1 + s7_1 + s9_1 >
+        s1_2 + s3_2 + s5_2 + s7_2 + s9_2) { // strogner signal from IRSEEKER1
+      switch (dir_1) {
+        case 1:
+          // Serial.println("11");
+          vzad(spd);
+          break;
+
+        case 2:
+          // Serial.println("12");
+          vlavo_vzad(spd);
+          break;
+
+        case 3:
+          //   Serial.println("13");
+          vlavo_vzad(spd);
+          break;
+
+        case 4:
+          //    Serial.println("14");
+          vlavo(spd);
+          break;
+
+        case 5:
+          //    Serial.println("15");
+          move_team_distance();
+          break;
+
+        case 6:
+          //  Serial.println("16");
+          vpravo(spd);
+          break;
+
+        case 7:
+          //    Serial.println("17");
+          vpravo_vzad(spd);
+          break;
+
+        case 8:
+          //      Serial.println("18");
+          vzad(spd);
+          break;
+
+        case 9:
+          //     Serial.println("19");
+          vzad(spd);
+          break;
+
+        default:
+          //     Serial.println("00");
+          move_team_distance();
+          break;
+      }
+    } else { // stronger signal from IRSEEKER2
+      switch (dir_2) {
+        case 1:
+          //  Serial.println("21");
+          vpravo_vzad(spd);
+          break;
+
+        case 2:
+          //   Serial.println("22");
+          vpravo_vzad(spd);
+          break;
+
+        case 3:
+          //   Serial.println("23");
+          vzad(spd);
+          break;
+
+        case 4:
+          //Serial.println("24");
+          if (s5_2 > 100) {
+            vpravo(spd);
+          } else {
+            vzad(spd);
+          }
+          break;
+
+        case 5:
+          // Serial.println("25");
+          if (s5_2 > 100) {
+            vpravo(spd);
+          } else {
+            vzad(spd);
+          }
+          break;
+
+        case 6:
+          //Serial.println("26");
+          if (s5_2 > 100) {
+            vpravo(spd);
+          } else {
+            vzad(spd);
+          }
+          break;
+
+        case 7:
+          //  Serial.println("27");
+          vzad(spd);
+          break;
+
+        case 8:
+          //  Serial.println("28");
+          vlavo_vzad(spd);
+          break;
+
+        case 9:
+          // Serial.println("29");
+          vlavo_vzad(spd);
+          break;
+
+        default:
+          // Serial.println("00");
+          na_mieste();
+          break;
+      }
+    }
+  } else {
+    switch (dir_1) {
+      case 1:
+        // Serial.println("11");
+        vzad(spd);
+        break;
+
+      case 2:
+        // Serial.println("12");
+        vlavo_vzad(spd);
+        break;
+
+      case 3:
+        //Serial.println("13");
+        vlavo_vzad(spd);
+        break;
+
+      case 4:
+        // Serial.println("14");
+        vlavo(spd);
+        break;
+
+      case 5:
+        //Serial.println("15");
+        move_team_distance();
+        break;
+
+      case 6:
+        // Serial.println("16");
+        vpravo(spd);
+        break;
+
+      case 7:
+        //Serial.println("17");
+        vpravo_vzad(spd);
+        break;
+
+      case 8:
+        // Serial.println("18");
+        vzad(spd);
+        break;
+
+      case 9:
+        //Serial.println("19");
+        vzad(spd);
+        break;
+
+      default:
+        switch (dir_2) {
+          case 1:
+            //Serial.println("21");
+            vpravo_vzad(spd);
+            break;
+
+          case 2:
+            // Serial.println("22");
+            vpravo_vzad(spd);
+            break;
+
+          case 3:
+            // Serial.println("23");
+            vzad(spd);
+            break;
+
+          case 4:
+            //  Serial.println("24");
+            if (s5_2 > 100) {
+              vpravo(spd);
+            } else {
+              vzad(spd);
+            }
+            break;
+
+          case 5:
+            // Serial.println("25");
+            if (s5_2 > 100) {
+              vpravo(spd);
+            } else {
+              vzad(spd);
+            }
+            break;
+
+          case 6:
+            // Serial.println("26");
+            if (s5_2 > 100) {
+              vpravo(spd);
+            } else {
+              vzad(spd);
+            }
+            break;
+
+          case 7:
+            // Serial.println("27");
+            vzad(spd);
+            break;
+
+          case 8:
+            //Serial.println("28");
+            vlavo_vzad(spd);
+            break;
+
+          case 9:
+            // Serial.println("29");
+            vlavo_vzad(spd);
+            break;
+
+          default:
+            // Serial.println("00");
+            move_team_distance();
         }
     }
   }

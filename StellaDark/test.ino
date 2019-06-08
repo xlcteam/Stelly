@@ -44,3 +44,14 @@ void test_frequency() {
     position_in_program = 1;
   }
 }
+void test_team() {
+  pixyViSy.update(PIXYVISY_TEAM);
+  Serial.print("Dist: ");
+  Serial.println(team_distance());
+  Serial.print("Angle: ");
+  Serial.println( team_angle());
+  Serial.print("Dx: ");
+  Serial.println( team_Dx());
+  Serial.println("////////////////////////////////////////////");
+  delay(150);
+}
