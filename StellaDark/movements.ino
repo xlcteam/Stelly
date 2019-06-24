@@ -1,3 +1,6 @@
+/**
+ * functions for movements
+ */
 #define MOTOR_RIGHT_DIR_PIN 8
 #define MOTOR_RIGHT_PWM_PIN 10
 #define MOTOR_LEFT_DIR_PIN 7
@@ -77,9 +80,6 @@ int PID(int16_t speeds[3], int setpoint) {
 		PID_I = 0;
 		PID_D = 0;
 		out = 0;
-		//		for(int i=0;i<D_change_ball;i++){
-		//			errors[i]=0;
-		//			}
 	}
 
 	last_time = now;
@@ -107,9 +107,9 @@ int centering_to_ball() {
 	error_ball = IR_V3();
 	strength = IR_V3_strength();
 	if (error_ball < 10 && error_ball > -10) {
-		spd = spd_vpred_strong;
+		spd = spd_forward_strong;
 	} else {
-		spd = spd_vpred;
+		spd = spd_forward;
 	}
 	int maximal_value_ball = 255 - spd ;
 	int minimal_value_ball = -255 + spd ;
@@ -135,17 +135,7 @@ int centering_to_ball() {
 	last_time_ball = now_ball;
 	last_error_ball = error_ball;
 	last_input_ball = error_ball;
-	//	Serial.print(error_ball);
-	//	Serial.print("			");
-	//	Serial.print(strength);
-	//	Serial.print("			");
-	//	Serial.print(PID_P_ball );
-	//	Serial.print("			");
-	//	Serial.print(PID_I_ball / 100);
-	//	Serial.print("			");
-	//	Serial.print( PID_D_ball);
-	//	Serial.print("			");
-	//	Serial.println(out_ball);
+
 	return out_ball;
 }
 
@@ -157,39 +147,39 @@ void move_direct(int16_t *spds) {
 	motorC.go(spds[2] + compensation);
 }
 
-void vpred(int16_t spd) {
+void forward(int16_t spd) {
 	int compensation = centering_to_ball();
-	int16_t speeds[3] = {spd_vpred + compensation / 2,
-		-spd_vpred + compensation / 2, -compensation};
+	int16_t speeds[3] = {spd_forward + compensation / 2,
+		-spd_forward + compensation / 2, -compensation};
 	motion_last_dir = 0;
 	move_direct(speeds);
 }
 
-void vpravo_vpred(int16_t spd) {
+void right_forward(int16_t spd) {
 	int16_t speeds[3] = {spd, 0, -spd};
 	motion_last_dir = 1;
 	move_direct(speeds);
 }
 
-void vpravo(int16_t spd) {
+void right(int16_t spd) {
 	int16_t speeds[3] = {spd / 2, spd / 2, -spd};
 	motion_last_dir = 2;
 	move_direct(speeds);
 }
 
-void vpravo_vzad(int16_t spd) {
+void right_backward(int16_t spd) {
 	int16_t speeds[3] = {0, spd, -spd};
 	motion_last_dir = 3;
 	move_direct(speeds);
 }
 
-void vzad(int16_t spd) {
+void backward(int16_t spd) {
 	int16_t speeds[3] = { -spd, spd, 0};
 	motion_last_dir = 4;
 	move_direct(speeds);
 }
 
-void vlavo_vzad(int16_t spd) {
+void left_backward(int16_t spd) {
 	int16_t speeds[3] = { -spd, 0, spd};
 	motion_last_dir = 5;
 	move_direct(speeds);
@@ -201,13 +191,13 @@ void vlavo(int16_t spd) {
 	move_direct(speeds);
 }
 
-void vlavo_vpred(int16_t spd) {
+void left_forward(int16_t spd) {
 	int16_t speeds[3] = {0, -spd, spd};
 	motion_last_dir = 7;
 	move_direct(speeds);
 }
 
-void na_mieste() {
+void stay_direct() {
 	int16_t speeds[3] = {0, 0, 0};
 	move_direct(speeds);
 }
@@ -221,13 +211,12 @@ void motors_off() {
 void move_team_distance() {
 	if (TEAM_DISTANCE + TEAM_DISTANCE_TOLERATION < distance) {
 		// too far away
-		vpred((distance - TEAM_DISTANCE) * P_TEAM);
+		forward((distance - TEAM_DISTANCE) * P_TEAM);
 	} else if (TEAM_DISTANCE - TEAM_DISTANCE_TOLERATION > distance) {
 		// too close
-		vzad((TEAM_DISTANCE - distance) * P_TEAM_NEAR);
-		Serial.println((TEAM_DISTANCE - distance) * P_TEAM * P_TEAM_NEAR);
+		backward((TEAM_DISTANCE - distance) * P_TEAM_NEAR);
 	} else {
 		// OK
-		na_mieste();
+		stay_direct();
 	}
 }

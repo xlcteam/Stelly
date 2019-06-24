@@ -1,3 +1,6 @@
+/**
+ * functions for robot testing
+ */
 void test_sensors() {
 	uint8_t dir, s1, s3, s5, s7, s9;
 	IRseeker1(&dir, &s1, &s3, &s5, &s7, &s9);
