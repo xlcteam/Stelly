@@ -1,3 +1,9 @@
+/**
+ * XLC TEAM Robocup 2019 Sydney
+ * Soccer light weight
+ * Šimon Varga
+ * Jakub Gál
+ */
 #include <Wire.h>
 #include <Motor.h>
 #include <PixyViSy.h>
@@ -5,7 +11,6 @@
 #include <Pixy.h>
 #include <XLCPixy.h>
 #include <stdint.h>
-
 
 #define FOC_LEN_X 266
 #define FOC_LEN_Y 237
@@ -49,8 +54,8 @@ uint8_t touch_line_dir;
 int spd = 150;
 int line_spd = 80;
 int line_strong_spd = 250;
-int spd_vpred = 180;//180
-int spd_vpred_strong = 220;//220
+int spd_forward = 180;//180
+int spd_forward_strong = 220;//220
 bool defend = 0;
 int16_t last_distance;
 int16_t distance;
@@ -109,110 +114,43 @@ void loop() {
 		uint8_t dir_from_line = (touch_line + 4) % 8;
 		switch (dir_from_line) {
 		case 0:
-			/* vpred(spd);
-				delay(LINE_TIME);*/
 
-			/* IRseeker2(&dir, &s1, &s3, &s5, &s7, &s9);
-				touch_line_dir = dir;.
-				while (touch_line_dir == dir) {
-				IRseeker2(&dir, &s1, &s3, &s5, &s7, &s9);
-				motors_off();
-				}*/
-			from_line(vpred, true);
+			from_line(forward, true);
 			break;
 
 		case 1:
-			/* vpravo_vpred(line_spd);
-				delay(LINE_TIME);*/
 
-			/*IRseeker2(&dir, &s1, &s3, &s5, &s7, &s9);
-				touch_line_dir = dir;
-				while (touch_line_dir == dir) {
-				IRseeker2(&dir, &s1, &s3, &s5, &s7, &s9);
-				motors_off();
-				}*/
-			from_line(vpravo_vpred, true);
+			from_line(right_forward, true);
 			break;
 
 		case 2:
-			/* vpravo(line_spd);
-				delay(LINE_TIME);*/
 
-			/*	IRseeker1(&dir, &s1, &s3, &s5, &s7, &s9);
-				touch_line_dir = dir;
-				while (touch_line_dir == dir) {
-				IRseeker1(&dir, &s1, &s3, &s5, &s7, &s9);
-				motors_off();
-				}*/
-			from_line(vpravo, false);
+			from_line(right, false);
 			break;
 
 		case 3:
-			/*vpravo_vzad(line_spd);
-				delay(LINE_TIME);
-			*/
-			/*
-				IRseeker1(&dir, &s1, &s3, &s5, &s7, &s9);
-				touch_line_dir = dir;
-				while (touch_line_dir == dir) {
-					IRseeker1(&dir, &s1, &s3, &s5, &s7, &s9);
-					motors_off();
-				}*/
-			from_line(vpravo_vzad, false);
+
+			from_line(right_backward, false);
 			break;
 
 		case 4:
-			/*	vzad(line_spd);
-				delay(LINE_TIME);
-			*/
-			/*
-				IRseeker1(&dir, &s1, &s3, &s5, &s7, &s9);
-				touch_line_dir = dir;
-				while (touch_line_dir == dir) {
-					IRseeker1(&dir, &s1, &s3, &s5, &s7, &s9);
-					motors_off();
-				}*/
-			from_line(vzad, false);
+
+			from_line(backward, false);
 			break;
 
 		case 5:
-			/*vlavo_vzad(line_spd);
-				delay(LINE_TIME);
-			*/
 
-			/*	IRseeker1(&dir, &s1, &s3, &s5, &s7, &s9);
-				touch_line_dir = dir;
-				while (touch_line_dir == dir) {
-				IRseeker1(&dir, &s1, &s3, &s5, &s7, &s9);
-				motors_off();
-				}*/
-			from_line(vlavo_vzad, false);
+			from_line(left_backward, false);
 			break;
 
 		case 6:
-			/* vlavo(line_spd);
-				delay(LINE_TIME);*/
 
-			/*	 IRseeker1(&dir, &s1, &s3, &s5, &s7, &s9);
-				touch_line_dir = dir;
-				while (touch_line_dir == dir) {
-				IRseeker1(&dir, &s1, &s3, &s5, &s7, &s9);
-				motors_off();
-				}*/
 			from_line(vlavo, false);
 			break;
 
 		case 7:
-			/* vlavo_vpred(line_spd);
-				delay(LINE_TIME);*/
-			/*
-				IRseeker2(&dir, &s1, &s3, &s5, &s7, &s9);
-				touch_line_dir = dir;
-				while (touch_line_dir == dir) {
-					IRseeker2(&dir, &s1, &s3, &s5, &s7, &s9);
-					motors_off();
-				}*/
-			from_line(vlavo_vpred, true);
+
+			from_line(left_forward, true);
 			break;
 		}
 	}
@@ -250,229 +188,190 @@ void za_loptou() {
 			// stronger signal from IRSEEKER1
 			switch (dir_1) {
 			case 1:
-				// Serial.println("11");
-				vzad(spd);
+				backward(spd);
 				break;
 
 			case 2:
-				// Serial.println("12");
-				vlavo_vzad(spd);
+				left_backward(spd);
 				break;
 
 			case 3:
-				// Serial.println("13");
-				vlavo_vzad(spd);
+				left_backward(spd);
 				break;
 
 			case 4:
-				// Serial.println("14");
 				vlavo(spd);
 				break;
 
 			case 5:
-				// Serial.println("15");
-				vpred(spd);
+				forward(spd);
 				break;
 
 			case 6:
-				// Serial.println("16");
-				vpravo(spd);
+				right(spd);
 				break;
 
 			case 7:
-				// Serial.println("17");
-				vpravo_vzad(spd);
+				right_backward(spd);
 				break;
 
 			case 8:
-				// Serial.println("18");
-				vzad(spd);
+				backward(spd);
 				break;
 
 			case 9:
-				// Serial.println("19");
-				vzad(spd);
+				backward(spd);
 				break;
 
 			default:
-				// Serial.println("00");
-				na_mieste();
+				stay_direct();
 				break;
 			}
 		} else { // stronger signal from IRSEEKER2
 			switch (dir_2) {
 			case 1:
-				//	Serial.println("21");
-				vpravo_vzad(spd);
+				right_backward(spd);
 				break;
 
 			case 2:
-				//	 Serial.println("22");
-				vpravo_vzad(spd);
+				right_backward(spd);
 				break;
 
 			case 3:
-				//	 Serial.println("23");
-				vzad(spd);
+				backward(spd);
 				break;
 
 			case 4:
-				//Serial.println("24");
 				if (s5_2 > 100) {
-					vpravo(spd);
+					right(spd);
 				} else {
-					vzad(spd);
+					backward(spd);
 				}
 				break;
 
 			case 5:
-				// Serial.println("25");
 				if (s5_2 > 100) {
-					vpravo(spd);
+					right(spd);
 				} else {
-					vzad(spd);
+					backward(spd);
 				}
 				break;
 
 			case 6:
-				//Serial.println("26");
 				if (s5_2 > 100) {
-					vpravo(spd);
+					right(spd);
 				} else {
-					vzad(spd);
+					backward(spd);
 				}
 				break;
 
 			case 7:
-				//	Serial.println("27");
-				vzad(spd);
+				backward(spd);
 				break;
 
 			case 8:
-				//	Serial.println("28");
-				vlavo_vzad(spd);
+				left_backward(spd);
 				break;
 
 			case 9:
-				// Serial.println("29");
-				vlavo_vzad(spd);
+				left_backward(spd);
 				break;
 
 			default:
-				// Serial.println("00");
-				na_mieste();
+				stay_direct();
 				break;
 			}
 		}
 	} else {
 		switch (dir_1) {
 		case 1:
-			// Serial.println("11");
-			vzad(spd);
+			backward(spd);
 			break;
 
 		case 2:
-			// Serial.println("12");
-			vlavo_vzad(spd);
+			left_backward(spd);
 			break;
 
 		case 3:
-			//Serial.println("13");
-			vlavo_vzad(spd);
+			left_backward(spd);
 			break;
 
 		case 4:
-			// Serial.println("14");
 			vlavo(spd);
 			break;
 
 		case 5:
-			//Serial.println("15");
-			vpred(spd);
+			forward(spd);
 			break;
 
 		case 6:
-			// Serial.println("16");
-			vpravo(spd);
+			right(spd);
 			break;
 
 		case 7:
-			//Serial.println("17");
-			vpravo_vzad(spd);
+			right_backward(spd);
 			break;
 
 		case 8:
-			// Serial.println("18");
-			vzad(spd);
+			backward(spd);
 			break;
 
 		case 9:
-			//Serial.println("19");
-			vzad(spd);
+			backward(spd);
 			break;
 
 		default:
 			switch (dir_2) {
 			case 1:
-				//Serial.println("21");
-				vpravo_vzad(spd);
+				right_backward(spd);
 				break;
 
 			case 2:
-				// Serial.println("22");
-				vpravo_vzad(spd);
+				right_backward(spd);
 				break;
 
 			case 3:
-				// Serial.println("23");
-				vzad(spd);
+				backward(spd);
 				break;
 
 			case 4:
-				//	Serial.println("24");
 				if (s5_2 > 100) {
-					vpravo(spd);
+					right(spd);
 				} else {
-					vzad(spd);
+					backward(spd);
 				}
 				break;
 
 			case 5:
-				// Serial.println("25");
 				if (s5_2 > 100) {
-					vpravo(spd);
+					right(spd);
 				} else {
-					vzad(spd);
+					backward(spd);
 				}
 				break;
 
 			case 6:
-				// Serial.println("26");
 				if (s5_2 > 100) {
-					vpravo(spd);
+					right(spd);
 				} else {
-					vzad(spd);
+					backward(spd);
 				}
 				break;
 
 			case 7:
-				// Serial.println("27");
-				vzad(spd);
+				backward(spd);
 				break;
 
 			case 8:
-				//Serial.println("28");
-				vlavo_vzad(spd);
+				left_backward(spd);
 				break;
 
 			case 9:
-				// Serial.println("29");
-				vlavo_vzad(spd);
+				left_backward(spd);
 				break;
 
 			default:
-				// Serial.println("00");
-				na_mieste();
+				stay_direct();
 			}
 		}
 	}
@@ -495,228 +394,189 @@ void defender() {
 			// strogner signal from IRSEEKER1
 			switch (dir_1) {
 			case 1:
-				// Serial.println("11");
-				vzad(spd);
+				backward(spd);
 				break;
 
 			case 2:
-				// Serial.println("12");
-				vlavo_vzad(spd);
+				left_backward(spd);
 				break;
 
 			case 3:
-				//	 Serial.println("13");
-				vlavo_vzad(spd);
+				left_backward(spd);
 				break;
 
 			case 4:
-				//		Serial.println("14");
 				vlavo(spd);
 				break;
 
 			case 5:
-				//		Serial.println("15");
 				move_team_distance();
 				break;
 
 			case 6:
-				//	Serial.println("16");
-				vpravo(spd);
+				right(spd);
 				break;
 
 			case 7:
-				//		Serial.println("17");
-				vpravo_vzad(spd);
+				right_backward(spd);
 				break;
 
 			case 8:
-				//			Serial.println("18");
-				vzad(spd);
+				backward(spd);
 				break;
 
 			case 9:
-				//		 Serial.println("19");
-				vzad(spd);
+				backward(spd);
 				break;
 
 			default:
-				//		 Serial.println("00");
 				move_team_distance();
 				break;
 			}
 		} else { // stronger signal from IRSEEKER2
 			switch (dir_2) {
 			case 1:
-				//	Serial.println("21");
-				vpravo_vzad(spd);
+				right_backward(spd);
 				break;
 
 			case 2:
-				//	 Serial.println("22");
-				vpravo_vzad(spd);
+				right_backward(spd);
 				break;
 
 			case 3:
-				//	 Serial.println("23");
-				vzad(spd);
+				backward(spd);
 				break;
 
 			case 4:
-				//Serial.println("24");
 				if (s5_2 > 100) {
-					vpravo(spd);
+					right(spd);
 				} else {
-					vzad(spd);
+					backward(spd);
 				}
 				break;
 
 			case 5:
-				// Serial.println("25");
 				if (s5_2 > 100) {
-					vpravo(spd);
+					right(spd);
 				} else {
-					vzad(spd);
+					backward(spd);
 				}
 				break;
 
 			case 6:
-				//Serial.println("26");
 				if (s5_2 > 100) {
-					vpravo(spd);
+					right(spd);
 				} else {
-					vzad(spd);
+					backward(spd);
 				}
 				break;
 
 			case 7:
-				//	Serial.println("27");
-				vzad(spd);
+				backward(spd);
 				break;
 
 			case 8:
-				//	Serial.println("28");
-				vlavo_vzad(spd);
+				left_backward(spd);
 				break;
 
 			case 9:
-				// Serial.println("29");
-				vlavo_vzad(spd);
+				left_backward(spd);
 				break;
 
 			default:
-				// Serial.println("00");
-				na_mieste();
+				stay_direct();
 				break;
 			}
 		}
 	} else {
 		switch (dir_1) {
 		case 1:
-			// Serial.println("11");
-			vzad(spd);
+			backward(spd);
 			break;
 
 		case 2:
-			// Serial.println("12");
-			vlavo_vzad(spd);
+			left_backward(spd);
 			break;
 
 		case 3:
-			//Serial.println("13");
-			vlavo_vzad(spd);
+			left_backward(spd);
 			break;
 
 		case 4:
-			// Serial.println("14");
-			vlavo(spd);
+			left(spd);
 			break;
 
 		case 5:
-			//Serial.println("15");
 			move_team_distance();
 			break;
 
 		case 6:
-			// Serial.println("16");
-			vpravo(spd);
+			right(spd);
 			break;
 
 		case 7:
-			//Serial.println("17");
-			vpravo_vzad(spd);
+			right_backward(spd);
 			break;
 
 		case 8:
-			// Serial.println("18");
-			vzad(spd);
+			backward(spd);
 			break;
 
 		case 9:
-			//Serial.println("19");
-			vzad(spd);
+			backward(spd);
 			break;
 
 		default:
 			switch (dir_2) {
 			case 1:
-				//Serial.println("21");
-				vpravo_vzad(spd);
+				right_backward(spd);
 				break;
 
 			case 2:
-				// Serial.println("22");
-				vpravo_vzad(spd);
+				right_backward(spd);
 				break;
 
 			case 3:
-				// Serial.println("23");
-				vzad(spd);
+				backward(spd);
 				break;
 
 			case 4:
-				//	Serial.println("24");
 				if (s5_2 > 100) {
-					vpravo(spd);
+					right(spd);
 				} else {
-					vzad(spd);
+					backward(spd);
 				}
 				break;
 
 			case 5:
-				// Serial.println("25");
 				if (s5_2 > 100) {
-					vpravo(spd);
+					right(spd);
 				} else {
-					vzad(spd);
+					backward(spd);
 				}
 				break;
 
 			case 6:
-				// Serial.println("26");
 				if (s5_2 > 100) {
-					vpravo(spd);
+					right(spd);
 				} else {
-					vzad(spd);
+					backward(spd);
 				}
 				break;
 
 			case 7:
-				// Serial.println("27");
-				vzad(spd);
+				backward(spd);
 				break;
 
 			case 8:
-				//Serial.println("28");
-				vlavo_vzad(spd);
+				left_backward(spd);
 				break;
 
 			case 9:
-				// Serial.println("29");
-				vlavo_vzad(spd);
+				left_backward(spd);
 				break;
 
 			default:
-				// Serial.println("00");
 				move_team_distance();
 			}
 		}

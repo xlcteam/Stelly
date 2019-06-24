@@ -1,3 +1,6 @@
+/**
+ * functions for line sensors procesing
+ */
 uint8_t line_sensors[LINE_SENSORS_COUNT] =
 { LINE_FRONT_PIN, LINE_RIGHT_PIN, LINE_LEFT_PIN };
 /* all interrupt pins are on the same port, so we can use any one of them

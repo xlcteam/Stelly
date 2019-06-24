@@ -1,3 +1,9 @@
+/**
+ * functions to communicate with these sensors:
+ * Hitechnic IR seeker V2
+ * HiTechnic IR seeker V3
+ * HiTechnic Compass
+ */
 #define TCAADDR 0x70
 #define TCA_COMPASS 0
 #define TCA_IR_FRONT 1

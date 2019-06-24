@@ -1,3 +1,6 @@
+/**
+ * functions for Pixy procesing
+ */
 int16_t angle_goal() {
 	static uint8_t no_goal_cnt = 0;
 	static int16_t last_goal_angle = GOAL_ANGLE_NO_GOAL;
