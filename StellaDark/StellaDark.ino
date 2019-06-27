@@ -145,7 +145,7 @@ void loop() {
 
 		case 6:
 
-			from_line(vlavo, false);
+			from_line(left, false);
 			break;
 
 		case 7:
@@ -200,7 +200,7 @@ void za_loptou() {
 				break;
 
 			case 4:
-				vlavo(spd);
+				left(spd);
 				break;
 
 			case 5:
@@ -297,7 +297,7 @@ void za_loptou() {
 			break;
 
 		case 4:
-			vlavo(spd);
+			left(spd);
 			break;
 
 		case 5:
@@ -406,7 +406,7 @@ void defender() {
 				break;
 
 			case 4:
-				vlavo(spd);
+				left(spd);
 				break;
 
 			case 5:

@@ -70,11 +70,11 @@ int PID(int16_t speeds[3], int setpoint) {
 	if (error != 0) {
 		PID_P = error * P;
 		PID_I += (now - last_time) * error * I ;
-		constrain(PID_I, min_I, max_I);
+		PID_I = constrain(PID_I, min_I, max_I);
 		PID_D = (errors[(D_change - 1) - error_index] - error) * D;
 
 		out = PID_P + (PID_I / 100) - PID_D;
-		constrain(out, minimal_value, maximal_value);
+		out = constrain(out, minimal_value, maximal_value);
 	} else {
 		PID_P = 0;
 		PID_I = 0;
@@ -120,11 +120,11 @@ int centering_to_ball() {
 	if (error_ball != 0) {
 		PID_P_ball = (error_ball * BALL_P) * (BALL_P_DISTANCE * strength);
 		PID_I_ball += ((now_ball - last_time_ball) * error_ball ) * BALL_I ;
-		constrain(PID_I_ball, min_I, max_I);
+		PID_I_ball = constrain(PID_I_ball, min_I, max_I);
 		PID_D_ball = (errors_ball[(D_change_ball - 1) - error_index_ball] - error_ball) * BALL_D;
 
 		out_ball = PID_P_ball + (PID_I_ball / 100) - PID_D_ball;
-		constrain(out_ball, minimal_value_ball, maximal_value_ball);
+		out_ball = constrain(out_ball, minimal_value_ball, maximal_value_ball);
 	} else {
 		PID_P_ball = 0;
 		PID_I_ball = 0;
@@ -149,8 +149,8 @@ void move_direct(int16_t *spds) {
 
 void forward(int16_t spd) {
 	int compensation = centering_to_ball();
-	int16_t speeds[3] = {spd_forward + compensation / 2,
-		-spd_forward + compensation / 2, -compensation};
+	int16_t speeds[3] = {spd + compensation / 2,
+		-spd - compensation / 2, -compensation};
 	motion_last_dir = 0;
 	move_direct(speeds);
 }
@@ -185,7 +185,7 @@ void left_backward(int16_t spd) {
 	move_direct(speeds);
 }
 
-void vlavo(int16_t spd) {
+void left(int16_t spd) {
 	int16_t speeds[3] = { -spd / 2, -spd / 2, spd};
 	motion_last_dir = 6;
 	move_direct(speeds);

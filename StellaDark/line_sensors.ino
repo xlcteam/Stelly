@@ -93,8 +93,6 @@ uint8_t process_ws()
 
 uint8_t line_sensors_dir()
 {
-	uint32_t time = micros();
-
 	// get data to process
 	if (!line_use_int) {
 		for (uint8_t i = 0; i < LINE_SENSORS_COUNT; i++) {
