@@ -35,11 +35,17 @@ PixyViSy pixyViSy(FOC_LEN_X, FOC_LEN_Y);
 
 #define LINE_STRONG_TIME 80
 #define LINE_TIME 300
-#define LINE_BACK_TIME 400 // aplied for 3, 4, 5
+#define LINE_BACK_TIME 400 // aplied for line_dir 3, 4, 5
 #define STOP_LINE_TIME 0
 #define MUTEX(state) mutex = (state)
 #define LINE_USE_INT 1
 #define LINE_THRESH 150
+
+#define SPD 150
+#define LINE_SPD 80
+#define LINE_STRONG_SPD 250
+#define SPD_FORWARD 180
+#define SPD_FORWARD_STRONG 220
 
 uint8_t line_use_int = LINE_USE_INT;
 uint8_t light_pwm = LINE_THRESH;
@@ -51,11 +57,6 @@ uint8_t touch_line;
 uint32_t start;
 uint8_t touch_line_dir;
 
-int spd = 150;
-int line_spd = 80;
-int line_strong_spd = 250;
-int spd_forward = 180;//180
-int spd_forward_strong = 220;//220
 bool defend = 0;
 int16_t last_distance;
 int16_t distance;
@@ -98,6 +99,11 @@ void setup() {
 }
 
 void loop() {
+	if (analogRead(A6) > 100) {
+		motors_off();
+		return;
+	}
+
 	touch_line = line_sensors_dir();
 	if (touch_line == 255) {
 		pixyViSy.update(PIXYVISY_TEAM);
@@ -105,480 +111,59 @@ void loop() {
 		distance = team_distance();
 		if (distance == PIXYVISY_NOBLOCK || IR_ATACK_VALUE > IR_V3_strength()){
 			defend = 0;
-			za_loptou();
+			attacker();
 		} else {
 			defend = 1;
 			defender();
 		}
 	} else {
-		uint8_t dir_from_line = (touch_line + 4) % 8;
-		switch (dir_from_line) {
-		case 0:
-
-			from_line(forward, true);
-			break;
-
-		case 1:
-
-			from_line(right_forward, true);
-			break;
-
-		case 2:
-
-			from_line(right, false);
-			break;
-
-		case 3:
-
-			from_line(right_backward, false);
-			break;
-
-		case 4:
-
-			from_line(backward, false);
-			break;
-
-		case 5:
-
-			from_line(left_backward, false);
-			break;
-
-		case 6:
-
-			from_line(left, false);
-			break;
-
-		case 7:
-
-			from_line(left_forward, true);
-			break;
-		}
+		from_line(touch_line);
 	}
 }
 
-void from_line(void (* p_fun)(int16_t), bool back) {
-	start = millis();
-	uint32_t delay_time = back ? LINE_BACK_TIME : LINE_TIME;
-	while (millis() - start < LINE_STRONG_TIME) {
-		p_fun(line_strong_spd);
-	}
-	while (millis() - start < delay_time) {
-		p_fun(line_spd);
-	}
-	start = millis();
-	do {
-		motors_off();
-	} while (millis() - start < STOP_LINE_TIME);
-}
 
-void za_loptou() {
-	defend = 0;
-	if (analogRead(A6) > 100) {
-		motors_off();
-		return;
-	}
+void attacker() {
 	uint8_t dir_1, s1_1, s3_1, s5_1, s7_1, s9_1;
 	uint8_t dir_2, s1_2, s3_2, s5_2, s7_2, s9_2;
 	IRseeker1(&dir_1, &s1_1, &s3_1, &s5_1, &s7_1, &s9_1);
 	IRseeker2(&dir_2, &s1_2, &s3_2, &s5_2, &s7_2, &s9_2);
 
-	if (dir_1 != 0 && dir_2 != 0) { // both sensors received the signal
+	if (dir_1 && dir_2) { // both sensors received the signal
 		if (s1_1 + s3_1 + s5_1 + s7_1 + s9_1 >
 				s1_2 + s3_2 + s5_2 + s7_2 + s9_2) {
-			// stronger signal from IRSEEKER1
-			switch (dir_1) {
-			case 1:
-				backward(spd);
-				break;
-
-			case 2:
-				left_backward(spd);
-				break;
-
-			case 3:
-				left_backward(spd);
-				break;
-
-			case 4:
-				left(spd);
-				break;
-
-			case 5:
-				forward(spd);
-				break;
-
-			case 6:
-				right(spd);
-				break;
-
-			case 7:
-				right_backward(spd);
-				break;
-
-			case 8:
-				backward(spd);
-				break;
-
-			case 9:
-				backward(spd);
-				break;
-
-			default:
-				stay_direct();
-				break;
-			}
+			move_by_front_IR(dir_1, SPD);
 		} else { // stronger signal from IRSEEKER2
-			switch (dir_2) {
-			case 1:
-				right_backward(spd);
-				break;
-
-			case 2:
-				right_backward(spd);
-				break;
-
-			case 3:
-				backward(spd);
-				break;
-
-			case 4:
-				if (s5_2 > 100) {
-					right(spd);
-				} else {
-					backward(spd);
-				}
-				break;
-
-			case 5:
-				if (s5_2 > 100) {
-					right(spd);
-				} else {
-					backward(spd);
-				}
-				break;
-
-			case 6:
-				if (s5_2 > 100) {
-					right(spd);
-				} else {
-					backward(spd);
-				}
-				break;
-
-			case 7:
-				backward(spd);
-				break;
-
-			case 8:
-				left_backward(spd);
-				break;
-
-			case 9:
-				left_backward(spd);
-				break;
-
-			default:
-				stay_direct();
-				break;
-			}
+			move_by_back_IR(dir_2, SPD, s5_2 > 100 ? true : false);
 		}
+	} else if (dir_1) {
+		move_by_front_IR(dir_1, SPD);
 	} else {
-		switch (dir_1) {
-		case 1:
-			backward(spd);
-			break;
-
-		case 2:
-			left_backward(spd);
-			break;
-
-		case 3:
-			left_backward(spd);
-			break;
-
-		case 4:
-			left(spd);
-			break;
-
-		case 5:
-			forward(spd);
-			break;
-
-		case 6:
-			right(spd);
-			break;
-
-		case 7:
-			right_backward(spd);
-			break;
-
-		case 8:
-			backward(spd);
-			break;
-
-		case 9:
-			backward(spd);
-			break;
-
-		default:
-			switch (dir_2) {
-			case 1:
-				right_backward(spd);
-				break;
-
-			case 2:
-				right_backward(spd);
-				break;
-
-			case 3:
-				backward(spd);
-				break;
-
-			case 4:
-				if (s5_2 > 100) {
-					right(spd);
-				} else {
-					backward(spd);
-				}
-				break;
-
-			case 5:
-				if (s5_2 > 100) {
-					right(spd);
-				} else {
-					backward(spd);
-				}
-				break;
-
-			case 6:
-				if (s5_2 > 100) {
-					right(spd);
-				} else {
-					backward(spd);
-				}
-				break;
-
-			case 7:
-				backward(spd);
-				break;
-
-			case 8:
-				left_backward(spd);
-				break;
-
-			case 9:
-				left_backward(spd);
-				break;
-
-			default:
-				stay_direct();
-			}
-		}
+		move_by_back_IR(dir_2, SPD, s5_2 > 100 ? true : false);
 	}
 }
 
 void defender() {
-	defend = 1;
-	if (analogRead(A6) > 100) {
-		motors_off();
-		return;
-	}
 	uint8_t dir_1, s1_1, s3_1, s5_1, s7_1, s9_1;
 	uint8_t dir_2, s1_2, s3_2, s5_2, s7_2, s9_2;
 	IRseeker1(&dir_1, &s1_1, &s3_1, &s5_1, &s7_1, &s9_1);
 	IRseeker2(&dir_2, &s1_2, &s3_2, &s5_2, &s7_2, &s9_2);
 
-	if (dir_1 != 0 && dir_2 != 0) { // both sensors received the signal
+	if (dir_1 && dir_2) { // both sensors received the signal
 		if (s1_1 + s3_1 + s5_1 + s7_1 + s9_1 >
 				s1_2 + s3_2 + s5_2 + s7_2 + s9_2) {
-			// strogner signal from IRSEEKER1
-			switch (dir_1) {
-			case 1:
-				backward(spd);
-				break;
-
-			case 2:
-				left_backward(spd);
-				break;
-
-			case 3:
-				left_backward(spd);
-				break;
-
-			case 4:
-				left(spd);
-				break;
-
-			case 5:
-				move_team_distance();
-				break;
-
-			case 6:
-				right(spd);
-				break;
-
-			case 7:
-				right_backward(spd);
-				break;
-
-			case 8:
-				backward(spd);
-				break;
-
-			case 9:
-				backward(spd);
-				break;
-
-			default:
-				move_team_distance();
-				break;
-			}
+			move_by_front_IR(dir_1, SPD);
 		} else { // stronger signal from IRSEEKER2
-			switch (dir_2) {
-			case 1:
-				right_backward(spd);
-				break;
-
-			case 2:
-				right_backward(spd);
-				break;
-
-			case 3:
-				backward(spd);
-				break;
-
-			case 4:
-				if (s5_2 > 100) {
-					right(spd);
-				} else {
-					backward(spd);
-				}
-				break;
-
-			case 5:
-				if (s5_2 > 100) {
-					right(spd);
-				} else {
-					backward(spd);
-				}
-				break;
-
-			case 6:
-				if (s5_2 > 100) {
-					right(spd);
-				} else {
-					backward(spd);
-				}
-				break;
-
-			case 7:
-				backward(spd);
-				break;
-
-			case 8:
-				left_backward(spd);
-				break;
-
-			case 9:
-				left_backward(spd);
-				break;
-
-			default:
-				stay_direct();
-				break;
-			}
+			move_by_back_IR(dir_2, SPD, s5_2 > 100 ? true : false);
 		}
-	} else {
-		switch (dir_1) {
-		case 1:
-			backward(spd);
-			break;
-
-		case 2:
-			left_backward(spd);
-			break;
-
-		case 3:
-			left_backward(spd);
-			break;
-
-		case 4:
-			left(spd);
-			break;
-
-		case 5:
+	} else if (dir_1) {
+		if (dir_1 == 5) {
 			move_team_distance();
-			break;
-
-		case 6:
-			right(spd);
-			break;
-
-		case 7:
-			right_backward(spd);
-			break;
-
-		case 8:
-			backward(spd);
-			break;
-
-		case 9:
-			backward(spd);
-			break;
-
-		default:
-			switch (dir_2) {
-			case 1:
-				right_backward(spd);
-				break;
-
-			case 2:
-				right_backward(spd);
-				break;
-
-			case 3:
-				backward(spd);
-				break;
-
-			case 4:
-				if (s5_2 > 100) {
-					right(spd);
-				} else {
-					backward(spd);
-				}
-				break;
-
-			case 5:
-				if (s5_2 > 100) {
-					right(spd);
-				} else {
-					backward(spd);
-				}
-				break;
-
-			case 6:
-				if (s5_2 > 100) {
-					right(spd);
-				} else {
-					backward(spd);
-				}
-				break;
-
-			case 7:
-				backward(spd);
-				break;
-
-			case 8:
-				left_backward(spd);
-				break;
-
-			case 9:
-				left_backward(spd);
-				break;
-
-			default:
-				move_team_distance();
-			}
+		} else {
+			move_by_front_IR(dir_1, SPD);
 		}
+	} else if (dir_2) {
+		move_by_back_IR(dir_2, SPD, s5_2 > 100 ? true : false);
+	} else {
+		move_team_distance();
 	}
 }

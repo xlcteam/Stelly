@@ -19,7 +19,7 @@ int PID_D = 0;
 #define P_TEAM 5
 #define P_TEAM_NEAR 18
 //////////////////////////////////////////////////////
-#define P 3;
+#define P 3
 #define I 0.07
 #define D 10
 #define D_change 3
@@ -107,9 +107,9 @@ int centering_to_ball() {
 	error_ball = IR_V3();
 	strength = IR_V3_strength();
 	if (error_ball < 10 && error_ball > -10) {
-		spd = spd_forward_strong;
+		spd = SPD_FORWARD_STRONG;
 	} else {
-		spd = spd_forward;
+		spd = SPD_FORWARD;
 	}
 	int maximal_value_ball = 255 - spd ;
 	int minimal_value_ball = -255 + spd ;
