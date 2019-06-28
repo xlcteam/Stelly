@@ -37,7 +37,7 @@ void compass_set_north() {
 }
 
 uint16_t compass_raw() {
-	uint16_t a, b;
+	uint16_t a = 0, b = 0;
 	Wire.beginTransmission(0x02 >> 1);
 	Wire.write(0x44);
 	Wire.endTransmission();
