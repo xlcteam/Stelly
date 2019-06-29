@@ -12,6 +12,7 @@ void test_sensors() {
 	Serial.println(compass());
 	delay(50);
 }
+
 void test_motors() {
 	motorA.go(255);
 	motorB.go(255);
@@ -34,6 +35,7 @@ void test_motors() {
 	motorC.go(-255);
 	delay(1000);
 }
+
 void test_frequency() {
 	static bool position_in_program = 0;
 	static long last_time = 0;
@@ -47,6 +49,7 @@ void test_frequency() {
 		position_in_program = 1;
 	}
 }
+
 void test_team() {
 	pixyViSy.update(PIXYVISY_TEAM);
 	Serial.print("Dist: ");
@@ -57,4 +60,14 @@ void test_team() {
 	Serial.println( team_Dx());
 	Serial.println("////////////////////////////////////////////");
 	delay(150);
+}
+
+void test_light_sensors() {
+	Serial.print(read_line_sensor(0));
+	Serial.print('\t');
+	Serial.print(read_line_sensor(1));
+	Serial.print('\t');
+	Serial.print(read_line_sensor(2));
+	Serial.println();
+	delay(50);
 }

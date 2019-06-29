@@ -12,6 +12,9 @@
 #include <XLCPixy.h>
 #include <stdint.h>
 
+#define DEBUG 0
+#define TEST test_light_sensors
+
 #define FOC_LEN_X 266
 #define FOC_LEN_Y 237
 
@@ -39,7 +42,7 @@ PixyViSy pixyViSy(FOC_LEN_X, FOC_LEN_Y);
 #define STOP_LINE_TIME 0
 #define MUTEX(state) mutex = (state)
 #define LINE_USE_INT 1
-#define LINE_THRESH 150
+#define LINE_THRESH 255
 
 #define SPD 150
 #define LINE_SPD 80
@@ -78,7 +81,7 @@ ISR(PCINT1_vect) {
 }
 
 void setup() {
-	Serial.begin(9600);
+	Serial.begin(115200);
 	Wire.begin();
 	setup_line_sensors();
 	compass_set_north();
@@ -89,16 +92,22 @@ void setup() {
 	pixyViSy.setMinGoalArea(MIN_GOAL_AREA);
 	pinMode(A7, INPUT);
 	pinMode(A6, INPUT);
+#if DEBUG == 0
 	while (analogRead(A6) < 100) {
 		if (analogRead(A7) > 100) {
 			compass_set_north();
 		}
 		motors_off();
 	}
+#else
+	Serial.println("Test");
+	motors_off();
+#endif
 	ws[0] = ws[1] = ws[2] = 0;
 }
 
 void loop() {
+#if DEBUG == 0
 	if (analogRead(A6) > 100) {
 		motors_off();
 		return;
@@ -119,6 +128,9 @@ void loop() {
 	} else {
 		from_line(touch_line);
 	}
+#else
+	TEST();
+#endif
 }
 
 
